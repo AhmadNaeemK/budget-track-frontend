@@ -8,11 +8,19 @@ const LoginForm = () => {
         password: '',
     }
 
-    const [formData, setFormData] = useState({initialData})
+    const [formData, setFormData] = useState(initialData)
 
     const handleSubmit = (event)=>{
         event.preventDefault();
-        console.log(formData)
+        const url = 'http://127.0.0.1:8000/user/login/'
+        fetch(url, {
+            method: 'POST',
+            mode:'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData),
+        }).then(response => {console.log(response.status)})
     }
 
     const handleChange = (event)=>{
@@ -29,12 +37,12 @@ const LoginForm = () => {
 
     <div className="form-group">
         <label>Username</label>
-        <input type="text" className="form-control" placeholder="Enter " onChange={handleChange}/>
+        <input type="text" className="form-control" placeholder="Enter " name='username' onChange={handleChange}/>
     </div>
 
     <div className="form-group">
         <label>Password</label>
-        <input type="password" className="form-control" placeholder="Enter password" onChange={handleChange}/>
+        <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={handleChange}/>
     </div>
 
     <div className="form-group">

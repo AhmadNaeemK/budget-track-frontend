@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 
+
 const RegistrationForm = () => {
 
     const initialData = {
@@ -9,11 +10,24 @@ const RegistrationForm = () => {
         password: '',
     }
 
-    const [formData, setFormData] = useState({initialData})
+    const [formData, setFormData] = useState(initialData)
 
     const handleSubmit = (event)=>{
         event.preventDefault();
-        console.log(formData)
+        console.log(formData);
+
+        const url = 'http://127.0.0.1:8000/user/register/'
+        fetch(url, {
+            method: 'POST',
+            mode:'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData),
+        }).then(response => {
+            console.log(response.status);
+            this.props.history.push('/home')
+        })
     }
 
     const handleChange = (event)=>{
