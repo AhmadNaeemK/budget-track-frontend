@@ -1,26 +1,44 @@
+import { LocalLaundryService } from '@material-ui/icons';
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+
 
 const LoginForm = () => {
+
+    const navigate = useNavigate();
     
     const initialData = {
         username: '',
         password: '',
-    }
+    };
 
-    const [formData, setFormData] = useState(initialData)
+    const [formData, setFormData] = useState(initialData);
 
     const handleSubmit = (event)=>{
         event.preventDefault();
-        const url = 'http://127.0.0.1:8000/user/login/'
+        const url = 'http://127.0.0.1:8000/user/login/';
         fetch(url, {
             method: 'POST',
             mode:'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'JWT' + localStorage.getItem('access_token')
             },
             body: JSON.stringify(formData),
-        }).then(response => {console.log(response.status)})
+        }).then(res => res.json())
+        .then(result => {
+            if (result.user){
+                localStorage.setItem('access',result.access)
+                localStorage.setItem('refresh', result.refresh)
+                console.log(result.user)
+                navigate('/home')
+            }
+        })
+        .catch (error => {
+            console.log(error)
+        });
+
     }
 
     const handleChange = (event)=>{

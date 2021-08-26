@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const RegistrationForm = () => {
+
+    const navigate = useNavigate();
 
     const initialData = {
         username: '',
@@ -26,7 +29,7 @@ const RegistrationForm = () => {
             body: JSON.stringify(formData),
         }).then(response => {
             console.log(response.status);
-            this.props.history.push('/home')
+            navigate('/');
         })
     }
 
