@@ -5,9 +5,6 @@ const transactionList = (userid) => {
 
     const [lists,setLists]  = useState([]);
 
-
-
-
     return (<div></div>);
 }
 

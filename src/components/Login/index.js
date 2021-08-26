@@ -1,7 +1,8 @@
-import { LocalLaundryService } from '@material-ui/icons';
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+
+import { LOGIN_URL } from '../../Config';
 
 
 const LoginForm = () => {
@@ -10,6 +11,7 @@ const LoginForm = () => {
     
     const initialData = {
         username: '',
+        email: '',
         password: '',
     };
 
@@ -17,24 +19,24 @@ const LoginForm = () => {
 
     const handleSubmit = (event)=>{
         event.preventDefault();
-        const url = 'http://127.0.0.1:8000/user/login/';
-        fetch(url, {
+        fetch(LOGIN_URL, {
             method: 'POST',
             mode:'cors',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'JWT' + localStorage.getItem('access_token')
+                'Authorization': ' Bearer ' + localStorage.getItem('access_token')
             },
             body: JSON.stringify(formData),
         }).then(res => res.json())
         .then(result => {
-            if (result.user){
-                localStorage.setItem('access',result.access)
-                localStorage.setItem('refresh', result.refresh)
-                console.log(result.user)
-                navigate('/home')
+            if (result.access){
+                localStorage.setItem('access',result.access);
+                localStorage.setItem('refresh', result.refresh);
+                console.log(result);
+                navigate('/home');
+                }
             }
-        })
+        )
         .catch (error => {
             console.log(error)
         });
@@ -55,7 +57,7 @@ const LoginForm = () => {
 
     <div className="form-group">
         <label>Username</label>
-        <input type="text" className="form-control" placeholder="Enter " name='username' onChange={handleChange}/>
+        <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={handleChange}/>
     </div>
 
     <div className="form-group">
