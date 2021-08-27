@@ -2,6 +2,8 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { REGISTER_URL } from '../../Config';
+
 
 const RegistrationForm = () => {
 
@@ -19,8 +21,7 @@ const RegistrationForm = () => {
         event.preventDefault();
         console.log(formData);
 
-        const url = 'http://127.0.0.1:8000/user/register/'
-        fetch(url, {
+        fetch(REGISTER_URL, {
             method: 'POST',
             mode:'cors',
             headers: {

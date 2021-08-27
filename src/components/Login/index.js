@@ -18,29 +18,34 @@ const LoginForm = () => {
     const [formData, setFormData] = useState(initialData);
 
     const handleSubmit = (event)=>{
+        let uname = localStorage.getItem('username')
+        console.log(uname !== null)
         event.preventDefault();
-        fetch(LOGIN_URL, {
-            method: 'POST',
-            mode:'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': ' Bearer ' + localStorage.getItem('access_token')
-            },
-            body: JSON.stringify(formData),
-        }).then(res => res.json())
-        .then(result => {
-            if (result.access){
-                localStorage.setItem('access',result.access);
-                localStorage.setItem('refresh', result.refresh);
-                console.log(result);
-                navigate('/home');
+            fetch(LOGIN_URL, {
+                method: 'POST',
+                mode:'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            }).then(res => { 
+                console.log(res)
+                return res.json();})
+            .then(result => {
+                if (result.access){
+                    localStorage.setItem('access',result.access);
+                    localStorage.setItem('refresh', result.refresh);
+                    localStorage.setItem('username', result.user);
+                    localStorage.setItem('userid', result.id);
+                    console.log(result);
+                    navigate('/home');
+                    }
                 }
-            }
-        )
-        .catch (error => {
-            console.log(error)
-        });
-
+            )
+            .catch (error => {
+                console.log(error)
+            });
+        
     }
 
     const handleChange = (event)=>{
@@ -56,7 +61,7 @@ const LoginForm = () => {
     <h3>Sign In</h3>
 
     <div className="form-group">
-        <label>Username</label>
+        <label>Email</label>
         <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={handleChange}/>
     </div>
 
