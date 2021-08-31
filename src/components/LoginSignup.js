@@ -4,7 +4,7 @@ import LoginForm from './Login';
 import RegisterationForm from './Register';
 
 
-const LoginSignup = () => {
+const Signup = () => {
 
     return (
         <div className='container-fluid p-2'>
@@ -23,4 +23,4 @@ const LoginSignup = () => {
     )
 }
 
-export default LoginSignup;
+export default Signup;
