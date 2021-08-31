@@ -16,7 +16,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     * {
-        box-sizing:border-box;
         font-family: 'Montserrat' , sans-serif;
     }
 
@@ -28,8 +27,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     .green {
-        background: var(--green)
+        background-color: var(--green)
     }
-
 
 `;
