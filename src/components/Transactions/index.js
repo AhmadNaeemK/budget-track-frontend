@@ -12,8 +12,9 @@ const TransactionList = (props) => {
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
         const res = await API.deleteTransactions(transactionId);
         const newTransactions = transactions.filter( transaction => transaction.id !== transactionId);
+        const newAccounts = await API.fetchAccount(false,true)
         if (res.status === 204){
-            props.transactionHandler(newTransactions);
+            props.transactionAccountHandler(newTransactions, newAccounts)
         }
     }
 

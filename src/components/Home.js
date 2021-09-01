@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
 
 import TransactionList from './Transactions';
-
 import TransactionForm from './TransactionForm';
+import AccountsList from './Accounts'
+import AccountsForm from './AccountsForm'
+
 
 import API from '../API';
 
@@ -15,18 +16,32 @@ class Home extends React.Component{
             loggedIn: false,
             accounts: [],
             transactionId: null,
+            accountId: null,
         }
     }
 
-    transactionHandler(t){
+    transactionAccountHandler = (t, a)=> {
         this.setState({
-            transactions: t
+            transactions: t,
+            accounts: a,
         })
     }
 
-    transactionIdHandler(t){
+    transactionIdHandler = (t) => {
         this.setState({
             transactionId: t
+        })
+    }
+
+    accountIdHandler = (a) => {
+        this.setState({
+            accountId: a
+        })
+    }
+
+    accountHandler = (a) => {
+        this.setState({
+            accounts: a
         })
     }
 
@@ -49,14 +64,22 @@ class Home extends React.Component{
     render () {
         return (
             <div className='container-fluid m-2 p-2'>
-            <div className=' row display-flex '>
+
+            <div className=' row d-flex '>
                 <TransactionList transactions = {this.state.transactions} 
-                                transactionHandler ={this.transactionHandler.bind(this)}
-                                transactionIdHandler ={this.transactionIdHandler.bind(this)} />
+                                transactionAccountHandler ={this.transactionAccountHandler}
+                                transactionIdHandler ={this.transactionIdHandler} />
                 <TransactionForm title='Create Transactions' 
                                 accounts= {this.state.accounts} 
                                 transactions = {this.state.transactions} 
-                                transactionHandler ={this.transactionHandler.bind(this)}/>
+                                transactionAccountHandler ={this.transactionAccountHandler}/>
+            </div>
+
+            <div className='row d-flex'>
+                <AccountsList accounts= {this.state.accounts}
+                                transactionAccountHandler = {this.transactionAccountHandler}
+                                accountIdHandler = {this.accountIdHandler}/>
+                <AccountsForm title='Create Accounts' accountHandler={this.accountHandler}/>
             </div>
 
             <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
@@ -73,7 +96,7 @@ class Home extends React.Component{
                         transactionId= {this.state.transactionId}
                         accounts= {this.state.accounts} 
                         transactions = {this.state.transactions} 
-                        transactionHandler ={this.transactionHandler.bind(this)}/>
+                        transactionAccountHandler ={this.transactionAccountHandler}/>
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -82,6 +105,29 @@ class Home extends React.Component{
                     </div>
                 </div>
             </div>
+
+            <div className="modal fade" id="aModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="ModalLongTitle">Edit Account</h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                    <AccountsForm
+                        accountId= {this.state.accountId}
+                        transactionAccountHandler = {this.transactionAccountHandler}/>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-primary">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         )
     }
