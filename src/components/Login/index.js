@@ -18,8 +18,6 @@ const LoginForm = () => {
     const [formData, setFormData] = useState(initialData);
 
     const handleSubmit = (event)=>{
-        let uname = localStorage.getItem('username')
-        console.log(uname !== null)
         event.preventDefault();
             fetch(LOGIN_URL, {
                 method: 'POST',
@@ -29,7 +27,6 @@ const LoginForm = () => {
                 },
                 body: JSON.stringify(formData),
             }).then(res => { 
-                console.log(res)
                 return res.json();})
             .then(result => {
                 if (result.access){
@@ -37,13 +34,12 @@ const LoginForm = () => {
                     localStorage.setItem('refresh', result.refresh);
                     localStorage.setItem('username', result.user);
                     localStorage.setItem('userid', result.id);
-                    console.log(result);
                     navigate('/home');
                     }
                 }
             )
             .catch (error => {
-                console.log(error)
+                navigate('/');
             });
         
     }

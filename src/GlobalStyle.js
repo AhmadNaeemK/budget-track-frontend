@@ -30,4 +30,8 @@ export const GlobalStyle = createGlobalStyle`
         background-color: var(--green)
     }
 
+    .modal {
+        color: black;
+    }
+
 `;
