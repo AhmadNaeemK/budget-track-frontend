@@ -29,7 +29,8 @@ class TransactionForm extends React.Component {
             const res = await API.createTransactions(this.state);
             if (res && res.status === 201){
                 const newTransactions = await API.fetchTransactions(false)
-                this.props.transactionHandler(newTransactions)
+                const newAccounts = await API.fetchAccount(false,true)
+                this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
         } else {
@@ -41,7 +42,8 @@ class TransactionForm extends React.Component {
             console.log(res)
             if (res && res.status === 202){
                 const newTransactions = await API.fetchTransactions(false)
-                this.props.transactionHandler(newTransactions)
+                const newAccounts = await API.fetchAccount(false,true)
+                this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
         }
@@ -49,7 +51,7 @@ class TransactionForm extends React.Component {
 
     render () {
         return (
-        <div className='border rounded border-white p-2 m-2'>
+        <div className='border rounded border-white p-4 m-2'>
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
                 <label for='title'>Transaction Title</label>
@@ -59,29 +61,26 @@ class TransactionForm extends React.Component {
                 <input className='form-control' type='text' name='description' onChange={this.handleChange}/>
 
                 <label for='credit_account'>Credit Account</label>
-                <select name='credit_account' onChange={this.handleChange}>
+                <select className='form-select' name='credit_account' onChange={this.handleChange}>
                     {this.props.accounts.map( (account) => (
                         <option key={account.id} value={account.id}>{account.title}</option>
                     ) )}
                 </select>
 
-                <label for='debit_account'>Credit Account</label>
-                <select name='debit_account' onChange={this.handleChange}>
+                <label for='debit_account'>Debit Account</label>
+                <select className='form-select' name='debit_account' onChange={this.handleChange}>
                     {this.props.accounts.map( (account) => (
                         <option key={account.id} value={account.id}>{account.title}</option>
                     ) )}
                 </select>
-
-                <label for='amount'>Amount</label>
-                <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
-                {this.props.transactionId ?
-                <input type='hidden' name='transactionID' value={this.props.transactionId} /> :
-                null }
+                
+                <div className='form-group'>
+                    <label for='amount'>Amount</label>
+                    <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
+                </div>
 
                 <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
             </form>
-
-                            
 
         </div>
     )

@@ -4,7 +4,8 @@ const REFRESH_URL = LOGIN_URL + 'refresh/'
 const LOGOUT_URL = API_URL + '/user/logout/'
 const REGISTER_URL = API_URL + '/user/register/'
 const TRANSACTION_URL = API_URL + '/transactionlist/'
-const ACCOUNT_URL = API_URL + '/accountsList'
+const ACCOUNT_URL = API_URL + '/accountsList/'
+const ACCOUNT_CATEGORY_URL = API_URL + '/accountsCategoryList/'
 
 export {
     API_URL,
@@ -13,5 +14,6 @@ export {
     TRANSACTION_URL,
     REFRESH_URL,
     LOGOUT_URL,
-    ACCOUNT_URL
+    ACCOUNT_URL,
+    ACCOUNT_CATEGORY_URL
 }
