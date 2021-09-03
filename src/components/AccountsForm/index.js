@@ -33,7 +33,8 @@ class AccountsForm extends React.Component{
         if (this.props.title === "Create Accounts"){
             const res = await API.createAccount(cleanState);
             if (res && res.status === 201){
-                const newAccounts = await API.fetchAccount(false, true)
+                const newAccounts = await API.fetchAccount(false, false, true)
+                console.log(newAccounts)
                 this.props.accountHandler(newAccounts)
                 this.setState(this.initialState)
             }
@@ -45,7 +46,7 @@ class AccountsForm extends React.Component{
             const res = await API.updateAccount(newState);
             if (res && res.status === 202){
                 const newTransactions = await API.fetchTransactions(false);
-                const newAccounts = await API.fetchAccount(false,true);
+                const newAccounts = await API.fetchAccount(false,false,true);
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
@@ -55,7 +56,7 @@ class AccountsForm extends React.Component{
 
     render () {
         return (
-        <div className='border rounded border-white p-4 m-2'>
+        <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
 

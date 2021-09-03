@@ -3,7 +3,7 @@ import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL } from 
 
 const API = { 
     fetchTransactions: async (all) => {
-        const newURL = TRANSACTION_URL + (all ? 'all=true': '')
+        const newURL = TRANSACTION_URL + (all ? '?all=true': '')
         const transactionResponse = await fetch(newURL, {
             method: 'GET',
             mode: 'cors',
@@ -45,8 +45,9 @@ const API = {
     },
 
     updateTransactions: async(formData) => {
+        console.log(formData)
         const res = await fetch(TRANSACTION_URL, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('access'), 
@@ -74,8 +75,8 @@ const API = {
         });
     },
 
-    fetchAccount: async (cash, getAll) => {
-        const newURL = ACCOUNT_URL + (getAll ? '?getAll=true' : (cash ? '?cash=true': ''))
+    fetchAccount: async (cash, getEach, getAll) => {
+        const newURL = ACCOUNT_URL + (getAll? '?getAll=true' : (getEach ? '?getEach=true' : (cash ? '?cash=true': '')))
 
         const accountResponse = await fetch(newURL, {
             method: 'GET',
@@ -120,7 +121,6 @@ const API = {
     },
 
     updateAccount: async (formData) => {
-        console.log(formData)
         const res = await fetch(ACCOUNT_URL, {
             method: 'PUT',
             headers: {

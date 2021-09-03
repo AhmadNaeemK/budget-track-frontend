@@ -28,8 +28,8 @@ class TransactionForm extends React.Component {
         if (this.props.title === "Create Transactions"){
             const res = await API.createTransactions(this.state);
             if (res && res.status === 201){
-                const newTransactions = await API.fetchTransactions(false)
-                const newAccounts = await API.fetchAccount(false,true)
+                const newTransactions = await API.fetchTransactions(true)
+                const newAccounts = await API.fetchAccount(false,false,true)
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
@@ -38,11 +38,11 @@ class TransactionForm extends React.Component {
             for (let s in this.state){
                 if (this.state[s] !== '') newState = {...newState, [s]: this.state[s]}
             }
+            console.log(newState)
             const res = await API.updateTransactions(newState);
-            console.log(res)
             if (res && res.status === 202){
                 const newTransactions = await API.fetchTransactions(false)
-                const newAccounts = await API.fetchAccount(false,true)
+                const newAccounts = await API.fetchAccount(false,false,true)
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
@@ -51,7 +51,7 @@ class TransactionForm extends React.Component {
 
     render () {
         return (
-        <div className='border rounded border-white p-4 m-2'>
+        <div className={'border rounded border-white p-4 m-2 ' + this.props.className } >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
                 <label for='title'>Transaction Title</label>

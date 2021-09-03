@@ -2,6 +2,8 @@ import React from 'react'
 
 import API from '../../API'
 
+import { Link } from 'react-router-dom'
+
 const AccountsList = (props) => {
 
     const accounts = props.accounts
@@ -12,7 +14,7 @@ const AccountsList = (props) => {
     const handleDelete = async (event) => {
         const accountId = parseInt(event.target.parentNode.parentNode.id);
         const res = await API.deleteAccount(accountId);
-        const newAccounts = accounts.filter( account => account.id !== accountId);
+        const newAccounts = API.fetchAccount(false,false,true)
         const newTransactions = await API.fetchTransactions(false);
 
         if (res.status === 204){
@@ -42,18 +44,19 @@ const AccountsList = (props) => {
 
                     {accounts.map((account) => (
                         <tr key={account.id} id={account.id}>
-                            <td scope='col'>{account.id}</td>
-                            <td scope='col'>{account.category}</td>
-                            <td scope='col'>{account.title}</td>
-                            <td scope='col'>{account.credit}</td>
-                            <td scope='col'>{account.debit}</td>
-                            <td scope='col'><button className='btn btn-danger' onClick={handleDelete}>Del</button>
+                            <td>{account.id}</td>
+                            <td>{account.category}</td>
+                            <td>{account.title}</td>
+                            <td>{account.credit}</td>
+                            <td>{account.debit}</td>
+                            <td><button className='btn btn-danger' onClick={handleDelete}>Del</button>
                             <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#aModal`} onClick={handleEdit}>Edit</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
+            <Link to='/accounts'> <button className='btn btn-dark w-100'><b>All Accounts</b></button> </Link>
         </div>)
         ;
 

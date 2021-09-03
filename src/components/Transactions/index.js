@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 import API from '../../API'
 
 const TransactionList = (props) => {
@@ -30,27 +32,29 @@ const TransactionList = (props) => {
                 <thead><tr><th className='bg-dark' colSpan='6'>Transactions</th></tr></thead>
                 <tbody>
                     <tr>
-                        <th scope='col'>Id</th>
-                        <th scope='col'>From</th>
-                        <th scope='col'>To</th>
-                        <th scope='col'>Date</th>
-                        <th scope='col'>Amount</th>
+                        <th>Id</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Date</th>
+                        <th>Amount</th>
                         <th></th>
                     </tr>
 
                     {transactions.map((transaction) => (
                         <tr key={transaction.id} id={transaction.id}>
-                            <td scope='col'>{transaction.id}</td>
-                            <td scope='col'>{transaction.credit_account}</td>
-                            <td scope='col'>{transaction.debit_account}</td>
-                            <td scope='col'>{transaction.transaction_date.match(/\d{4,}-\d{2}-\d{2}/)}</td>
-                            <td scope='col'>{transaction.amount}</td>
-                            <td scope='col'><button className='btn btn-danger' onClick={handleDelete}>Del</button>
+                            <td>{transaction.id}</td>
+                            <td>{transaction.credit_account}</td>
+                            <td>{transaction.debit_account}</td>
+                            <td>{transaction.transaction_date.match(/\d{4,}-\d{2}-\d{2}/)}</td>
+                            <td>{transaction.amount}</td>
+                            <td><button className='btn btn-danger' onClick={handleDelete}>Del</button>
                             <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#tModal`} onClick={handleEdit}>Edit</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            
+            <Link to='/transactions'> <button className='btn btn-dark w-100'><b>All Transactions</b></button> </Link>
 
         </div>)
         ;

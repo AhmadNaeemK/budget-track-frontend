@@ -74,9 +74,6 @@ const LoginForm = () => {
     </div>
 
     <button type="submit" className="btn btn-primary btn-block" onClick={handleSubmit}>Submit</button>
-    <p className="forgot-password text-right">
-        Forgot <a href="#">password?</a>
-    </p>
     </form>
 
 )};
