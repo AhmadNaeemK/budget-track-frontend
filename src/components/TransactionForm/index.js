@@ -32,19 +32,24 @@ class TransactionForm extends React.Component {
                 const newAccounts = await API.fetchAccount(false,false,true)
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
+            } else {
+                alert (res);
             }
         } else {
             let newState = {'transactionId': this.props.transactionId}
             for (let s in this.state){
                 if (this.state[s] !== '') newState = {...newState, [s]: this.state[s]}
             }
-            console.log(newState)
+
             const res = await API.updateTransactions(newState);
             if (res && res.status === 202){
                 const newTransactions = await API.fetchTransactions(false)
                 const newAccounts = await API.fetchAccount(false,false,true)
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
+            } else {
+                const error = await res.json()
+                alert(error.non_field_errors)
             }
         }
     }
@@ -79,7 +84,9 @@ class TransactionForm extends React.Component {
                     <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
                 </div>
 
-                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
+                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                    { this.props.title==='Create Transactions' ? 'Add' : 'Update' }
+                </button>
             </form>
 
         </div>

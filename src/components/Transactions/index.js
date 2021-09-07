@@ -17,6 +17,8 @@ const TransactionList = (props) => {
         const newAccounts = await API.fetchAccount(false,true)
         if (res.status === 204){
             props.transactionAccountHandler(newTransactions, newAccounts)
+        } else {
+            alert(res)
         }
     }
 

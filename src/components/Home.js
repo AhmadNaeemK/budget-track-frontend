@@ -60,9 +60,6 @@ class Home extends React.Component {
         fetchThings()
     }
 
-    componentDidUpdate() {
-        API.fetchToken()
-    }
 
     render() {
         return (
