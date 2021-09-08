@@ -1,6 +1,7 @@
 import React from 'react';
 
 import API from '../API';
+import { monthNames } from '../Config';
 
 import AccountsForm from './AccountsForm';
 
@@ -23,10 +24,12 @@ class AllAccounts extends React.Component {
     handleDelete = async (event) => {
         const accountId = parseInt(event.target.parentNode.parentNode.id);
         const res = await API.deleteAccount(accountId);
-        const newAccounts = await API.fetchAccount(false,false,true);
+
+        const accounts = await API.fetchAccount(false,false,true);
+        const expenseAccountData = await API.getExpenseAccountsData(this.state.month)
 
         if (res.status === 204){
-            this.setState({accounts: newAccounts})
+            this.setState({accounts: accounts, expenseAccountsData: expenseAccountData});
         }
     }
 
@@ -35,23 +38,16 @@ class AllAccounts extends React.Component {
         this.setState({ accountId: accountId })
     }
 
-    transactionAccountHandler = (t,a) => {
-        this.setState({
-            accounts: a
-        })
-    }
-
-    accountHandler = (a) => {
-        this.setState({
-            accounts: a
-        })
+    accountHandler = async () => {
+        const accounts = await API.fetchAccount(false,false,true);
+        const expenseAccountData = await API.getExpenseAccountsData(this.state.month)
+        this.setState({accounts: accounts, expenseAccountsData: expenseAccountData});
     }
 
     componentDidMount() {
         (async () => {
             const accounts = await API.fetchAccount(false,false,true);
             const expenseAccountData = await API.getExpenseAccountsData(this.state.month)
-            console.log(expenseAccountData)
             this.setState({accounts: accounts, expenseAccountsData: expenseAccountData});
         })();
     }
@@ -66,7 +62,7 @@ class AllAccounts extends React.Component {
                     </div>
 
                     <div className='w-20'>
-                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
+                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={monthNames[this.state.month - 1]} />
                     </div>
 
                     <AccountsForm className='w-50'
@@ -117,7 +113,7 @@ class AllAccounts extends React.Component {
                         <div className="modal-body">
                         <AccountsForm
                             accountId= {this.state.accountId}
-                            transactionAccountHandler = {this.transactionAccountHandler}/>
+                            accountHandler = {this.accountHandler}/>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>

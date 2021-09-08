@@ -8,6 +8,11 @@ const ACCOUNT_URL = API_URL + '/accountsList/'
 const ACCOUNT_CATEGORY_URL = API_URL + '/accountsCategoryList/'
 const MONTHLY_EXPENSE_DATA = API_URL + '/monthlyExpenses/'
 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+
 export {
     API_URL,
     LOGIN_URL,
@@ -18,4 +23,5 @@ export {
     ACCOUNT_URL,
     ACCOUNT_CATEGORY_URL,
     MONTHLY_EXPENSE_DATA,
+    monthNames,
 }

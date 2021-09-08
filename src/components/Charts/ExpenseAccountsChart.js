@@ -39,7 +39,7 @@ class ExpenseAccountsChart extends React.Component {
                     plugins:{
                         title:{
                         display:true,
-                        text:`Expense Accounts for month ${this.props.month}`,
+                        text:`Expense Accounts for ${this.props.month}`,
                         fontSize:100,
                         },
                         legend:{

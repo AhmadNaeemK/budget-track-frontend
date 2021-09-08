@@ -25,13 +25,16 @@ class Home extends React.Component {
         }
     }
 
-    transactionAccountHandler = (t, a) => {
+    transactionAccountHandler = async () => {
+        const newTransactions = await API.fetchTransactions(this.state.month,false)
+        const newAccounts = await API.fetchAccount(false,false,true)
         this.setState({
-            transactions: t,
-            accounts: a,
+            transactions: newTransactions,
+            accounts: newAccounts,
         })
     }
 
+    // edit forms
     transactionIdHandler = (t) => {
         this.setState({
             transactionId: t
@@ -41,12 +44,6 @@ class Home extends React.Component {
     accountIdHandler = (a) => {
         this.setState({
             accountId: a
-        })
-    }
-
-    accountHandler = (a) => {
-        this.setState({
-            accounts: a
         })
     }
 
@@ -90,7 +87,7 @@ class Home extends React.Component {
                         accountIdHandler={this.accountIdHandler} />
                     </div>
                     <div className='col'>
-                    <AccountsForm title='Create Accounts' accountHandler={this.accountHandler} />
+                    <AccountsForm title='Create Accounts' accountHandler={this.transactionAccountHandler} />
                     </div>
                     <div className='col p-2 mb-5' style={{ maxHeight: '100px', maxWidth: '25%' }}>
                         <CashAccountsChart accounts={this.state.accounts} />
@@ -132,7 +129,7 @@ class Home extends React.Component {
                             <div className="modal-body">
                                 <AccountsForm
                                     accountId={this.state.accountId}
-                                    transactionAccountHandler={this.transactionAccountHandler} />
+                                    accountHandler={this.transactionAccountHandler} />
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>

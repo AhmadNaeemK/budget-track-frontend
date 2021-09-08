@@ -20,21 +20,21 @@ class TransactionForm extends React.Component {
     
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
     }
 
-    static getDerivedStateFromProps = (props,state) => {
-        if (props.accounts.length > 0) {
-            this.creditAccounts = props.accounts.filter((account => ['Cash', 'Salary'].includes(account.category)))
-            this.debitAccounts = props.accounts.filter((account => !['Cash', 'Salary'].includes(account.category)))
+    componentDidUpdate = (prevProps) => {
+        if (this.props.accounts.length > 0 && this.props != prevProps){
+            this.creditAccounts = this.props.accounts.filter((account => ['Cash', 'Salary'].includes(account.category)))
+            this.debitAccounts = this.props.accounts.filter((account => !['Cash', 'Salary'].includes(account.category)))
             this.initialState = {...this.initialState, credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
-            return {credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
+            this.setState({credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id})
         }
-        return null
     }
-    
+
+
     handleChange(event) {
         this.setState({[event.target.name]: event.target.value});
+
     }
     
     handleSubmit = async (event) => {
@@ -42,9 +42,7 @@ class TransactionForm extends React.Component {
         if (this.props.title === "Create Transactions"){
             const res = await API.createTransactions(this.state);
             if (res && res.status === 201){
-                const newTransactions = await API.fetchTransactions(true)
-                const newAccounts = await API.fetchAccount(false,false,true)
-                this.props.transactionAccountHandler(newTransactions, newAccounts)
+                this.props.transactionAccountHandler();
                 this.setState(this.initialState)
             } else {
                 alert (res);
@@ -57,15 +55,14 @@ class TransactionForm extends React.Component {
 
             const res = await API.updateTransactions(newState);
             if (res && res.status === 202){
-                const newTransactions = await API.fetchTransactions(false)
-                const newAccounts = await API.fetchAccount(false,false,true)
-                this.props.transactionAccountHandler(newTransactions, newAccounts)
+                this.props.transactionAccountHandler()
                 this.setState(this.initialState)
             } else {
                 const error = await res.json()
                 alert(error.non_field_errors)
             }
         }
+        event.target.parentNode.reset()
     }
 
     render () {
@@ -73,7 +70,6 @@ class TransactionForm extends React.Component {
         <div className={'border rounded border-white p-4 m-2 ' + this.props.className } >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
-                <fieldset>
                 <label htmlFor='title'>Transaction Title</label>
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
@@ -110,7 +106,6 @@ class TransactionForm extends React.Component {
                 <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
                     { this.props.title==='Create Transactions' ? 'Add' : 'Update' }
                 </button>
-                </fieldset>
             </form>
 
         </div>

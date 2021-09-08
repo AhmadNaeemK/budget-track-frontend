@@ -20,7 +20,8 @@ class AccountsForm extends React.Component{
         (async () => {
         const categories = await API.fetchAccountCategories();
         this.categories = categories
-        this.setState({category: Object.values(categories)[0]})
+        this.setState({category: Object.keys(categories)[0]})
+        this.initialState.category = Object.keys(categories)[0]
         })();
     }
 
@@ -34,9 +35,7 @@ class AccountsForm extends React.Component{
         if (this.props.title === "Create Accounts"){
             const res = await API.createAccount(cleanState);
             if (res && res.status === 201){
-                const newAccounts = await API.fetchAccount(false, false, true)
-                console.log(newAccounts)
-                this.props.accountHandler(newAccounts)
+                this.props.accountHandler()
                 this.setState(this.initialState)
             }
         } else {
@@ -52,6 +51,7 @@ class AccountsForm extends React.Component{
                 this.setState(this.initialState)
             }
         }
+        event.target.parentNode.reset()
     }
     
 
@@ -65,7 +65,7 @@ class AccountsForm extends React.Component{
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
                 <label htmlFor='category'>Category</label>
-                <select className='form-select' type='text' name='category' onChange={this.handleChange} value={Object.values(this.categories)[0]}>
+                <select className='form-select' type='text' name='category' onChange={this.handleChange}>
                     {Object.entries(this.categories).map((category, index) => (
                         <option key={index} value={category[0]}> {category[1]} </option>
                     ))}

@@ -7,9 +7,8 @@ import TransactionForm from './TransactionForm';
 import CashAccountsChart from './Charts/CashAccountChart';
 import ExpenseAccountsChart from './Charts/ExpenseAccountsChart';
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+import { monthNames } from '../Config';
+
 
 class AllTransactions extends React.Component {
 
@@ -29,9 +28,11 @@ class AllTransactions extends React.Component {
     handleDelete = async (event) => {
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
         const res = await API.deleteTransactions(transactionId);
+        const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
+        const AllAccounts = await API.fetchAccount(false,false,true)
         if (res.status === 204) {
             const newTransactions = this.state.transactions.filter( transaction => transaction.id !== transactionId);
-            this.setState({transactions: newTransactions})
+            this.setState({transactions: newTransactions, accounts:AllAccounts, expenseAccountsData: expenseAccounts});
         }
     }
 
@@ -49,10 +50,11 @@ class AllTransactions extends React.Component {
         })();
     }
 
-    transactionHandler = (t) => {
-        this.setState({
-            transactions: t
-        })
+    transactionHandler = async () => {
+        const AllTransactions = await API.fetchTransactions(this.state.month,true);
+        const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
+        const AllAccounts = await API.fetchAccount(false,false,true)
+        this.setState({transactions: AllTransactions, accounts:AllAccounts, expenseAccountsData: expenseAccounts});
     }
 
 
@@ -74,7 +76,7 @@ class AllTransactions extends React.Component {
                     </div>
 
                     <div className='w-20'>
-                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
+                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={monthNames[this.state.month - 1]} />
                     </div>
                     <TransactionForm className='w-50'
                             title= 'Create Transactions'
