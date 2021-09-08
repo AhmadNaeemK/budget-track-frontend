@@ -20,6 +20,7 @@ class AccountsForm extends React.Component{
         (async () => {
         const categories = await API.fetchAccountCategories();
         this.categories = categories
+        this.setState({category: Object.values(categories)[0]})
         })();
     }
 
@@ -64,7 +65,7 @@ class AccountsForm extends React.Component{
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
                 <label htmlFor='category'>Category</label>
-                <select className='form-select' type='text' name='category' onChange={this.handleChange}>
+                <select className='form-select' type='text' name='category' onChange={this.handleChange} value={Object.values(this.categories)[0]}>
                     {Object.entries(this.categories).map((category, index) => (
                         <option key={index} value={category[0]}> {category[1]} </option>
                     ))}

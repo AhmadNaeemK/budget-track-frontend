@@ -11,12 +11,26 @@ class TransactionForm extends React.Component {
                     'amount': '',
                     }
 
+    creditAccounts = []
+    debitAccounts = []
+
     constructor(props) {
         super(props);
         this.state = this.initialState;
     
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    static getDerivedStateFromProps = (props,state) => {
+        if (props.accounts.length > 0) {
+            this.creditAccounts = props.accounts.filter((account => ['Cash', 'Salary'].includes(account.category)))
+            this.debitAccounts = props.accounts.filter((account => !['Cash', 'Salary'].includes(account.category)))
+            this.initialState = {...this.initialState, credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
+            return {credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
+        }
+        return null
     }
     
     handleChange(event) {
@@ -59,6 +73,7 @@ class TransactionForm extends React.Component {
         <div className={'border rounded border-white p-4 m-2 ' + this.props.className } >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
+                <fieldset>
                 <label htmlFor='title'>Transaction Title</label>
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
@@ -66,7 +81,7 @@ class TransactionForm extends React.Component {
                 <input className='form-control' type='text' name='description' onChange={this.handleChange}/>
 
                 <label htmlFor='credit_account'>Credit Account</label>
-                <select className='form-select' name='credit_account' onChange={this.handleChange}>
+                <select className='form-select form-select-lg' name='credit_account' onChange={this.handleChange}>
                     {this.props.accounts
                         .filter( (account) => ['Cash', 'Salary'].includes(account.category))
                         .map( (account) => (
@@ -76,6 +91,7 @@ class TransactionForm extends React.Component {
                 </select>
 
                 <label htmlFor='debit_account'>Debit Account</label>
+                
                 <select className='form-select' name='debit_account' onChange={this.handleChange}>
                     {this.props.accounts
                         .filter( (account) => !['Cash', 'Salary'].includes(account.category))
@@ -90,9 +106,11 @@ class TransactionForm extends React.Component {
                     <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
                 </div>
 
+
                 <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
                     { this.props.title==='Create Transactions' ? 'Add' : 'Update' }
                 </button>
+                </fieldset>
             </form>
 
         </div>

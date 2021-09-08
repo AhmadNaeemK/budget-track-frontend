@@ -45,7 +45,6 @@ class AllTransactions extends React.Component {
             this.setState({month: parseInt(await event.target.value)});
             const AllTransactions = await API.fetchTransactions(this.state.month,true);
             const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
-            console.log(AllTransactions)
             this.setState({ transactions: AllTransactions, expenseAccountsData: expenseAccounts})
         })();
     }
@@ -91,9 +90,9 @@ class AllTransactions extends React.Component {
                             <th className='bg-dark' colSpan='8'>Transactions</th>
                             <th className='bg-dark'> 
                                 <label htmlFor="month">Month</label>
-                                <select name='month' onChange={this.handleMonthChange}>
+                                <select name='month' onChange={this.handleMonthChange} value={this.state.month}>
                                     {monthNames.map( (month, index) => (
-                                    <option value={index+1} selected={index+1 === this.state.month ? true: null} > {month} </option>    
+                                    <option key={index} value={index+1} > {month} </option>    
                                     ))}
                                 </select>
                             </th>
