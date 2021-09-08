@@ -9,27 +9,25 @@ class ExpenseAccountsChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            expenseAccountData : {}
+            expenseAccountData : []
         }
     }
 
-    static getDerivedStateFromProps(props, state) {
-        
-        function getExpenseAccountsData(accounts) {
-            const expenseAccounts = accounts.filter( account => !['Cash', 'Salary'].includes(account.category));
+    static getDerivedStateFromProps (props, state) {
+        function getExpenseAccountsData(expenseAccounts) {
             const data = {
                 labels: expenseAccounts.map(account => account.title),
                 datasets: [
                     {
                         label: 'Expense Accounts',
-                        data: expenseAccounts.map(account => account.balance),
-                        backgroundColor: [...new Array(expenseAccounts.length)].map(() => getRandomColor()), 
+                        data:  expenseAccounts.map(account => account.debit),
+                        backgroundColor: [...new Array( expenseAccounts.length)].map(() => getRandomColor()), 
                     }
                 ],
             }
             return data;
         }
-        return {expenseAccountData: getExpenseAccountsData(props.accounts) };
+        return {expenseAccountData: getExpenseAccountsData(props.expenseAccounts) };
       }
 
     render() {
@@ -41,7 +39,7 @@ class ExpenseAccountsChart extends React.Component {
                     plugins:{
                         title:{
                         display:true,
-                        text:'Expense Accounts',
+                        text:`Expense Accounts for month ${this.props.month}`,
                         fontSize:100,
                         },
                         legend:{

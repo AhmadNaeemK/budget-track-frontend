@@ -20,6 +20,8 @@ class Home extends React.Component {
             accounts: [],
             transactionId: null,
             accountId: null,
+            month : new Date().getMonth() + 1,
+            expenseAccountsData: []
         }
     }
 
@@ -51,11 +53,11 @@ class Home extends React.Component {
     componentDidMount() {
         this.setState({ loggedIn: localStorage.getItem('userid') ? true : false });
         const fetchThings = async () => {
-            const transactions = await API.fetchTransactions(false);
-            this.setState({ transactions: transactions })
-
+            const month = new Date().getMonth() + 1
+            const transactions = await API.fetchTransactions(month,false);
             const accounts = await API.fetchAccount(false, false, true);
-            this.setState({ accounts: accounts })
+            const expenseAccounts = await API.getExpenseAccountsData(month)
+            this.setState({ accounts: accounts , transactions: transactions, expenseAccountsData: expenseAccounts})
         }
         fetchThings()
     }
@@ -77,7 +79,7 @@ class Home extends React.Component {
                             transactionAccountHandler={this.transactionAccountHandler} />
                     </div>
                     <div className='col p-2 mb-5' style={{ maxHeight: '100px', maxWidth: '25%' }}>
-                        <ExpenseAccountsChart accounts={this.state.accounts} />
+                        <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
                     </div>
                 </div>
 

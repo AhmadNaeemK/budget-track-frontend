@@ -60,10 +60,10 @@ class AccountsForm extends React.Component{
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
 
-                <label for='title'>Accounts Title</label>
+                <label htmlFor='title'>Accounts Title</label>
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
-                <label for='category'>Category</label>
+                <label htmlFor='category'>Category</label>
                 <select className='form-select' type='text' name='category' onChange={this.handleChange}>
                     {Object.entries(this.categories).map((category, index) => (
                         <option key={index} value={category[0]}> {category[1]} </option>

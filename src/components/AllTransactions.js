@@ -4,6 +4,13 @@ import API from '../API';
 
 import TransactionForm from './TransactionForm';
 
+import CashAccountsChart from './Charts/CashAccountChart';
+import ExpenseAccountsChart from './Charts/ExpenseAccountsChart';
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 class AllTransactions extends React.Component {
 
     constructor(props) {
@@ -11,8 +18,10 @@ class AllTransactions extends React.Component {
 
         this.state = {
             accounts: [],
+            expenseAccountsData: [],
             transactions: [],
             transactionId: null,
+            month: new Date().getMonth() + 1,
         }
 
     }
@@ -31,6 +40,16 @@ class AllTransactions extends React.Component {
         this.setState({ transactionId: transactionId })
     }
 
+    handleMonthChange = (event) => {
+        (async () => {
+            this.setState({month: parseInt(await event.target.value)});
+            const AllTransactions = await API.fetchTransactions(this.state.month,true);
+            const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
+            console.log(AllTransactions)
+            this.setState({ transactions: AllTransactions, expenseAccountsData: expenseAccounts})
+        })();
+    }
+
     transactionHandler = (t) => {
         this.setState({
             transactions: t
@@ -40,9 +59,10 @@ class AllTransactions extends React.Component {
 
     componentDidMount() {
         (async () => {
-            const AllTransactions = await API.fetchTransactions(true);
+            const AllTransactions = await API.fetchTransactions(this.state.month,true);
             const AllAccounts = await API.fetchAccount(false,false,true)
-            this.setState({ transactions: AllTransactions , accounts: AllAccounts})
+            const expenseAccounts = await API.getExpenseAccountsData(this.state.month)
+            this.setState({ transactions: AllTransactions , accounts: AllAccounts, expenseAccountsData: expenseAccounts})
         })();
     }
 
@@ -50,6 +70,13 @@ class AllTransactions extends React.Component {
         return (
             <div className = 'p-2 m-2'>
                 <div className='d-flex justify-content-center'>
+                <div className='w-20'>
+                    <CashAccountsChart accounts={this.state.accounts} />
+                    </div>
+
+                    <div className='w-20'>
+                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
+                    </div>
                     <TransactionForm className='w-50'
                             title= 'Create Transactions'
                             transactionId= {this.state.transactionId}
@@ -60,7 +87,17 @@ class AllTransactions extends React.Component {
                 <div className='border rounded border-white p-2 m-2'>
                     <table className='table table-dark table-striped'>
 
-                        <thead><tr><th className='bg-dark' colSpan='9'>Transactions</th></tr></thead>
+                        <thead><tr>
+                            <th className='bg-dark' colSpan='8'>Transactions</th>
+                            <th className='bg-dark'> 
+                                <label htmlFor="month">Month</label>
+                                <select name='month' onChange={this.handleMonthChange}>
+                                    {monthNames.map( (month, index) => (
+                                    <option value={index+1} selected={index+1 === this.state.month ? true: null} > {month} </option>    
+                                    ))}
+                                </select>
+                            </th>
+                        </tr></thead>
                         <tbody>
                             <tr>
                                 <th>Id</th>

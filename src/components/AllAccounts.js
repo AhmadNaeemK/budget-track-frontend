@@ -14,7 +14,9 @@ class AllAccounts extends React.Component {
 
         this.state ={
             accounts : [],
+            expenseAccountsData: [],
             accountId: null,
+            month: new Date().getMonth() + 1,
         }
     }
 
@@ -48,14 +50,15 @@ class AllAccounts extends React.Component {
     componentDidMount() {
         (async () => {
             const accounts = await API.fetchAccount(false,false,true);
-            this.setState({accounts: accounts});
+            const expenseAccountData = await API.getExpenseAccountsData(this.state.month)
+            console.log(expenseAccountData)
+            this.setState({accounts: accounts, expenseAccountsData: expenseAccountData});
         })();
     }
 
     render () {
         return (
             <div className='m-2 p-2'>
-
                 <div className='d-flex justify-content-center'>
 
                     <div className='w-20'>
@@ -63,7 +66,7 @@ class AllAccounts extends React.Component {
                     </div>
 
                     <div className='w-20'>
-                    <ExpenseAccountsChart accounts={this.state.accounts} />
+                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
                     </div>
 
                     <AccountsForm className='w-50'

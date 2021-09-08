@@ -59,28 +59,34 @@ class TransactionForm extends React.Component {
         <div className={'border rounded border-white p-4 m-2 ' + this.props.className } >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
-                <label for='title'>Transaction Title</label>
+                <label htmlFor='title'>Transaction Title</label>
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
-                <label for='description'>Description</label>
+                <label htmlFor='description'>Description</label>
                 <input className='form-control' type='text' name='description' onChange={this.handleChange}/>
 
-                <label for='credit_account'>Credit Account</label>
+                <label htmlFor='credit_account'>Credit Account</label>
                 <select className='form-select' name='credit_account' onChange={this.handleChange}>
-                    {this.props.accounts.map( (account) => (
-                        <option key={account.id} value={account.id}>{account.title}</option>
-                    ) )}
+                    {this.props.accounts
+                        .filter( (account) => ['Cash', 'Salary'].includes(account.category))
+                        .map( (account) => (
+                            <option key={account.id} value={account.id}>{account.title}</option>
+                        ))
+                    }
                 </select>
 
-                <label for='debit_account'>Debit Account</label>
+                <label htmlFor='debit_account'>Debit Account</label>
                 <select className='form-select' name='debit_account' onChange={this.handleChange}>
-                    {this.props.accounts.map( (account) => (
-                        <option key={account.id} value={account.id}>{account.title}</option>
-                    ) )}
+                    {this.props.accounts
+                        .filter( (account) => !['Cash', 'Salary'].includes(account.category))
+                        .map( (account) => (
+                            <option key={account.id} value={account.id}>{account.title}</option>
+                        ))
+                    }
                 </select>
                 
                 <div className='form-group'>
-                    <label for='amount'>Amount</label>
+                    <label htmlFor='amount'>Amount</label>
                     <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
                 </div>
 

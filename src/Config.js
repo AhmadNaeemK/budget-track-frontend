@@ -6,6 +6,7 @@ const REGISTER_URL = API_URL + '/user/register/'
 const TRANSACTION_URL = API_URL + '/transactionlist/'
 const ACCOUNT_URL = API_URL + '/accountsList/'
 const ACCOUNT_CATEGORY_URL = API_URL + '/accountsCategoryList/'
+const MONTHLY_EXPENSE_DATA = API_URL + '/monthlyExpenses/'
 
 export {
     API_URL,
@@ -15,5 +16,6 @@ export {
     REFRESH_URL,
     LOGOUT_URL,
     ACCOUNT_URL,
-    ACCOUNT_CATEGORY_URL
+    ACCOUNT_CATEGORY_URL,
+    MONTHLY_EXPENSE_DATA,
 }

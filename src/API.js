@@ -1,4 +1,6 @@
-import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL } from "./Config";
+import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL
+        , MONTHLY_EXPENSE_DATA        
+} from "./Config";
 
 const authFetch = async (url, config, retry=0) => {
 
@@ -23,7 +25,7 @@ const authFetch = async (url, config, retry=0) => {
         return response;
     }
     catch (e) {
-        if (e === 'Token Expired' && retry<= 5){
+        if (e === 'Token Expired' && retry<= 1){
             try {
                 const refreshResponse = await fetch(REFRESH_URL, {
                     method: 'POST',
@@ -51,14 +53,15 @@ const authFetch = async (url, config, retry=0) => {
                 console.log(e);
             }
         }
+        console.log(e)
     }
 };
 
 
 const API = { 
 
-    fetchTransactions: async (all) => {
-        const newURL = TRANSACTION_URL + (all ? '?all=true': '')
+    fetchTransactions: async (month, all) => {
+        const newURL = TRANSACTION_URL + `?month=${month}` + (all ? '&all=true': '')
         const config = {
             method: 'GET',
         };
@@ -138,6 +141,15 @@ const API = {
         const categoryResponse = await authFetch(ACCOUNT_CATEGORY_URL, config)
         return await categoryResponse.json()
     },
+
+    getExpenseAccountsData: async (month) => {
+        const newURL = MONTHLY_EXPENSE_DATA + `?month=${month}`;
+        const config = {
+            method: 'GET',
+        }
+        const expenseDataResponse = await authFetch(newURL, config)
+        return await expenseDataResponse.json()
+    }
 }
 
 export default API
