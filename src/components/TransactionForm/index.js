@@ -39,6 +39,10 @@ class TransactionForm extends React.Component {
     
     handleSubmit = async (event) => {
         event.preventDefault();
+        const debitAccount = this.debitAccounts.find(account => account.id == this.state.debit_account)
+        if (debitAccount.debit + parseInt(this.state.amount) > debitAccount.budget_limit ) {
+            alert("You are crossing your budget limit")
+        }
         if (this.props.title === "Create Transactions"){
             const res = await API.createTransactions(this.state);
             if (res && res.status === 201){

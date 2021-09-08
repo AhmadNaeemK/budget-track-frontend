@@ -90,7 +90,6 @@ const API = {
     },
 
     updateTransactions: async(formData) => {
-        console.log(formData)
         const config = {
             method: 'PATCH',
             body:JSON.stringify(formData)
