@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
-import { LOGIN_URL } from '../../Config';
+import API from '../../API';
 
 
 const LoginForm = () => {
@@ -17,31 +17,17 @@ const LoginForm = () => {
 
     const [formData, setFormData] = useState(initialData);
 
-    const handleSubmit = (event)=>{
+    const handleSubmit = async (event)=>{
         event.preventDefault();
-            fetch(LOGIN_URL, {
-                method: 'POST',
-                mode:'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            }).then(res => { 
-                return res.json();})
-            .then(result => {
-                if (result.access){
-                    localStorage.setItem('access',result.access);
-                    localStorage.setItem('refresh', result.refresh);
-                    localStorage.setItem('username', result.user);
-                    localStorage.setItem('userid', result.id);
-                    navigate('/home');
-                    }
-                }
-            )
-            .catch (error => {
-                navigate('/');
-            });
-        
+        const result = await API.login(formData);
+        if (result.access){
+            localStorage.setItem('access',result.access);
+            localStorage.setItem('refresh', result.refresh);
+            localStorage.setItem('username', result.user);
+            localStorage.setItem('userid', result.id);
+            navigate('/home')
+        }
+
     }
 
     const handleChange = (event)=>{

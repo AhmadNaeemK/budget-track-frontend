@@ -8,6 +8,8 @@ import AccountsForm from './AccountsForm'
 import ExpenseAccountsChart from './Charts/ExpenseAccountsChart';
 import CashAccountsChart from './Charts/CashAccountChart';
 
+import { monthNames } from '../Config';
+
 
 import API from '../API';
 
@@ -76,7 +78,7 @@ class Home extends React.Component {
                             transactionAccountHandler={this.transactionAccountHandler} />
                     </div>
                     <div className='col p-2 mb-5' style={{ maxHeight: '100px', maxWidth: '25%' }}>
-                        <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={this.state.month} />
+                        <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={monthNames[this.state.month-1]} />
                     </div>
                 </div>
 
