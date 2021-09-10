@@ -45,7 +45,7 @@ const AccountsList = (props) => {
                     {accounts.map((account) => (
                         <tr key={account.id} id={account.id}>
                             <td>{account.id}</td>
-                            <td>{account.category}</td>
+                            <td>{account.category[1]}</td>
                             <td>{account.title}</td>
                             <td>{account.credit}</td>
                             <td>{account.debit}</td>

@@ -14,15 +14,15 @@ class AccountsForm extends React.Component{
         this.state = this.initialState;
     }
 
-    categories = {}
+    categories = []
 
     componentDidMount= () => {
         (async () => {
         const categories = await API.fetchAccountCategories();
         this.categories = categories
         if (this.props.title == 'Create Accounts'){
-            this.setState({category: Object.keys(categories)[0]})
-            this.initialState.category = Object.keys(categories)[0]
+            this.setState({category: this.categories[0][0]})
+            this.initialState.category = this.categories[0][0]
         }
         })();
     }
@@ -66,7 +66,7 @@ class AccountsForm extends React.Component{
 
                 <label htmlFor='category'>Category</label>
                 <select className='form-select' type='text' name='category' onChange={this.handleChange}>
-                    {Object.entries(this.categories).map((category, index) => (
+                    {this.categories.map((category, index) => (
                         <option key={index} value={category[0]}> {category[1]} </option>
                     ))}
                 </select>
