@@ -30,10 +30,8 @@ class Home extends React.Component {
     transactionAccountHandler = async () => {
         const newTransactions = await API.fetchTransactions(this.state.month,false)
         const newAccounts = await API.fetchAccount(false,false,true)
-        this.setState({
-            transactions: newTransactions,
-            accounts: newAccounts,
-        })
+        const expenseAccounts = await API.getExpenseAccountsData(this.state.month)
+        this.setState({ accounts: newAccounts , transactions: newTransactions, expenseAccountsData: expenseAccounts})
     }
 
     // edit forms
@@ -113,7 +111,6 @@ class Home extends React.Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -135,7 +132,6 @@ class Home extends React.Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>

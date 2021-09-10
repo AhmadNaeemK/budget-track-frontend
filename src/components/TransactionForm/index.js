@@ -23,11 +23,13 @@ class TransactionForm extends React.Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        if (this.props.accounts.length > 0 && this.props != prevProps){
-            this.creditAccounts = this.props.accounts.filter((account => ['Cash', 'Salary'].includes(account.category)))
-            this.debitAccounts = this.props.accounts.filter((account => !['Cash', 'Salary'].includes(account.category)))
-            this.initialState = {...this.initialState, credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
-            this.setState({credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id})
+        if (this.props != prevProps){
+            this.creditAccounts = this.props.accounts.filter((account => [1, 2].includes(account.category[0])))
+            this.debitAccounts = this.props.accounts.filter((account => ![2].includes(account.category[0])))
+            if (this.creditAccounts.length > 0 && this.debitAccounts.length > 0 && this.props.title === 'Create Transactions'){
+                this.initialState = {...this.initialState, credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
+                this.setState({credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id})
+            }
         }
     }
 
@@ -40,7 +42,10 @@ class TransactionForm extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         const debitAccount = this.debitAccounts.find(account => account.id == this.state.debit_account)
-        if (debitAccount.debit + parseInt(this.state.amount) > debitAccount.budget_limit ) {
+        if (debitAccount && debitAccount.budget_limit !== 0 && 
+            debitAccount.debit + parseInt(this.state.amount) > debitAccount.budget_limit && 
+            debitAccount.category[0] !== 1
+            ) {
             alert("You are crossing your budget limit")
         }
         if (this.props.title === "Create Transactions"){
@@ -82,9 +87,8 @@ class TransactionForm extends React.Component {
 
                 <label htmlFor='credit_account'>Credit Account</label>
                 <select className='form-select form-select-lg' name='credit_account' onChange={this.handleChange}>
-                    {this.props.accounts
-                        .filter( (account) => ['Cash', 'Salary'].includes(account.category))
-                        .map( (account) => (
+                    {
+                        this.creditAccounts.map( (account) => (
                             <option key={account.id} value={account.id}>{account.title}</option>
                         ))
                     }
@@ -93,9 +97,8 @@ class TransactionForm extends React.Component {
                 <label htmlFor='debit_account'>Debit Account</label>
                 
                 <select className='form-select' name='debit_account' onChange={this.handleChange}>
-                    {this.props.accounts
-                        .filter( (account) => !['Cash', 'Salary'].includes(account.category))
-                        .map( (account) => (
+                    {
+                        this.debitAccounts.map( (account) => (
                             <option key={account.id} value={account.id}>{account.title}</option>
                         ))
                     }
