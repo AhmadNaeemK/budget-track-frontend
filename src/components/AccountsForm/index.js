@@ -20,6 +20,8 @@ class AccountsForm extends React.Component{
         (async () => {
         const categories = await API.fetchAccountCategories();
         this.categories = categories
+        this.setState({category: Object.keys(categories)[0]})
+        this.initialState.category = Object.keys(categories)[0]
         })();
     }
 
@@ -33,8 +35,7 @@ class AccountsForm extends React.Component{
         if (this.props.title === "Create Accounts"){
             const res = await API.createAccount(cleanState);
             if (res && res.status === 201){
-                const newAccounts = await API.fetchAccount(false, true)
-                this.props.accountHandler(newAccounts)
+                this.props.accountHandler()
                 this.setState(this.initialState)
             }
         } else {
@@ -45,24 +46,25 @@ class AccountsForm extends React.Component{
             const res = await API.updateAccount(newState);
             if (res && res.status === 202){
                 const newTransactions = await API.fetchTransactions(false);
-                const newAccounts = await API.fetchAccount(false,true);
+                const newAccounts = await API.fetchAccount(false,false,true);
                 this.props.transactionAccountHandler(newTransactions, newAccounts)
                 this.setState(this.initialState)
             }
         }
+        event.target.parentNode.reset()
     }
     
 
     render () {
         return (
-        <div className='border rounded border-white p-4 m-2'>
+        <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
             <form>
                 {this.props.title? <h3>{this.props.title}</h3>: null }
 
-                <label for='title'>Accounts Title</label>
+                <label htmlFor='title'>Accounts Title</label>
                 <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
 
-                <label for='category'>Category</label>
+                <label htmlFor='category'>Category</label>
                 <select className='form-select' type='text' name='category' onChange={this.handleChange}>
                     {Object.entries(this.categories).map((category, index) => (
                         <option key={index} value={category[0]}> {category[1]} </option>

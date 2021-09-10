@@ -1,149 +1,155 @@
-import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL } from "./Config";
+import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL
+        , MONTHLY_EXPENSE_DATA        
+} from "./Config";
+
+const authFetch = async (url, config, retry=0) => {
+
+    const defaultConfig = {
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access')}`
+        },
+        user: {username: localStorage.getItem('username'),
+                userid: localStorage.getItem('userid')},
+    }
+
+    const newConfig = {...config, ...defaultConfig}
+
+    try {
+        const response = await fetch(url, newConfig)
+        if (response.status === 401){
+            throw 'Token Expired';
+        }
+        return response;
+    }
+    catch (e) {
+        if (e === 'Token Expired' && retry<= 1){
+            try {
+                const refreshResponse = await fetch(REFRESH_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "refresh": localStorage.getItem('refresh')
+                    }),
+                    user: {username: localStorage.getItem('username'),
+                        userid: localStorage.getItem('userid')},
+                });
+
+                if (refreshResponse.status === 401) {
+                    throw "Refresh Token Expired";
+                }
+
+                const accessTokenData = await refreshResponse.json();
+                localStorage.setItem('access', accessTokenData['access']);
+
+                const s = await authFetch (url, config, retry+1);
+                return s
+
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        console.log(e)
+    }
+};
 
 
 const API = { 
-    fetchTransactions: async (all) => {
-        const newURL = TRANSACTION_URL + (all ? 'all=true': '')
-        const transactionResponse = await fetch(newURL, {
+
+    fetchTransactions: async (month, all) => {
+        const newURL = TRANSACTION_URL + `?month=${month}` + (all ? '&all=true': '')
+        const config = {
             method: 'GET',
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
-            user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-        });
-        return await transactionResponse.json()
+        };
+        const response = await authFetch(newURL, config)
+        return await response.json()
     },
 
     createTransactions: async (formData) => {
-        const res = await fetch(TRANSACTION_URL, {
+        const config = {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
             body: JSON.stringify(formData),
-            user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-        })
-        return res
+        }
+        return await authFetch(TRANSACTION_URL, config)
     },
     
     deleteTransactions: async (transactionID) => {
-        const res = await fetch(TRANSACTION_URL,{
+        const config = {
             method : 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('access'), 
             },
             body: JSON.stringify({transactionID})
-        })
-        return res;
+        }
+        return await authFetch(TRANSACTION_URL, config);
     },
 
     updateTransactions: async(formData) => {
-        const res = await fetch(TRANSACTION_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
+        console.log(formData)
+        const config = {
+            method: 'PATCH',
             body:JSON.stringify(formData)
-        })
-        return res
+        }
+        return await authFetch(TRANSACTION_URL, config)
     }
     ,
-    fetchToken: () => {
-        fetch(REFRESH_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "refresh": localStorage.getItem('refresh')
-            }),
-            user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-        }).then(res => {
-            return res.json()})
-        .then(result => {
-            if (result.refresh) localStorage.setItem('refresh', result.refresh)
-        });
-    },
 
-    fetchAccount: async (cash, getAll) => {
-        const newURL = ACCOUNT_URL + (getAll ? '?getAll=true' : (cash ? '?cash=true': ''))
+    fetchAccount: async (cash, getEach, getAll) => {
+        const newURL = ACCOUNT_URL + (getAll? '?getAll=true' : (getEach ? '?getEach=true' : (cash ? '?cash=true': '')))
 
-        const accountResponse = await fetch(newURL, {
+        const config = {
             method: 'GET',
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
-            user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-        });
+        }
+
+        const accountResponse = await authFetch(newURL, config)
         return await accountResponse.json()
     },
 
     createAccount: async (formData) => {
-        const accountResponse = await fetch(ACCOUNT_URL, {
+        const config = {
             method: 'POST',
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
             body: JSON.stringify(formData),
-            user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-        });
-        return accountResponse;
+        };
+        return await authFetch(ACCOUNT_URL, config)
     },
 
     deleteAccount: async (accountId) => {
-        const res = await fetch(ACCOUNT_URL,{
+        const config = {
             method : 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
             body: JSON.stringify({accountId})
-        })
-        return res;
+        }
+        return await authFetch(ACCOUNT_URL, config);
     },
 
     updateAccount: async (formData) => {
-        console.log(formData)
-        const res = await fetch(ACCOUNT_URL, {
+        const config = {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            },
             body:JSON.stringify(formData)
-        })
-        return res
+        }
+        return await authFetch(ACCOUNT_URL, config);
     },
 
     fetchAccountCategories: async () => {
-        const categoryResponse = await fetch(ACCOUNT_CATEGORY_URL, {
+        const config = {
             method: 'GET',
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-            }
-        })
+        }
+        const categoryResponse = await authFetch(ACCOUNT_CATEGORY_URL, config)
         return await categoryResponse.json()
     },
+
+    getExpenseAccountsData: async (month) => {
+        const newURL = MONTHLY_EXPENSE_DATA + `?month=${month}`;
+        const config = {
+            method: 'GET',
+        }
+        const expenseDataResponse = await authFetch(newURL, config)
+        return await expenseDataResponse.json()
+    }
 }
 
 export default API
