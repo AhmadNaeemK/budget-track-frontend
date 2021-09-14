@@ -2,66 +2,9 @@ import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL
         , MONTHLY_EXPENSE_DATA, REGISTER_URL, LOGIN_URL,
 } from "./Config";
 
-import { createBrowserHistory } from "history";
+import { unregister } from "./interceptor.js";
 
-const history = createBrowserHistory();
-
-
-const authFetch = async (url, config, retry=0) => {
-
-    const defaultConfig = {
-        mode: 'cors',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access')}`
-        },
-        user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-    }
-
-    const newConfig = {...config, ...defaultConfig}
-
-    try {
-        const response = await fetch(url, newConfig)
-        if (response.status === 401){
-            throw 'Token Expired';
-        }
-        return response;
-    }
-    catch (e) {
-        if (e === 'Token Expired' && retry<= 1){
-            try {
-                const refreshResponse = await fetch(REFRESH_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        "refresh": localStorage.getItem('refresh')
-                    }),
-                    user: {username: localStorage.getItem('username'),
-                        userid: localStorage.getItem('userid')},
-                });
-
-                if (refreshResponse.status === 401) {
-                    throw "Refresh Token Expired";
-                }
-
-                const accessTokenData = await refreshResponse.json();
-                localStorage.setItem('access', accessTokenData['access']);
-
-                const s = await authFetch (url, config, retry+1);
-                return s
-
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        console.log(e)
-    }
-};
-
+const authFetch = fetch
 
 const API = { 
 
