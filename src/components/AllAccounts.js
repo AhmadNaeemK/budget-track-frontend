@@ -18,6 +18,7 @@ class AllAccounts extends React.Component {
             expenseAccountsData: [],
             accountId: null,
             month: new Date().getMonth() + 1,
+            budget_limit: 0,
         }
     }
 
@@ -36,6 +37,20 @@ class AllAccounts extends React.Component {
     handleEdit = (event) => {
         const accountId = parseInt(event.target.parentNode.parentNode.id);
         this.setState({ accountId: accountId })
+    }
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        const {accountId , budget_limit , ...state} = this.state
+        const res = await API.updateAccount({accountId: accountId , budget_limit: budget_limit})
+        if (res.status === 202){
+            const accounts = await API.fetchAccount(false,false,true);
+            this.setState({accounts: accounts});
+        }
+    }
+
+    handleBudgetChange = (event) => {
+        this.setState({accountId: this.state.accountId ,budget_limit: event.target.value})
     }
 
     accountHandler = async () => {
@@ -73,7 +88,7 @@ class AllAccounts extends React.Component {
                 <div className='border rounded border-white p-2 m-2'>
                     <table className='table table-dark table-striped'>
 
-                        <thead><tr><th className='bg-dark' colSpan='7'>Accounts</th></tr></thead>
+                        <thead><tr><th className='bg-dark' colSpan='8'>Accounts</th></tr></thead>
                         <tbody>
                             <tr>
                                 <th >Id</th>
@@ -82,6 +97,7 @@ class AllAccounts extends React.Component {
                                 <th >Credit</th>
                                 <th >Debit</th>
                                 <th >Balance</th>
+                                <th >Budget Limit</th>
                                 <th></th>
                             </tr>
 
@@ -93,8 +109,13 @@ class AllAccounts extends React.Component {
                                     <td >{account.credit}</td>
                                     <td >{account.debit}</td>
                                     <td >{account.balance}</td>
+                                    <td >{account.budget_limit}</td>
                                     <td ><button className='btn btn-danger' onClick={this.handleDelete}>Del</button>
-                                    <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#aModal`} onClick={this.handleEdit}>Edit</button></td>
+                                    <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#aModal`} onClick={this.handleEdit}>Edit</button>
+                                    { ['Cash', 'Salary'].includes(account.category) ? null :
+                                                <button className='btn btn-primary' data-toggle='modal' data-toggle='modal' data-target={`#bModal`} onClick={this.handleEdit}>Set Budget</button>
+                                    }
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -117,7 +138,29 @@ class AllAccounts extends React.Component {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade" id="bModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="ModalLongTitle">Set Budget</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                        <form>
+                                <label htmlFor='budget-limit'>Limit</label>
+                                <input type='number' className='form-control' placeholder='Set Budget Limit' onChange={this.handleBudgetChange}/>
+                                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Set Budget</button>
+                        </form>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                         </div>
                     </div>

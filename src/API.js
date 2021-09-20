@@ -1,6 +1,11 @@
 import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL
-        , MONTHLY_EXPENSE_DATA        
+        , MONTHLY_EXPENSE_DATA, REGISTER_URL, LOGIN_URL,
 } from "./Config";
+
+import { createBrowserHistory } from "history";
+
+const history = createBrowserHistory();
+
 
 const authFetch = async (url, config, retry=0) => {
 
@@ -60,6 +65,33 @@ const authFetch = async (url, config, retry=0) => {
 
 const API = { 
 
+    register: async (formData) => {
+        const res = await fetch(REGISTER_URL, {
+            method: 'POST',
+            mode:'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData),
+        })
+        if (res.status === 201) {
+            alert('User Registered')
+        }
+    },
+
+    login : async (formData) => {
+        const res = await fetch(LOGIN_URL, {
+            method: 'POST',
+            mode:'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        const result = await res.json()
+        return result
+    },
+
     fetchTransactions: async (month, all) => {
         const newURL = TRANSACTION_URL + `?month=${month}` + (all ? '&all=true': '')
         const config = {
@@ -90,7 +122,6 @@ const API = {
     },
 
     updateTransactions: async(formData) => {
-        console.log(formData)
         const config = {
             method: 'PATCH',
             body:JSON.stringify(formData)

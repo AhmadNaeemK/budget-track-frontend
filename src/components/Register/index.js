@@ -2,12 +2,10 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { REGISTER_URL } from '../../Config';
+import API from '../../API';
 
 
 const RegistrationForm = () => {
-
-    const navigate = useNavigate();
 
     const initialData = {
         username: '',
@@ -19,19 +17,7 @@ const RegistrationForm = () => {
 
     const handleSubmit = (event)=>{
         event.preventDefault();
-        console.log(formData);
-
-        fetch(REGISTER_URL, {
-            method: 'POST',
-            mode:'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData),
-        }).then(response => {
-            console.log(response.status);
-            navigate('/');
-        })
+        API.register(formData);
     }
 
     const handleChange = (event)=>{

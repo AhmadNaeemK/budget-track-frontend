@@ -16,7 +16,7 @@ class CashAccountsChart extends React.Component {
     static getDerivedStateFromProps(props, state) {
         
         function getCashAccountsData(accounts) {
-            const cashAccounts = accounts.filter( account => account.category === 'Cash' );
+            const cashAccounts = accounts.filter( account => account.category[0] === 1 );
             const data = {
                 labels: cashAccounts.map(account => account.title),
                 datasets: [
