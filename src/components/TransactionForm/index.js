@@ -4,119 +4,134 @@ import API from '../../API';
 
 class TransactionForm extends React.Component {
 
-    initialState = {'title': '',
-                    'description': '',
-                    'credit_account': '',
-                    'debit_account': '',
-                    'amount': '',
-                    }
-
-    creditAccounts = []
-    debitAccounts = []
+    initialState = {
+        'title': '',
+        'description': '',
+        'cash_account': '',
+        'category': '',
+        'user': localStorage.getItem('userid'),
+        'amount': '',
+    }
 
     constructor(props) {
         super(props);
         this.state = this.initialState;
-    
+        if (props.title === 'Create Transactions') {
+            this.initialState.category = props.categories[0][0]
+            this.initialState.cash_account = props.accounts[0].id
+        }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidUpdate = (prevProps) => {
-        if (this.props != prevProps){
-            this.creditAccounts = this.props.accounts.filter((account => [1, 2].includes(account.category[0])))
-            this.debitAccounts = this.props.accounts.filter((account => ![2].includes(account.category[0])))
-            if (this.creditAccounts.length > 0 && this.debitAccounts.length > 0 && this.props.title === 'Create Transactions'){
-                this.initialState = {...this.initialState, credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id}
-                this.setState({credit_account: this.creditAccounts[0].id, debit_account: this.debitAccounts[0].id})
-            }
-        }
-    }
-
-
     handleChange(event) {
-        this.setState({[event.target.name]: event.target.value});
-
+        this.setState({ [event.target.name]: event.target.value });
     }
-    
+
     handleSubmit = async (event) => {
         event.preventDefault();
-        const debitAccount = this.debitAccounts.find(account => account.id == this.state.debit_account)
-        if (debitAccount && debitAccount.budget_limit !== 0 && 
-            debitAccount.debit + parseInt(this.state.amount) > debitAccount.budget_limit && 
-            debitAccount.category[0] !== 1
-            ) {
-            alert("You are crossing your budget limit")
+        const incomeCategory = this.props.categories.find(category => category[1] === "Income")[0]
+        const create = async () => {
+            const formData = { ...this.state, transaction_time: new Date() }
+            if (this.state.category === incomeCategory) {
+                const res = await API.createIncome(formData)
+                if (res && res.status === 201) {
+                    const newTransactions = await API.fetchIncomeList(new Date().getMonth() + 1)
+                    const newAccounts = await API.fetchCashAccountList()
+                    this.props.transactionAccountHandler('incomes', newTransactions, newAccounts)
+                } else {
+                    const error = await res.json()
+                    alert(error[Object.keys(error)[0]])
+                }
+            } else {
+                const res = await API.createExpense(formData)
+                if (res && res.status === 201) {
+                    const newTransactions = await API.fetchExpenseList(new Date().getMonth() + 1)
+                    const newAccounts = await API.fetchCashAccountList()
+                    this.props.transactionAccountHandler('expenses', newTransactions, newAccounts)
+                } else {
+                    const error = await res.json()
+                    alert(error[Object.keys(error)[0]])
+                }
+            }
         }
-        if (this.props.title === "Create Transactions"){
-            const res = await API.createTransactions(this.state);
-            if (res && res.status === 201){
-                this.props.transactionAccountHandler();
-                this.setState(this.initialState)
-            } else {
-                alert (res);
-            }
-        } else {
-            let newState = {'transactionId': this.props.transactionId}
-            for (let s in this.state){
-                if (this.state[s] !== '') newState = {...newState, [s]: this.state[s]}
-            }
 
-            const res = await API.updateTransactions(newState);
-            if (res && res.status === 202){
-                this.props.transactionAccountHandler()
-                this.setState(this.initialState)
+        const update = async () => {
+            const formData = { 'amount': this.state.amount }
+            const transactionId = this.props.transaction.id
+            if (this.props.transaction.category === incomeCategory) {
+                const res = await API.updateIncome(transactionId, formData)
+                const newTransactions = await API.fetchIncomeList(new Date().getMonth() + 1)
+                const newAccounts = await API.fetchCashAccountList()
+                this.props.transactionAccountHandler('incomes', newTransactions, newAccounts)
             } else {
-                const error = await res.json()
-                alert(error.non_field_errors)
+                const res = await API.updateIncome(transactionId, formData)
+                const newTransactions = await API.fetchExpenseList(new Date().getMonth() + 1)
+                const newAccounts = await API.fetchCashAccountList()
+                this.props.transactionAccountHandler('expenses', newTransactions, newAccounts)
             }
+        }
+
+        if (this.props.title === "Create Transactions") {
+            await create();
+        } else {
+            await update();
         }
         event.target.parentNode.reset()
     }
 
-    render () {
+    render() {
         return (
-        <div className={'border rounded border-white p-4 m-2 ' + this.props.className } >
-            <form>
-                {this.props.title? <h3>{this.props.title}</h3>: null }
-                <label htmlFor='title'>Transaction Title</label>
-                <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
+            <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
+                {this.props.title === "Create Transactions" ? (
+                    <form>
+                        {this.props.title ? <h3>{this.props.title}</h3> : null}
+                        <label htmlFor='title'>Transaction Title</label>
+                        <input className='form-control' type='text' name='title' onChange={this.handleChange} />
 
-                <label htmlFor='description'>Description</label>
-                <input className='form-control' type='text' name='description' onChange={this.handleChange}/>
+                        <label htmlFor='cash_account'>Cash Account</label>
+                        <select className='form-select form-select-lg' name='cash_account' onChange={this.handleChange}>
+                            {
+                                this.props.accounts.map((account) => (
+                                    <option key={account.id} value={account.id}>{account.title}</option>
+                                ))
+                            }
+                        </select>
 
-                <label htmlFor='credit_account'>Credit Account</label>
-                <select className='form-select form-select-lg' name='credit_account' onChange={this.handleChange}>
-                    {
-                        this.creditAccounts.map( (account) => (
-                            <option key={account.id} value={account.id}>{account.title}</option>
-                        ))
-                    }
-                </select>
+                        <label htmlFor='category'>Category</label>
+                        <select className='form-select form-select-lg' name='category' onChange={this.handleChange}>
+                            {
+                                this.props.categories.map((category) => (
+                                    <option key={category[0]} value={category[0]}>{category[1]}</option>
+                                ))
+                            }
+                        </select>
 
-                <label htmlFor='debit_account'>Debit Account</label>
-                
-                <select className='form-select' name='debit_account' onChange={this.handleChange}>
-                    {
-                        this.debitAccounts.map( (account) => (
-                            <option key={account.id} value={account.id}>{account.title}</option>
-                        ))
-                    }
-                </select>
-                
-                <div className='form-group'>
-                    <label htmlFor='amount'>Amount</label>
-                    <input className='form-control' type='number' name='amount' onChange={this.handleChange}/>
-                </div>
+                        <div className='form-group'>
+                            <label htmlFor='amount'>Amount</label>
+                            <input className='form-control' type='number' name='amount' onChange={this.handleChange} />
+                        </div>
 
 
-                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
-                    { this.props.title==='Create Transactions' ? 'Add' : 'Update' }
-                </button>
-            </form>
+                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                            Add
+                        </button>
+                    </form>
+                ) : (
+                    <form>
+                        <div className='form-group'>
+                            <label htmlFor='amount'>Amount</label>
+                            <input className='form-control' type='number' name='amount' onChange={this.handleChange} />
+                        </div>
 
-        </div>
-    )
+                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                            Update
+                        </button>
+                    </form>
+                )
+                }
+            </div>
+        )
     }
 }
 
