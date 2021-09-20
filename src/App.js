@@ -7,6 +7,7 @@ import Home from './components/Home';
 import LoginSignup from './components/LoginSignup'
 import AllTransactions from './components/AllTransactions'
 import AllAccounts from './components/AllAccounts';
+import UserOnboarding from './components/UserOnBoarding'
 
 // styles
 import { GlobalStyle } from './GlobalStyle';
@@ -17,6 +18,7 @@ const App = () => (
     <Routes>
 
       <Route path='/' element={<LoginSignup />} />
+      <Route path='/onboarding' element={<UserOnboarding />} />
       <Route path='/home' element={<Home />} />
       <Route path='/transactions' element={<AllTransactions />} />
       <Route path='/accounts' element={<AllAccounts />} />

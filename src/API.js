@@ -137,7 +137,7 @@ const API = {
 
     updateCashAccount: async (accountId, formData) => {
         const config = {
-            method: 'PUT',
+            method: 'PATCH',
             body: JSON.stringify(formData)
         }
         const newURL = CASH_ACCOUNT_URL + String(accountId)

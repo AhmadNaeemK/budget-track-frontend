@@ -4,6 +4,15 @@ import { useNavigate } from 'react-router-dom'
 
 import API from '../../API';
 
+async function checkNewUser(){
+    const accounts = await API.fetchCashAccountList()
+    const transactions = await API.fetchExpenseList(new Date().getMonth() + 1)
+
+    if (accounts[0].balance === 0 && transactions.length === 0){
+        return true
+    }
+    return false
+}
 
 const LoginForm = () => {
 
@@ -25,7 +34,12 @@ const LoginForm = () => {
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user);
             localStorage.setItem('userid', result.id);
-            window.location.href = '/home';
+            const isNewUser = await checkNewUser()
+            if (!isNewUser){
+                window.location.href = '/home';
+            } else {
+                window.location.href = '/onboarding'
+            }
         }
 
     }

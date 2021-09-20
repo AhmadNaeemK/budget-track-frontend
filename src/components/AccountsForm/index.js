@@ -36,8 +36,9 @@ class AccountsForm extends React.Component{
                 if (this.state[s] !== '') newState = {...newState, [s]: this.state[s]}
             }
             const res = await API.updateCashAccount(this.props.accountId, newState)
-            if (res && res.status === 202){
-                this.props.accountHandler()
+            if (res.status === 200){
+                const cashAccounts = await API.fetchCashAccountList()
+                this.props.accountHandler(cashAccounts)
                 this.setState(this.initialState)
             }
         }
