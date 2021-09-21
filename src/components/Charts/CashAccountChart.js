@@ -9,27 +9,31 @@ class CashAccountsChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            selectedAccount: 0,
             cashAccountData: {}
         }
     }
 
     static getDerivedStateFromProps(props, state) {
 
-        function getCashAccountsData(accounts) {
-            const cashAccounts = accounts.filter(account => account.category[0] === 1);
+        function getCashAccountsData(account) {
             const data = {
-                labels: cashAccounts.map(account => account.title),
+                labels: ['balance', 'expense'],
                 datasets: [
                     {
-                        label: 'Cash Accounts',
-                        data: cashAccounts.map(account => account.balance),
-                        backgroundColor: [...new Array(cashAccounts.length)].map(() => getRandomColor()),
+                        label: account.title,
+                        data: [account.balance, account.expenses],
+                        backgroundColor: ['#a4a4a4', '#151515'],
                     }
                 ],
             }
             return data;
         }
-        return { cashAccountData: getCashAccountsData(props.accounts) };
+        return { cashAccountData: getCashAccountsData(props.accounts[state.selectedAccount]) };
+    }
+
+    handleChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     render() {
@@ -41,7 +45,7 @@ class CashAccountsChart extends React.Component {
                         plugins: {
                             title: {
                                 display: true,
-                                text: 'Cash Accounts',
+                                text: 'Account Balance vs Expense',
                                 fontSize: 100,
                             },
                             legend: {
@@ -50,6 +54,13 @@ class CashAccountsChart extends React.Component {
                         },
                     }}
                 />
+                <div className='d-flex justify-content-center'>
+                    <select name='selectedAccount' className='custom-select col-3' onChange={this.handleChange}>
+                        {this.props.accounts.map( (account, index) => (
+                            <option value={index}>{account.title}</option>
+                        )) }
+                    </select>
+                </div>
             </>
         )
     }

@@ -1,11 +1,12 @@
 import {
-    REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL, INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL,CASH_ACCOUNT_LIST_URL
+    REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL, 
+    INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL, CASH_ACCOUNT_LIST_URL, CATEGORY_EXPENSE_URL,
+
 } from "./Config";
 
 import { unregister } from "./interceptor.js";
 
 const API = {
-
     register: async (formData) => {
         const res = await fetch(REGISTER_URL, {
             method: 'POST',
@@ -15,9 +16,7 @@ const API = {
             },
             body: JSON.stringify(formData),
         })
-        if (res.status === 201) {
-            alert('User Registered')
-        }
+        return res;
     },
 
     login: async (formData) => {
@@ -33,12 +32,12 @@ const API = {
         return result
     },
 
-    fetchExpenseList: async (month) => {
+    fetchExpenseList: async (month, url) => {
         const newURL = EXPENSE_LIST_URL + `?month=${month}`
         const config = {
             method: 'GET',
         };
-        const response = await fetch(newURL, config)
+        const response = await fetch(url || newURL, config)
         return await response.json()
     },
 
@@ -71,12 +70,12 @@ const API = {
         return await fetch(newURL, config);
     },
 
-    fetchIncomeList: async (month) => {
+    fetchIncomeList: async (month, url) => {
         const newURL = INCOME_LIST_URL + `?month=${month}`
         const config = {
             method: 'GET',
         };
-        const response = await fetch(newURL, config)
+        const response = await fetch(url || newURL, config)
         return await response.json()
     },
 
@@ -157,6 +156,15 @@ const API = {
             method:'GET'
         }
         return await fetch(USER_LIST_URL, config);
+    },
+
+    fetchCategoryExpenseData: async(month) => {
+        const config= {
+            method:'GET'
+        }
+        const newURL = CATEGORY_EXPENSE_URL + `?month=${month}`;
+        const expenseData = await fetch(newURL, config);
+        return await expenseData.json();
     }
 
 }

@@ -27,13 +27,17 @@ class UserOnBoarding extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Add How Much Money You Have</h1>
-                <div>
-                    <AccountsForm
-                        accountId={this.state.accountId}
-                        accountHandler={this.onSuccess}
-                    />
+            <div className='container-fluid p-2'>
+                <div className='d-flex justify-content-center mt-5'>
+                    <div className='col-5'>
+                        <h1>Add How Much Money You Have</h1>
+                        <div>
+                            <AccountsForm
+                                accountId={this.state.accountId}
+                                accountHandler={this.onSuccess}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         )

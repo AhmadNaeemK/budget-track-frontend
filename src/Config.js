@@ -11,6 +11,7 @@ const CASH_ACCOUNT_LIST_URL = API_URL + '/cashAccountList/'
 const CASH_ACCOUNT_URL = API_URL + '/cashAccount/'
 const TRANSACTION_CATEGORY_URL = API_URL + '/transactionCategoryList'
 const USER_LIST_URL = API_URL + '/users/list/'
+const CATEGORY_EXPENSE_URL = API_URL + '/categoryExpenseData'
 
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -32,5 +33,6 @@ export {
     CASH_ACCOUNT_URL,
     TRANSACTION_CATEGORY_URL,
     USER_LIST_URL,
+    CATEGORY_EXPENSE_URL,
     monthNames,
 }

@@ -18,10 +18,8 @@ const TransactionList = (props) => {
         const transactionType = transaction.category === incomeCategory ? 'incomes' : 'expenses'; 
 
         const res = transactionType === 'incomes' ? await API.deleteIncome(transactionId) : await API.deleteExpense(transactionId);
-        const newTransactions = transactions.filter( transaction => transaction.id !== transactionId);
-        const newCashAccounts = await API.fetchCashAccountList()
         if (res.status === 204){
-            props.transactionAccountHandler( transactionType, newTransactions, newCashAccounts)
+            props.transactionAccountHandler( transactionType)
         } else {
             alert(await res.json())
         }
