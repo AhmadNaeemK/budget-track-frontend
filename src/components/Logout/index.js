@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 import { LOGOUT_URL } from '../../Config';
 
-const Logout = () => {
+const Logout = (props) => {
 
     const navigate = useNavigate();
 
@@ -26,6 +26,7 @@ const Logout = () => {
             localStorage.removeItem('username');
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
+            props.loggedOut();
             navigate('/');
         }
 

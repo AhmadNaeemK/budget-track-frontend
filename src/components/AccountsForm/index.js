@@ -6,7 +6,9 @@ class AccountsForm extends React.Component{
 
     initialState = {
         title: '',
-        category: '',
+        balance: 0,
+        limit: 0,
+        user: localStorage.getItem('userid')
     }
 
     constructor(props) {
@@ -14,18 +16,6 @@ class AccountsForm extends React.Component{
         this.state = this.initialState;
     }
 
-    categories = []
-
-    componentDidMount= () => {
-        (async () => {
-        const categories = await API.fetchAccountCategories();
-        this.categories = categories
-        if (this.props.title == 'Create Accounts'){
-            this.setState({category: this.categories[0][0]})
-            this.initialState.category = this.categories[0][0]
-        }
-        })();
-    }
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
@@ -33,19 +23,19 @@ class AccountsForm extends React.Component{
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        const {categories, ...cleanState} = this.state;
         if (this.props.title === "Create Accounts"){
-            const res = await API.createAccount(cleanState);
+            const res = await API.createCashAccount(this.state);
             if (res && res.status === 201){
-                this.props.accountHandler()
+                const cashAccounts = await API.fetchCashAccountList()
+                this.props.accountHandler(cashAccounts)
                 this.setState(this.initialState)
             }
         } else {
-            let newState = {'accountId': this.props.accountId}
-            for (let s in cleanState){
-                if (cleanState[s] !== '') newState = {...newState, [s]: this.state[s]}
+            let newState = {};
+            for (let s in this.state){
+                if (this.state[s] !== '') newState = {...newState, [s]: this.state[s]}
             }
-            const res = await API.updateAccount(newState);
+            const res = await API.updateCashAccount(this.props.accountId, newState)
             if (res && res.status === 202){
                 this.props.accountHandler()
                 this.setState(this.initialState)
@@ -59,17 +49,19 @@ class AccountsForm extends React.Component{
         return (
         <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
             <form>
-                {this.props.title? <h3>{this.props.title}</h3>: null }
+                {this.props.title? 
+                    <>
+                    <h3>{this.props.title}</h3>
+                    <label htmlFor='title'>Accounts Title</label>
+                    <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
+                    </> 
+                    : null }
 
-                <label htmlFor='title'>Accounts Title</label>
-                <input className='form-control' type='text' name='title' onChange={this.handleChange}/>
+                <label htmlFor='balance'>Balance</label>
+                <input className='form-control' type='number' name='balance' onChange={this.handleChange}/>
 
-                <label htmlFor='category'>Category</label>
-                <select className='form-select' type='text' name='category' onChange={this.handleChange}>
-                    {this.categories.map((category, index) => (
-                        <option key={index} value={category[0]}> {category[1]} </option>
-                    ))}
-                </select>
+                <label htmlFor='limit'>Budget Limit</label>
+                <input className='form-control' type='number' name='limit' onChange={this.handleChange}/>
                 
                 <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
             </form>

@@ -11,33 +11,38 @@ const TransactionList = (props) => {
     }
 
     const handleDelete = async (event) => {
+        const incomeCategory = props.categories.find(category => category[1] === "Income")[0]
+
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
-        const res = await API.deleteTransactions(transactionId);
+        const transaction = props.transactions.find(transaction => transaction.id === transactionId)
+        const transactionType = transaction.category === incomeCategory ? 'incomes' : 'expenses'; 
+
+        const res = transactionType === 'incomes' ? await API.deleteIncome(transactionId) : await API.deleteExpense(transactionId);
         const newTransactions = transactions.filter( transaction => transaction.id !== transactionId);
-        const newAccounts = await API.fetchAccount(false,true)
+        const newCashAccounts = await API.fetchCashAccountList()
         if (res.status === 204){
-            props.transactionAccountHandler(newTransactions, newAccounts)
+            props.transactionAccountHandler( transactionType, newTransactions, newCashAccounts)
         } else {
-            alert(res)
+            alert(await res.json())
         }
     }
 
     const handleEdit = (event) => {
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
-        props.transactionIdHandler(transactionId);
+        props.transactionEditHandler(transactions.find(transaction => transaction.id === transactionId));
     }
 
     return (
-        <div className='border rounded border-white p-2 m-2'>
             <table className='table table-dark table-striped'>
 
-                <thead><tr><th className='bg-dark' colSpan='6'>Transactions</th></tr></thead>
+                <thead><tr><th className='bg-dark' colSpan='7'>{props.transactionType}</th></tr></thead>
                 <tbody>
                     <tr>
                         <th>Id</th>
-                        <th>From</th>
-                        <th>To</th>
+                        <th>Title</th>
+                        <th>Cash Account</th>
                         <th>Date</th>
+                        <th>Category</th>
                         <th>Amount</th>
                         <th></th>
                     </tr>
@@ -45,9 +50,10 @@ const TransactionList = (props) => {
                     {transactions.map((transaction) => (
                         <tr key={transaction.id} id={transaction.id}>
                             <td>{transaction.id}</td>
-                            <td>{transaction.credit_account}</td>
-                            <td>{transaction.debit_account}</td>
-                            <td>{transaction.transaction_date.match(/\d{4,}-\d{2}-\d{2}/)}</td>
+                            <td>{transaction.title}</td>
+                            <td>{props.cashAccounts.find(account => account.id === transaction.cash_account).title}</td>
+                            <td>{transaction.transaction_time.match(/\d{4,}-\d{2}-\d{2}/)}</td>
+                            <td>{props.categories[transaction.category][1]}</td>
                             <td>{transaction.amount}</td>
                             <td><button className='btn btn-danger' onClick={handleDelete}>Del</button>
                             <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#tModal`} onClick={handleEdit}>Edit</button></td>
@@ -55,11 +61,8 @@ const TransactionList = (props) => {
                     ))}
                 </tbody>
             </table>
-            
-            <Link to='/transactions'> <button className='btn btn-dark w-100'><b>All Transactions</b></button> </Link>
 
-        </div>)
-        ;
+        );
 }
 
 export default TransactionList;

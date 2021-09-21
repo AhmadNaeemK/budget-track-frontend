@@ -1,74 +1,15 @@
-import { TRANSACTION_URL, REFRESH_URL, ACCOUNT_URL, ACCOUNT_CATEGORY_URL
-        , MONTHLY_EXPENSE_DATA, REGISTER_URL, LOGIN_URL,
+import {
+    REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL, INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL,CASH_ACCOUNT_LIST_URL
 } from "./Config";
 
-import { createBrowserHistory } from "history";
+import { unregister } from "./interceptor.js";
 
-const history = createBrowserHistory();
-
-
-const authFetch = async (url, config, retry=0) => {
-
-    const defaultConfig = {
-        mode: 'cors',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access')}`
-        },
-        user: {username: localStorage.getItem('username'),
-                userid: localStorage.getItem('userid')},
-    }
-
-    const newConfig = {...config, ...defaultConfig}
-
-    try {
-        const response = await fetch(url, newConfig)
-        if (response.status === 401){
-            throw 'Token Expired';
-        }
-        return response;
-    }
-    catch (e) {
-        if (e === 'Token Expired' && retry<= 1){
-            try {
-                const refreshResponse = await fetch(REFRESH_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        "refresh": localStorage.getItem('refresh')
-                    }),
-                    user: {username: localStorage.getItem('username'),
-                        userid: localStorage.getItem('userid')},
-                });
-
-                if (refreshResponse.status === 401) {
-                    throw "Refresh Token Expired";
-                }
-
-                const accessTokenData = await refreshResponse.json();
-                localStorage.setItem('access', accessTokenData['access']);
-
-                const s = await authFetch (url, config, retry+1);
-                return s
-
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        console.log(e)
-    }
-};
-
-
-const API = { 
+const API = {
 
     register: async (formData) => {
         const res = await fetch(REGISTER_URL, {
             method: 'POST',
-            mode:'cors',
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -79,10 +20,10 @@ const API = {
         }
     },
 
-    login : async (formData) => {
+    login: async (formData) => {
         const res = await fetch(LOGIN_URL, {
             method: 'POST',
-            mode:'cors',
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -92,95 +33,132 @@ const API = {
         return result
     },
 
-    fetchTransactions: async (month, all) => {
-        const newURL = TRANSACTION_URL + `?month=${month}` + (all ? '&all=true': '')
+    fetchExpenseList: async (month) => {
+        const newURL = EXPENSE_LIST_URL + `?month=${month}`
         const config = {
             method: 'GET',
         };
-        const response = await authFetch(newURL, config)
+        const response = await fetch(newURL, config)
         return await response.json()
     },
 
-    createTransactions: async (formData) => {
+    createExpense: async (formData) => {
         const config = {
             method: 'POST',
             body: JSON.stringify(formData),
         }
-        return await authFetch(TRANSACTION_URL, config)
+        return await fetch(EXPENSE_LIST_URL, config)
     },
-    
-    deleteTransactions: async (transactionID) => {
+
+    deleteExpense: async (expenseId) => {
         const config = {
-            method : 'DELETE',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'), 
+                'Authorization': 'Bearer ' + localStorage.getItem('access'),
             },
-            body: JSON.stringify({transactionID})
         }
-        return await authFetch(TRANSACTION_URL, config);
+        const newURL = EXPENSE_URL + String(expenseId)
+        return await fetch(newURL, config);
     },
 
-    updateTransactions: async(formData) => {
+    updateExpense: async (expenseId, formData) => {
         const config = {
             method: 'PATCH',
-            body:JSON.stringify(formData)
+            body: JSON.stringify(formData)
         }
-        return await authFetch(TRANSACTION_URL, config)
-    }
-    ,
+        const newURL = EXPENSE_URL + String(expenseId)
+        return await fetch(newURL, config);
+    },
 
-    fetchAccount: async (cash, getEach, getAll) => {
-        const newURL = ACCOUNT_URL + (getAll? '?getAll=true' : (getEach ? '?getEach=true' : (cash ? '?cash=true': '')))
+    fetchIncomeList: async (month) => {
+        const newURL = INCOME_LIST_URL + `?month=${month}`
+        const config = {
+            method: 'GET',
+        };
+        const response = await fetch(newURL, config)
+        return await response.json()
+    },
+
+    createIncome: async (formData) => {
+        const config = {
+            method: 'POST',
+            body: JSON.stringify(formData),
+        }
+        return await fetch(INCOME_LIST_URL, config)
+    },
+
+    deleteIncome: async (incomeId) => {
+        const config = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('access'),
+            },
+        }
+        const newURL = INCOME_URL + String(incomeId)
+        return await fetch(newURL, config);
+    },
+
+    updateIncome: async (incomeId, formData) => {
+        const config = {
+            method: 'PATCH',
+            body: JSON.stringify(formData)
+        }
+        const newURL = INCOME_URL + String(incomeId)
+        return await fetch(newURL, config);
+    },
+
+    fetchCashAccountList: async () => {
 
         const config = {
             method: 'GET',
         }
 
-        const accountResponse = await authFetch(newURL, config)
+        const accountResponse = await fetch(CASH_ACCOUNT_LIST_URL, config)
         return await accountResponse.json()
     },
 
-    createAccount: async (formData) => {
+    createCashAccount: async (formData) => {
         const config = {
             method: 'POST',
             body: JSON.stringify(formData),
         };
-        return await authFetch(ACCOUNT_URL, config)
+        return await fetch(CASH_ACCOUNT_LIST_URL, config)
     },
 
-    deleteAccount: async (accountId) => {
+    deleteCashAccount: async (accountId) => {
         const config = {
-            method : 'DELETE',
-            body: JSON.stringify({accountId})
+            method: 'DELETE',
         }
-        return await authFetch(ACCOUNT_URL, config);
+        const newURL = CASH_ACCOUNT_URL + String(accountId)
+        return await fetch(newURL, config);
     },
 
-    updateAccount: async (formData) => {
+    updateCashAccount: async (accountId, formData) => {
         const config = {
             method: 'PUT',
-            body:JSON.stringify(formData)
+            body: JSON.stringify(formData)
         }
-        return await authFetch(ACCOUNT_URL, config);
+        const newURL = CASH_ACCOUNT_URL + String(accountId)
+        return await fetch(newURL, config);
     },
 
-    fetchAccountCategories: async () => {
+    fetchTransactionCategories: async () => {
         const config = {
             method: 'GET',
         }
-        const categoryResponse = await authFetch(ACCOUNT_CATEGORY_URL, config)
+        const categoryResponse = await fetch(TRANSACTION_CATEGORY_URL, config)
         return await categoryResponse.json()
     },
 
-    getExpenseAccountsData: async (month) => {
-        const newURL = MONTHLY_EXPENSE_DATA + `?month=${month}`;
-        const config = {
-            method: 'GET',
+    getUserList: async () => {
+        const config= {
+            method:'GET'
         }
-        const expenseDataResponse = await authFetch(newURL, config)
-        return await expenseDataResponse.json()
+        return await fetch(USER_LIST_URL, config);
     }
+
 }
 
 export default API
