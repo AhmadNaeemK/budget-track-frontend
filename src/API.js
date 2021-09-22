@@ -169,6 +169,7 @@ const API = {
     },
 
     createScheduledTransaction: async (formData) => {
+        formData = {...formData, scheduled:true}
         const config = {
             method: 'POST',
             body: JSON.stringify(formData),

@@ -57,10 +57,7 @@ const TransactionList = (props) => {
                         <td>{transaction.id}</td>
                         <td>{transaction.title}</td>
                         <td>{props.cashAccounts.find(account => account.id === transaction.cash_account).title}</td>
-                        {props.transactionType === 'Scheduled' ?
-                            <td>{transaction.scheduled_time.match(/\d{4,}-\d{2}-\d{2}/)}</td> :
-                            <td>{transaction.transaction_time.match(/\d{4,}-\d{2}-\d{2}/)}</td>
-                        }
+                        <td>{transaction.transaction_time.match(/\d{4,}-\d{2}-\d{2}/)}</td>
                         <td>{props.categories[transaction.category][1]}</td>
                         <td>{transaction.amount}</td>
                         <td>
