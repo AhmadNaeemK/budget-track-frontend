@@ -1,6 +1,7 @@
 import {
-    REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL, 
+    REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL,
     INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL, CASH_ACCOUNT_LIST_URL, CATEGORY_EXPENSE_URL,
+    SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL,
 
 } from "./Config";
 
@@ -152,19 +153,43 @@ const API = {
     },
 
     getUserList: async () => {
-        const config= {
-            method:'GET'
+        const config = {
+            method: 'GET'
         }
         return await fetch(USER_LIST_URL, config);
     },
 
-    fetchCategoryExpenseData: async(month) => {
-        const config= {
-            method:'GET'
+    fetchCategoryExpenseData: async (month) => {
+        const config = {
+            method: 'GET'
         }
         const newURL = CATEGORY_EXPENSE_URL + `?month=${month}`;
         const expenseData = await fetch(newURL, config);
         return await expenseData.json();
+    },
+
+    createScheduledTransaction: async (formData) => {
+        const config = {
+            method: 'POST',
+            body: JSON.stringify(formData),
+        }
+        return await fetch(SCHEDULED_TRANSACTION_LIST_URL, config)
+    },
+
+    fetchScheduledTransactionList: async() => {
+        const config = {
+            method: "GET"
+        }
+        const res = await fetch(SCHEDULED_TRANSACTION_LIST_URL, config)
+        return await res.json()
+    },
+
+    deleteScheduledTransaction: async(transactionId) => {
+        const config = {
+            method: "DELETE"
+        }
+        const newURL = SCHEDULED_TRANSACTION_URL + String(transactionId);
+        return await fetch(newURL, config)
     }
 
 }

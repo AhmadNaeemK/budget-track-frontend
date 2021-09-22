@@ -7,7 +7,7 @@ import AccountsForm from './AccountsForm'
 import ExpenseStructureChart from './Charts/ExpenseStructureChart'
 import CashAccountsChart from './Charts/CashAccountChart';
 import BudgetChart from './Charts/BudgetChart';
-import ScheduleExpenseForm from './ScheduleExpenseForm.js';
+import ScheduleTransactionForm from './ScheduleTransactionForm.js';
 
 import { monthNames } from '../Config';
 
@@ -29,7 +29,8 @@ class Home extends React.Component {
             transaction_edit: null,
             accountId: null,
             month: new Date().getMonth() + 1,
-            categoryExpenseData: []
+            categoryExpenseData: [],
+            Scheduled: [],
         }
     }
 
@@ -48,14 +49,28 @@ class Home extends React.Component {
 
 
     transactionAccountHandler = async (type, transaction, acc) => {
+        let newTransactions;
+        if (type === 'expenses'){
+            newTransactions = await API.fetchExpenseList(this.state.month)
+        } else if (type === 'incomes') {
+            newTransactions = await API.fetchIncomeList(this.state.month);
+        } else {
+            newTransactions = await API.fetchScheduledTransactionList();
+        }
+
         const newCategoryData = await API.fetchCategoryExpenseData(this.state.month);
-        const newTransactions = type === 'expenses' ? await API.fetchExpenseList(this.state.month) :
-            await API.fetchIncomeList(this.state.month);
         const newCashAccounts = await API.fetchCashAccountList();
         this.setState({
             [type]: newTransactions,
             cashAccounts: newCashAccounts,
             categoryExpenseData: newCategoryData,
+        })
+    }
+
+    scheduledTransactionHandler = async () => {
+        const newTransactions = await API.fetchScheduledTransactionList();
+        this.setState({
+            Scheduled: newTransactions,
         })
     }
 
@@ -73,11 +88,12 @@ class Home extends React.Component {
             const incomes = await API.fetchIncomeList(month);
             const cashAccountList = await API.fetchCashAccountList();
             const transactionCategories = await API.fetchTransactionCategories();
-            const categoryExpenseData = await API.fetchCategoryExpenseData(month)
+            const categoryExpenseData = await API.fetchCategoryExpenseData(month);
+            const scheduledTransactionList = await API.fetchScheduledTransactionList();
             this.setState({
                 expenses: expenses, cashAccounts: cashAccountList,
                 transactionCategories: transactionCategories, incomes: incomes,
-                categoryExpenseData: categoryExpenseData,
+                categoryExpenseData: categoryExpenseData, Scheduled: scheduledTransactionList,
             })
         }
         fetchThings().then(() => {
@@ -124,9 +140,10 @@ class Home extends React.Component {
                                 </div>
                                 <div className='row'>
                                     <div className='col'>
-                                        <ScheduleExpenseForm
+                                        <ScheduleTransactionForm
                                             accounts={this.state.cashAccounts}
                                             categories={this.state.transactionCategories}
+                                            scheduledTransactionHandler={this.scheduledTransactionHandler}
                                         />
                                     </div>
                                 </div>
@@ -156,6 +173,19 @@ class Home extends React.Component {
                                 <AccountsForm title='Create Account' accountHandler={this.accountHandler} />
                             </div>
                         </div>
+                        {   this.state.Scheduled.length > 0 &&
+                            <div className='rom m-2'>
+                                <div className='col border rounded border-white p-2 m-2'>
+                                    <TransactionList
+                                        transactions={this.state.Scheduled}
+                                        cashAccounts={this.state.cashAccounts}
+                                        categories={this.state.transactionCategories}
+                                        transactionAccountHandler={this.scheduledTransactionHandler}
+                                        transactionType="Scheduled"
+                                    />
+                                </div>
+                            </div>
+                        }
 
                         <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">

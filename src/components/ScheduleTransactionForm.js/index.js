@@ -1,6 +1,10 @@
 import React from 'react'
 
-class ScheduleExpenseForm extends React.Component {
+import moment from 'moment';
+
+import API from '../../API';
+
+class ScheduleTransactionForm extends React.Component {
 
     initialState = {
         'title': '',
@@ -9,7 +13,7 @@ class ScheduleExpenseForm extends React.Component {
         'category': '',
         'user': localStorage.getItem('userid'),
         'amount': '',
-        'schedule_time': '',
+        'scheduled_time': '',
     }
 
 
@@ -27,11 +31,27 @@ class ScheduleExpenseForm extends React.Component {
         })
     }
 
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        const timeFormated = moment(this.state.scheduled_time).format('YYYY-MM-DDTHH:mm:ss.00000ZZ')
+        const newState = {...this.state, scheduled_time: timeFormated}
+        const res = await API.createScheduledTransaction(newState)
+        if (res.status === 201) {
+            alert ("Transaction Scheduled")
+            this.props.scheduledTransactionHandler()
+        } else {
+            const error = await res.json()
+            alert(error[Object.keys(error)[0]])
+        }
+
+        
+    }
+
     render() {
         return (
             <div className='border rounded border-white p-4 m-2 '>
                 <form>
-                    <h3>Schedule An Expense</h3>
+                    <h3>Schedule A Transaction</h3>
                     <div className='form-group'>
                         <label htmlFor='title'>Title</label>
                         <input className='form-control' type='text' name='title' placeholder='Add title here' onChange={this.handleChange} />
@@ -73,8 +93,8 @@ class ScheduleExpenseForm extends React.Component {
                         </div>
                         <div className='col'>
                             <div className='form-group'>
-                                <label htmlFor='scheduleTime'>Time</label>
-                                <input className='form-control' type='datetime-local' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
+                                <label htmlFor='scheduled_time'>Time</label>
+                                <input className='form-control' type='datetime-local' name='scheduled_time' onChange={this.handleChange} placeholder="Add Date here" />
                             </div>
                         </div>
                     </div>
@@ -90,4 +110,4 @@ class ScheduleExpenseForm extends React.Component {
     }
 }
 
-export default ScheduleExpenseForm;
+export default ScheduleTransactionForm;

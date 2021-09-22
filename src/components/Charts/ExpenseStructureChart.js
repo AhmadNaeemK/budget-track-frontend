@@ -58,7 +58,7 @@ class ExpenseStructureChart extends React.Component {
                 <div className='d-flex justify-content-center'>
                     <select name='selectedAccount' className='custom-select col-3' onChange={this.handleChange}>
                         {Object.keys(this.props.expenseData).map((account, index) => (
-                            <option value={index}>{account}</option>
+                            <option key={index} value={index}>{account}</option>
                         ))}
                     </select>
                 </div>

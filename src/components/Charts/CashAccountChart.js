@@ -57,7 +57,7 @@ class CashAccountsChart extends React.Component {
                 <div className='d-flex justify-content-center'>
                     <select name='selectedAccount' className='custom-select col-3' onChange={this.handleChange}>
                         {this.props.accounts.map( (account, index) => (
-                            <option value={index}>{account.title}</option>
+                            <option key={index} value={index}>{account.title}</option>
                         )) }
                     </select>
                 </div>
