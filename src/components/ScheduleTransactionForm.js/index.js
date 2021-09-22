@@ -13,7 +13,7 @@ class ScheduleTransactionForm extends React.Component {
         'category': '',
         'user': localStorage.getItem('userid'),
         'amount': '',
-        'scheduled_time': '',
+        'transaction_time': '',
     }
 
 
@@ -33,8 +33,8 @@ class ScheduleTransactionForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        const timeFormated = moment(this.state.scheduled_time).format('YYYY-MM-DDTHH:mm:ss.00000ZZ')
-        const newState = {...this.state, scheduled_time: timeFormated}
+        const timeFormated = moment(this.state.transaction_time).format('YYYY-MM-DDTHH:mm:ss.00000ZZ')
+        const newState = {...this.state, transaction_time: timeFormated}
         const res = await API.createScheduledTransaction(newState)
         if (res.status === 201) {
             alert ("Transaction Scheduled")
@@ -93,8 +93,8 @@ class ScheduleTransactionForm extends React.Component {
                         </div>
                         <div className='col'>
                             <div className='form-group'>
-                                <label htmlFor='scheduled_time'>Time</label>
-                                <input className='form-control' type='datetime-local' name='scheduled_time' onChange={this.handleChange} placeholder="Add Date here" />
+                                <label htmlFor='transaction_time'>Time</label>
+                                <input className='form-control' type='datetime-local' name='transaction_time' onChange={this.handleChange} placeholder="Add Date here" />
                             </div>
                         </div>
                     </div>

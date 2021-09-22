@@ -57,14 +57,14 @@ const TransactionList = (props) => {
                         <td>{transaction.id}</td>
                         <td>{transaction.title}</td>
                         <td>{props.cashAccounts.find(account => account.id === transaction.cash_account).title}</td>
-                        <td>{transaction.transaction_time.match(/\d{4,}-\d{2}-\d{2}/)}</td>
+                            <td>{transaction.transaction_time.match(/\d{4,}-\d{2}-\d{2}/)}</td>
                         <td>{props.categories[transaction.category][1]}</td>
                         <td>{transaction.amount}</td>
                         <td>
-                            <button className='btn btn-danger' onClick={handleDelete}><i className="fas fa-trash-alt"></i></button>
+                            <button className='btn btn-danger' onClick={handleDelete}>Del</button>
                             {props.transactionType !== 'Scheduled' &&
                                 <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#tModal`} onClick={handleEdit}>
-                                    <i className="far fa-edit"></i>
+                                    Edit
                                 </button>
                             }
                         </td>

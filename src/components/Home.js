@@ -50,7 +50,7 @@ class Home extends React.Component {
 
     transactionAccountHandler = async (type, transaction, acc) => {
         let newTransactions;
-        if (type === 'expenses'){
+        if (type === 'expenses') {
             newTransactions = await API.fetchExpenseList(this.state.month)
         } else if (type === 'incomes') {
             newTransactions = await API.fetchIncomeList(this.state.month);
@@ -112,7 +112,8 @@ class Home extends React.Component {
                     <>
                         <div className='row m-2'>
                             <div className='col border rounded border-white p-2 m-2'>
-                                <TransactionList transactions={this.state.expenses.results}
+                                <TransactionList
+                                    transactions={this.state.expenses.results}
                                     transactionAccountHandler={this.transactionAccountHandler}
                                     cashAccounts={this.state.cashAccounts}
                                     categories={this.state.transactionCategories}
@@ -121,7 +122,8 @@ class Home extends React.Component {
                                 <Link to='/expenses'> <button className='btn btn-dark w-100'><b>All Expenses</b></button> </Link>
                             </div>
                             <div className='col border rounded border-white p-2 m-2'>
-                                <TransactionList transactions={this.state.incomes.results}
+                                <TransactionList
+                                    transactions={this.state.incomes.results}
                                     transactionAccountHandler={this.transactionAccountHandler}
                                     cashAccounts={this.state.cashAccounts}
                                     categories={this.state.transactionCategories}
@@ -173,7 +175,7 @@ class Home extends React.Component {
                                 <AccountsForm title='Create Account' accountHandler={this.accountHandler} />
                             </div>
                         </div>
-                        {   this.state.Scheduled.length > 0 &&
+                        {this.state.Scheduled.length > 0 &&
                             <div className='rom m-2'>
                                 <div className='col border rounded border-white p-2 m-2'>
                                     <TransactionList

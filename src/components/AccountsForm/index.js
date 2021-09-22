@@ -6,8 +6,8 @@ class AccountsForm extends React.Component {
 
     initialState = {
         title: '',
-        balance: '',
-        limit: '',
+        balance: 0,
+        limit: 0,
         user: localStorage.getItem('userid')
     }
 
@@ -23,7 +23,7 @@ class AccountsForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        if (this.props.title === "Create Accounts") {
+        if (this.props.title === "Create Account") {
             const res = await API.createCashAccount(this.state);
             if (res && res.status === 201) {
                 const cashAccounts = await API.fetchCashAccountList()
@@ -36,7 +36,7 @@ class AccountsForm extends React.Component {
         } else {
             let newState = {};
             for (let s in this.state) {
-                if (this.state[s] !== '') newState = { ...newState, [s]: this.state[s] }
+                if (this.state[s] !== '' && this.state[s] !== 0) newState = { ...newState, [s]: this.state[s] }
             }
             const res = await API.updateCashAccount(this.props.accountId, newState)
             if (res.status === 200) {

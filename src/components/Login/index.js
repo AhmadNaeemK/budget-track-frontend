@@ -8,7 +8,7 @@ async function checkNewUser(){
     const accounts = await API.fetchCashAccountList()
     const transactions = await API.fetchExpenseList(new Date().getMonth() + 1)
 
-    if (accounts[0].balance === 0 && transactions.length === 0){
+    if (accounts[0].balance == 0 && transactions.count == 0){
         return true
     }
     return false
