@@ -6,9 +6,6 @@ import { monthNames } from '../Config';
 import AccountsForm from './AccountsForm';
 import AccountsList from './Accounts';
 
-import CashAccountsChart from './Charts/CashAccountChart'
-import ExpenseAccountsChart from './Charts/ExpenseAccountsChart';
-
 class AllAccounts extends React.Component {
 
     constructor(props) {
@@ -63,7 +60,7 @@ class AllAccounts extends React.Component {
                         </div> */}
 
                         <AccountsForm className='w-50'
-                            title='Create Accounts' accountHandler={this.accountHandler} />
+                            title='Create Account' accountHandler={this.accountHandler} />
                     </div>
 
 
@@ -95,7 +92,7 @@ class AllAccounts extends React.Component {
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
             }
             </>
         )

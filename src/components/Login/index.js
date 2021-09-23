@@ -1,9 +1,18 @@
 import React from 'react'
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import API from '../../API';
 
+async function checkNewUser(){
+    const accounts = await API.fetchCashAccountList()
+    const transactions = await API.fetchExpenseList(new Date().getMonth() + 1)
+
+    if (accounts[0].balance == 0 && transactions.count == 0){
+        return true
+    }
+    return false
+}
 
 const LoginForm = () => {
 
@@ -25,7 +34,12 @@ const LoginForm = () => {
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user);
             localStorage.setItem('userid', result.id);
-            window.location.href = '/home';
+            const isNewUser = await checkNewUser()
+            if (!isNewUser){
+                window.location.href = '/home';
+            } else {
+                window.location.href = '/onboarding'
+            }
         }
 
     }
@@ -39,29 +53,31 @@ const LoginForm = () => {
 
 
     return (
-        <form>
-            <h3>Sign In</h3>
+        <div className='container-fluid p-2'>
+            <div className='d-flex justify-content-center mt-5'>
+                <div className='col-5'>
+                    <form>
+                        <h3>Sign In</h3>
 
-            <div className="form-group">
-                <label>Email</label>
-                <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={handleChange} />
-            </div>
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={handleChange} />
+                        </div>
 
-            <div className="form-group">
-                <label>Password</label>
-                <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={handleChange} />
-            </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={handleChange} />
+                        </div>
 
-            <div className="form-group">
-                <div className="custom-control custom-checkbox">
-                    <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                    <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+                        <button type="submit" className="btn btn-primary btn-block" onClick={handleSubmit}>Submit</button>
+                    </form>
+
+                <div>
+                    <Link to='/signup'> Create Your Account </Link>
                 </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary btn-block" onClick={handleSubmit}>Submit</button>
-        </form>
-
+            </div> 
+        </div>
+        </div>
     )
 };
 

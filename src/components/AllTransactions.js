@@ -4,10 +4,9 @@ import API from '../API';
 
 import TransactionForm from './TransactionForm';
 
-import CashAccountsChart from './Charts/CashAccountChart';
-import ExpenseAccountsChart from './Charts/ExpenseAccountsChart';
-
 import { monthNames } from '../Config';
+import TransactionList from './Transactions';
+import ExpenseStructureChart from './Charts/ExpenseStructureChart';
 
 
 class AllTransactions extends React.Component {
@@ -16,11 +15,14 @@ class AllTransactions extends React.Component {
         super(props);
 
         this.state = {
-            accounts: [],
-            expenseAccountsData: [],
+            isLoaded: false,
             transactions: [],
-            transactionId: null,
+            nextURL: null,
+            cashAccounts: [],
+            transactionCategories: [],
+            transaction_edit: null,
             month: new Date().getMonth() + 1,
+            categoryExpenseData: []
         }
 
     }
@@ -28,11 +30,10 @@ class AllTransactions extends React.Component {
     handleDelete = async (event) => {
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
         const res = await API.deleteTransactions(transactionId);
-        const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
-        const AllAccounts = await API.fetchAccount(false,false,true)
+        const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
         if (res.status === 204) {
-            const newTransactions = this.state.transactions.filter( transaction => transaction.id !== transactionId);
-            this.setState({transactions: newTransactions, accounts:AllAccounts, expenseAccountsData: expenseAccounts});
+            const newTransactions = this.state.transactions.filter(transaction => transaction.id !== transactionId);
+            this.setState({ transactions: newTransactions, categoryExpenseData: categoryExpenseData });
         }
     }
 
@@ -43,118 +44,116 @@ class AllTransactions extends React.Component {
 
     handleMonthChange = (event) => {
         (async () => {
-            this.setState({month: parseInt(await event.target.value)});
-            const AllTransactions = await API.fetchTransactions(this.state.month,true);
-            const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
-            this.setState({ transactions: AllTransactions, expenseAccountsData: expenseAccounts})
+            this.setState({ month: parseInt(await event.target.value) });
+            const AllTransactions = await API.fetchTransactions(this.state.month, true);
+            const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
+            this.setState({
+                transactions: AllTransactions,
+                categoryExpenseData: categoryExpenseData,
+            })
         })();
     }
 
     transactionHandler = async () => {
-        const AllTransactions = await API.fetchTransactions(this.state.month,true);
-        const expenseAccounts = await API.getExpenseAccountsData(this.state.month);
-        const AllAccounts = await API.fetchAccount(false,false,true)
-        this.setState({transactions: AllTransactions, accounts:AllAccounts, expenseAccountsData: expenseAccounts});
+        const AllTransactions = this.props.type === "Expenses" ? await API.fetchExpenseList(this.state.month) :
+            await API.fetchIncomeList(this.state.month);
+        const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
+        this.setState({
+            transactions: AllTransactions.results, nextURL: AllTransactions.next,
+            categoryExpenseData: categoryExpenseData
+        });
     }
 
+    transactionEditHandler = (t) => {
+        this.setState({
+            transaction_edit: t
+        })
+    }
 
     componentDidMount() {
         (async () => {
-            const AllTransactions = await API.fetchTransactions(this.state.month,true);
-            const AllAccounts = await API.fetchAccount(false,false,true)
-            const expenseAccounts = await API.getExpenseAccountsData(this.state.month)
-            this.setState({ transactions: AllTransactions , accounts: AllAccounts, expenseAccountsData: expenseAccounts})
-        })();
+            const AllTransactions = this.props.type === "Expenses" ? await API.fetchExpenseList(this.state.month) :
+                await API.fetchIncomeList(this.state.month);
+            const cashAccounts = await API.fetchCashAccountList()
+            const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
+            const transactionCategories = await API.fetchTransactionCategories()
+            this.setState({
+                transactions: AllTransactions.results, nextURL: AllTransactions.next,
+                cashAccounts: cashAccounts, categoryExpenseData: categoryExpenseData,
+                transactionCategories: transactionCategories
+            })
+        })().then(() => { this.setState({ isLoaded: true }) });
+    }
+
+    handleLoadMore = async () => {
+        const moreTransactions = this.props.type === "Expenses" ? await API.fetchExpenseList(this.state.month, this.state.nextURL) :
+            await API.fetchIncomeList(this.state.month, this.state.nextURL);
+        this.setState({
+            transactions: this.state.transactions.concat(moreTransactions.results),
+            nextURL: moreTransactions.next,
+        });
     }
 
     render() {
         return (
-            <div className = 'p-2 m-2'>
-                <div className='d-flex justify-content-center'>
-                <div className='w-20'>
-                    <CashAccountsChart accounts={this.state.accounts} />
-                    </div>
-
-                    <div className='w-20'>
-                    <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={monthNames[this.state.month - 1]} />
-                    </div>
-                    <TransactionForm className='w-50'
-                            title= 'Create Transactions'
-                            transactionId= {this.state.transactionId}
-                            accounts= {this.state.accounts} 
-                            transactionAccountHandler ={this.transactionHandler}/>
-                </div>
-
-                <div className='border rounded border-white p-2 m-2'>
-                    <table className='table table-dark table-striped'>
-
-                        <thead><tr>
-                            <th className='bg-dark' colSpan='8'>Transactions</th>
-                            <th className='bg-dark'> 
-                                <label htmlFor="month">Month</label>
-                                <select name='month' onChange={this.handleMonthChange} value={this.state.month}>
-                                    {monthNames.map( (month, index) => (
-                                    <option key={index} value={index+1} > {month} </option>    
-                                    ))}
-                                </select>
-                            </th>
-                        </tr></thead>
-                        <tbody>
-                            <tr>
-                                <th>Id</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Amount</th>
-                                <th></th>
-                            </tr>
-
-                            {this.state.transactions.map((transaction) => (
-                                <tr key={transaction.id} id={transaction.id}>
-                                    <td>{transaction.id}</td>
-                                    <td>{transaction.title}</td>
-                                    <td>{transaction.description}</td>
-                                    <td>{transaction.credit_account}</td>
-                                    <td>{transaction.debit_account}</td>
-                                    <td>{transaction.transaction_date.match(/\d{4,}-\d{2}-\d{2}/)}</td>
-                                    <td>{transaction.transaction_date.match(/\d+:\d+/)}</td>
-                                    <td>{transaction.amount}</td>
-                                    <td><button className='btn btn-danger' onClick={this.handleDelete}>Del</button>
-                                        <button className='btn btn-success' data-toggle='modal' data-toggle='modal' data-target={`#tModal`} onClick={this.handleEdit}>Edit</button></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered" role="document">
-                        <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="ModalLongTitle">Edit Transactions</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+            <div className='p-2 m-2'>
+                {this.state.isLoaded &&
+                    <>
+                        <div className='row m-2'>
+                            <div className='col'>
+                                <TransactionForm title='Create Transactions'
+                                    accounts={this.state.cashAccounts}
+                                    categories={this.state.transactionCategories}
+                                    transactionAccountHandler={this.transactionHandler} />
+                            </div>
+                            <div className='col p-2 mb-5' style={{ height: '50%', minWidth: '15%', maxWidth: '20%' }}>
+                                <ExpenseStructureChart expenseData={this.state.categoryExpenseData} month={monthNames[this.state.month - 1]} />
+                            </div>
                         </div>
-                        <div className="modal-body">
-                        <TransactionForm
-                            transactionId= {this.state.transactionId}
-                            accounts= {this.state.accounts} 
-                            transactionAccountHandler ={this.transactionHandler}/>
+                        <div className='row m-2'>
+                            <div className='col border rounded border-white p-2 m-2'>
+                                <TransactionList transactions={this.state.transactions}
+                                    transactionAccountHandler={this.transactionHandler}
+                                    cashAccounts={this.state.cashAccounts}
+                                    categories={this.state.transactionCategories}
+                                    transactionEditHandler={this.transactionEditHandler}
+                                    transactionType={this.props.type} />
+                                {this.state.nextURL ?
+                                    <button className='btn btn-dark w-100' onClick={this.handleLoadMore}><b>Load More</b></button>
+                                    : null
+                                }
+
+                            </div>
+
                         </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
+
+                        <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="ModalLongTitle">Edit Transactions</h5>
+                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <TransactionForm
+                                            transaction={this.state.transaction_edit}
+                                            transactionAccountHandler={this.transactionHandler}
+                                            categories={this.state.transactionCategories}
+                                        />
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                    </div>
-                </div>                 
+
+                    </>
+                }
             </div>
-            )
+        )
     }
 
 }
