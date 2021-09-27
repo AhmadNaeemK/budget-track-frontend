@@ -9,12 +9,15 @@ import CashAccountsChart from './Charts/CashAccountChart';
 import BudgetChart from './Charts/BudgetChart';
 import ScheduleTransactionForm from './ScheduleTransactionForm.js';
 
+
 import { monthNames } from '../Config';
 
 import { Link } from 'react-router-dom'
 
 
 import API from '../API';
+
+import { EXPENSE_LIST_URL, INCOME_LIST_URL } from '../Config';
 
 class Home extends React.Component {
     constructor(props) {
@@ -31,6 +34,7 @@ class Home extends React.Component {
             month: new Date().getMonth() + 1,
             categoryExpenseData: [],
             Scheduled: [],
+            page_size: 6,
         }
     }
 
@@ -84,7 +88,8 @@ class Home extends React.Component {
         this.setState({ loggedIn: localStorage.getItem('userid') ? true : false });
         const fetchThings = async () => {
             const month = new Date().getMonth() + 1
-            const expenses = await API.fetchExpenseList(month);
+            const paginationParams = `?month=${month}&page_size=${this.state.page_size}`
+            const expenses = await API.fetchExpenseList(month,EXPENSE_LIST_URL + paginationParams);
             const incomes = await API.fetchIncomeList(month);
             const cashAccountList = await API.fetchCashAccountList();
             const transactionCategories = await API.fetchTransactionCategories();

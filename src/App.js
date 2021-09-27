@@ -9,6 +9,7 @@ import AllTransactions from './components/AllTransactions'
 import AllAccounts from './components/AllAccounts';
 import UserOnboarding from './components/UserOnBoarding'
 import RegistrationForm from './components/Register';
+import FriendsPage from './components/Friends';
 
 // styles
 import { GlobalStyle } from './GlobalStyle';
@@ -24,6 +25,7 @@ const App = () => (
       <Route path='/expenses' element={<AllTransactions type='Expenses'/>} />
       <Route path='/incomes' element={<AllTransactions type='Incomes'/>} />
       <Route path='/accounts' element={<AllAccounts />} />
+      <Route path='/friends' element={<FriendsPage />} />
 
     </Routes>
     <GlobalStyle />
