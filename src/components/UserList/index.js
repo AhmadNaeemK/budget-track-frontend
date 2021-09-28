@@ -19,17 +19,19 @@ class UserList extends React.Component {
             totalRows: 0,
             isLoaded: false,
             pageSize: 10,
+            currentPage: 1,
             searchTerm: '',
+            sort_field: '',
         }
 
         this.columns = [
             {
-                name: 'Username',
+                name: 'username',
                 selector: row => row.username,
                 sortable: true,
             },
             {
-                name: 'Email',
+                name: 'email',
                 selector: row => row.email,
             },
             {
@@ -42,8 +44,11 @@ class UserList extends React.Component {
         ];
     }
 
-    loadResults = async (page, searchTerm) => {
-        const params = `?page=${page}&page_size=${this.state.pageSize}&search=${searchTerm || this.state.searchTerm}`
+    loadResults = async (page, searchTerm, pageSize, sortField) => {
+        const params = `?page=${page}` +
+            `&page_size=${pageSize}` +
+            `&search=${searchTerm}` +
+            `&ordering=${sortField}`
         const userslist = this.props.userType === "Users" ? await API.fetchUserList(USER_LIST_URL + params)
             : await API.fetchFriendsList(FRIEND_LIST_URL + params);
         if (page != 1) {
@@ -54,17 +59,26 @@ class UserList extends React.Component {
     }
 
     componentDidMount() {
-        this.loadResults(1).then(() => { this.setState({ isLoaded: true }) })
+        this.loadResults(1, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
+            .then(() => { this.setState({ isLoaded: true }) })
     }
 
     changePage = (page, totalRows) => {
-        this.setState({ isLoaded: false });
-        this.loadResults(page).then(() => { this.setState({ isLoaded: true }) })
+        this.setState({ isLoaded: false, currentPage: page });
+        this.loadResults(page, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
+            .then(() => { this.setState({ isLoaded: true }) })
     }
 
     changePageSize = (currentRowsPerPage, currentPage) => {
         this.setState({ pageSize: currentRowsPerPage })
-        this.changePage(currentPage)
+        this.loadResults(1, this.state.searchTerm, currentRowsPerPage, this.state.sort_field)
+    }
+
+    changeSortField = (column, direction) => {
+        const dir = direction === 'desc' ? '-' : ''
+        const sort_field =  dir + column.name
+        this.setState({ sort_field: sort_field })
+        this.loadResults(this.state.currentPage, this.state.searchTerm,this.state.pageSize, sort_field)
     }
 
     sendRequest = async (row) => {
@@ -115,13 +129,13 @@ class UserList extends React.Component {
 
     subHeaderCreator() {
         const handleClear = async () => {
-            this.setState({ searchTerm: '' })
-            this.changePage(1);
+            this.setState({ searchTerm: "" })
+            this.loadResults(1, "", this.state.pageSize);
         }
 
         const handleSearch = (searchTerm) => {
             this.setState({ searchTerm: searchTerm })
-            this.loadResults(1, searchTerm)
+            this.loadResults(1, searchTerm, this.state.pageSize)
         }
 
         return <UserSearchBar handleClear={handleClear} handleSearch={handleSearch} />
@@ -139,6 +153,9 @@ class UserList extends React.Component {
                 onChangePage={(page, totalRows) => {
                     this.changePage(page, totalRows)
                 }}
+                onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
+                    this.changePageSize(currentRowsPerPage, this.changePage)
+                }}
                 paginationServer={true}
                 paginationPerPage={this.state.pageSize}
                 paginationTotalRows={this.state.totalRows}
@@ -146,6 +163,8 @@ class UserList extends React.Component {
                 title={this.props.title}
                 subHeader
                 subHeaderComponent={this.subHeaderCreator()}
+                sortServer
+                onSort={this.changeSortField}
             />
         )
     }
