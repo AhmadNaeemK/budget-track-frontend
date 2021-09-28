@@ -31,6 +31,10 @@ const FRIEND_REQUEST_URL = API_URL + '/user/friendRequest/'
 const FRIEND_REQUEST_ACCEPT_URL = API_URL + '/user/acceptRequest/'
 const UNFFRIEND_URL = API_URL + '/user/removeFriend/'
 
+const SPLIT_TRANSACTION_LIST_URL = API_URL + '/splitTransactionList/'
+const SPLIT_TRANSACTION_URL = API_URL + '/splitTransaction/'
+const PAY_SPLIT_URL = API_URL + '/paySplit/'
+
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -60,5 +64,8 @@ export {
     FRIEND_REQUEST_ACCEPT_URL,
     FRIEND_LIST_URL,
     UNFFRIEND_URL,
+    SPLIT_TRANSACTION_LIST_URL,
+    SPLIT_TRANSACTION_URL,
+    PAY_SPLIT_URL,
     monthNames,
 }

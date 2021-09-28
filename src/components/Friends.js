@@ -70,13 +70,11 @@ class FriendsPage extends React.Component {
                         </div>
 
                         <div className='row m-2'>
-                            <div className='col-5 border rounded border-white p-2 m-2'>
-                                <h4>Users</h4>
-                                <UserList userType='Users' requestHandler={this.sentRequestHandler}/>
+                            <div className='col-5 border rounded border-white p-2 m-2' style={{minWidth: '800px'}}>
+                                <UserList userType='Users' requestHandler={this.sentRequestHandler} title="Users"/>
                             </div>
-                            <div className='col-5 border rounded border-white p-2 m-2'>
-                                <h4>Friends</h4>
-                                <UserList userType='Friends' />
+                            <div className='col-5 border rounded border-white p-2 m-2' style={{minWidth: '800px'}}>
+                                <UserList userType='Friends' title="Friends"/>
                             </div>
                         </div>
                     </>

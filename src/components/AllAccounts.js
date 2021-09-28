@@ -1,7 +1,6 @@
 import React from 'react';
 
 import API from '../API';
-import { monthNames } from '../Config';
 
 import AccountsForm from './AccountsForm';
 import AccountsList from './Accounts';

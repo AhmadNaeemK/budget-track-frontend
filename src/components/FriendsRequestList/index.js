@@ -4,10 +4,6 @@ import API from '../../API';
 
 class FriendsRequestList extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleDelete = async (event) => {
         const requestId = parseInt(event.target.id.split(/del-btn-/)[1]);
         const res = await API.deleteFriendRequest(requestId)

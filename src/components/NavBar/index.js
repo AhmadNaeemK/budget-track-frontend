@@ -32,26 +32,27 @@ class NavBar extends React.Component {
                 {!this.state.loggedIn ?
                     null :
                     (
-                        <>
-                            <div className='row align-items-center m-2'>
-                                <div className='col pt-2'>
-                                    <p>{localStorage.getItem('username')}</p>
-                                </div>
-                                <div className='col'>
-                                    <div className='dropdown'>
-                                        <i className='fas fa-user-circle fa-3x' type='button' data-toggle='dropdown'></i>
-                                        <div className="dropdown-menu" style={{right: '0', left:'auto'}} aria-labelledby="dropdownMenuButton">
-                                        <Link style={{ textDecoration: 'none'}} to={'/friends'}> <p className="dropdown-item">Friends</p> </Link>
-                                            <div className='dropdown-item'>
-                                            <Logout 
+                        <div className='row align-items-center m-2'>
+                            <div className='col pt-2'>
+                                <p>{localStorage.getItem('username')}</p>
+                            </div>
+                            <div className='col'>
+                                <div className='dropdown'>
+                                    <i className='fas fa-user-circle fa-3x' type='button' data-toggle='dropdown'></i>
+                                    <div className="dropdown-menu" style={{ right: '0', left: 'auto' }} aria-labelledby="dropdownMenuButton">
+                                        <Link style={{ textDecoration: 'none' }} to={'/friends'}> <p className="dropdown-item">Split Expenses</p> </Link>
+                                        <div class="dropdown-divider"></div>
+                                        <Link style={{ textDecoration: 'none' }} to={'/friends'}> <p className="dropdown-item">Friends</p> </Link>
+                                        <div class="dropdown-divider"></div>
+                                        <div className='dropdown-item'>
+                                            <Logout
                                                 loggedOut={this.loggedOut}
                                             />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )
                 }
             </nav>

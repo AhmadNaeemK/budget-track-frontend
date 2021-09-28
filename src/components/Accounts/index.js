@@ -30,7 +30,7 @@ const AccountsList = (props) => {
     return (
         <table className='table table-dark table-striped'>
 
-            <thead><tr><th className='bg-dark' colSpan='6'>Accounts</th></tr></thead>
+            <thead><tr><th className='bg-dark' colSpan='10'>Accounts</th></tr></thead>
             <tbody>
                 <tr>
                     <th scope='col'>Id</th>
@@ -38,7 +38,7 @@ const AccountsList = (props) => {
                     <th scope='col'>Balance</th>
                     <th scope='col'>Limit</th>
                     <th scope='col'>Total Expenses</th>
-                    <th></th>
+                    <th colSpan='3'></th>
                 </tr>
 
                 {accounts.map((account, index) => (
@@ -48,20 +48,17 @@ const AccountsList = (props) => {
                         <td>{account.balance}</td>
                         <td>{account.limit}</td>
                         <td>{account.expenses}</td>
-                        <td className='row'>
-                            {index != 0 && <>
-                                <div className='col-2 m-1'>
-                                    <button id={`del-btn-${account.id}`} className='btn btn-outline-danger' onClick={handleDelete}>
-                                        <i id={`del-btn-${account.id}`} className='fas fa-trash-alt'></i>
-                                    </button>
-                                </div>
-                            </>
-                            }
-                            <div className='col-2 m-1'>
-                                <button id={`edit-btn-${account.id}`} className='btn btn-outline-success' data-toggle='modal' data-target={`#aModal`} onClick={handleEdit}>
-                                    <i id={`edit-btn-${account.id}`} className='fas fa-edit'></i>
-                                </button>
-                            </div>
+                        <td>
+                        {index != 0 ?
+                                <button id={`del-btn-${account.id}`} className='btn btn-outline-danger' onClick={handleDelete}>
+                                    <i id={`del-btn-${account.id}`} className='fas fa-trash-alt'></i>
+                                </button> : null
+                        }
+                        </td>
+                        <td>
+                            <button id={`edit-btn-${account.id}`} className='btn btn-outline-success' data-toggle='modal' data-target={`#aModal`} onClick={handleEdit}>
+                                <i id={`edit-btn-${account.id}`} className='fas fa-edit'></i>
+                            </button>
                         </td>
                     </tr>
                 ))}

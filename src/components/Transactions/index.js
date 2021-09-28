@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Link } from 'react-router-dom'
-
 import API from '../../API'
 
 const TransactionList = (props) => {
@@ -67,7 +65,12 @@ const TransactionList = (props) => {
                         </td>
                         {props.transactionType !== 'Scheduled' &&
                             <td>
-                                <button id={`edit-btn-${transaction.id}`} className='btn btn-outline-success' data-toggle='modal' data-toggle='modal' data-target={`#tModal`} onClick={handleEdit}>
+                                <button id={`edit-btn-${transaction.id}`}
+                                    className='btn btn-outline-success'
+                                    data-toggle='modal'
+                                    data-toggle='modal'
+                                    data-target={`#tModal`}
+                                    onClick={handleEdit}>
                                     <i id={`edit-btn-${transaction.id}`} className='fas fa-edit'></i>
                                 </button>
                             </td>

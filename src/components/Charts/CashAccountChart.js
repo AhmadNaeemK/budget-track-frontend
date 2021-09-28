@@ -2,8 +2,6 @@ import React from 'react'
 
 import { Pie } from 'react-chartjs-2'
 
-import { getRandomColor } from './Utils/chartUtils'
-
 
 class CashAccountsChart extends React.Component {
     constructor(props) {

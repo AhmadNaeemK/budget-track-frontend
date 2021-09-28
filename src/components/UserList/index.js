@@ -4,6 +4,7 @@ import API from '../../API';
 import { USER_LIST_URL, FRIEND_LIST_URL } from '../../Config';
 
 import DataTable from 'react-data-table-component';
+import UserSearchBar from './searchBar';
 
 
 
@@ -17,7 +18,8 @@ class UserList extends React.Component {
             userslist: [],
             totalRows: 0,
             isLoaded: false,
-            pageSize: 10
+            pageSize: 10,
+            searchTerm: '',
         }
 
         this.columns = [
@@ -40,35 +42,35 @@ class UserList extends React.Component {
         ];
     }
 
-    componentDidMount() {
-        (async () => {
-            const params = `?page=${1}` + `&page_size=${this.state.pageSize}`
-            const userslist = this.props.userType === "Users" ? await API.fetchUserList(USER_LIST_URL + params) : await API.fetchFriendsList(FRIEND_LIST_URL + params);
+    loadResults = async (page, searchTerm) => {
+        const params = `?page=${page}&page_size=${this.state.pageSize}&search=${searchTerm || this.state.searchTerm}`
+        const userslist = this.props.userType === "Users" ? await API.fetchUserList(USER_LIST_URL + params)
+            : await API.fetchFriendsList(FRIEND_LIST_URL + params);
+        if (page != 1) {
             this.setState({ userslist: userslist.results, totalRows: userslist.count })
-        })().then(() => { this.setState({ isLoaded: true }) })
+        } else {
+            this.setState({ userslist: userslist.results })
+        }
+    }
+
+    componentDidMount() {
+        this.loadResults(1).then(() => { this.setState({ isLoaded: true }) })
     }
 
     changePage = (page, totalRows) => {
         this.setState({ isLoaded: false });
-        (async () => {
-            const params = `?page=${page}` + `&page_size=${this.state.pageSize}`
-            const userslist = this.props.userType === "Users" ? await API.fetchUserList(USER_LIST_URL + params) :
-                await API.fetchUserList(FRIEND_LIST_URL + params)
-            this.setState({ userslist: userslist.results })
-        })().then(() => { this.setState({ isLoaded: true }) })
+        this.loadResults(page).then(() => { this.setState({ isLoaded: true }) })
     }
 
     changePageSize = (currentRowsPerPage, currentPage) => {
-        this.setState({pageSize: currentRowsPerPage})
+        this.setState({ pageSize: currentRowsPerPage })
         this.changePage(currentPage)
     }
-
-
 
     sendRequest = async (row) => {
         const res = await API.createFriendRequest({ user: localStorage.userid, receiver: row.id })
         if (res.status === 201) {
-            const newUserList = this.state.userslist.filter(user => user.id == row.id )
+            const newUserList = this.state.userslist.filter(user => user.id == row.id)
             this.setState({ userslist: newUserList })
             alert("Request Sent")
             this.props.requestHandler();
@@ -111,25 +113,40 @@ class UserList extends React.Component {
         },
     };
 
+    subHeaderCreator() {
+        const handleClear = async () => {
+            this.setState({ searchTerm: '' })
+            this.changePage(1);
+        }
+
+        const handleSearch = (searchTerm) => {
+            this.setState({ searchTerm: searchTerm })
+            this.loadResults(1, searchTerm)
+        }
+
+        return <UserSearchBar handleClear={handleClear} handleSearch={handleSearch} />
+    }
+
     render() {
         return (
-            <div style={{ maxWidth: '100%' }}>
-                <DataTable
-                    theme='dark'
-                    striped={true}
-                    columns={this.columns}
-                    data={this.state.userslist}
-                    pagination={true}
-                    noDataComponent="No Such Users"
-                    onChangePage={(page, totalRows) => {
-                        this.changePage(page, totalRows)
-                    }}
-                    paginationServer={true}
-                    paginationPerPage={this.state.pageSize}
-                    paginationTotalRows={this.state.totalRows}
-                    customStyles={this.customStyles}
-                />
-            </div>
+            <DataTable
+                theme='dark'
+                striped={true}
+                columns={this.columns}
+                data={this.state.userslist}
+                pagination={true}
+                noDataComponent="No Such Users"
+                onChangePage={(page, totalRows) => {
+                    this.changePage(page, totalRows)
+                }}
+                paginationServer={true}
+                paginationPerPage={this.state.pageSize}
+                paginationTotalRows={this.state.totalRows}
+                customStyles={this.customStyles}
+                title={this.props.title}
+                subHeader
+                subHeaderComponent={this.subHeaderCreator()}
+            />
         )
     }
 }
