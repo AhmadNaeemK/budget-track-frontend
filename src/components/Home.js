@@ -8,13 +8,14 @@ import ExpenseStructureChart from './Charts/ExpenseStructureChart'
 import CashAccountsChart from './Charts/CashAccountChart';
 import BudgetChart from './Charts/BudgetChart';
 import ScheduleTransactionForm from './ScheduleTransactionForm.js';
-
-import { monthNames } from '../Config';
+import SplitTransactionList from './SplitTransactionList';
 
 import { Link } from 'react-router-dom'
 
-
 import API from '../API';
+
+import { EXPENSE_LIST_URL, monthNames} from '../Config';
+import SplitTransactionForm from './SplitTransactionForm';
 
 class Home extends React.Component {
     constructor(props) {
@@ -31,6 +32,9 @@ class Home extends React.Component {
             month: new Date().getMonth() + 1,
             categoryExpenseData: [],
             Scheduled: [],
+            userCreatedSplits: [],
+            userPayableSplits: [],
+            page_size: 6,
         }
     }
 
@@ -74,6 +78,13 @@ class Home extends React.Component {
         })
     }
 
+    splitTransactionHandler = async () => {
+        const newSplits = await API.fetchSplitTransactionList(true);
+        this.setState({
+            userCreatedSplits: newSplits,
+        })
+    }
+
     accountHandler = (acc) => {
         this.setState({
             cashAccounts: acc
@@ -84,25 +95,26 @@ class Home extends React.Component {
         this.setState({ loggedIn: localStorage.getItem('userid') ? true : false });
         const fetchThings = async () => {
             const month = new Date().getMonth() + 1
-            const expenses = await API.fetchExpenseList(month);
+            const paginationParams = `?month=${month}&page_size=${this.state.page_size}`
+            const expenses = await API.fetchExpenseList(month, EXPENSE_LIST_URL + paginationParams);
             const incomes = await API.fetchIncomeList(month);
             const cashAccountList = await API.fetchCashAccountList();
             const transactionCategories = await API.fetchTransactionCategories();
             const categoryExpenseData = await API.fetchCategoryExpenseData(month);
             const scheduledTransactionList = await API.fetchScheduledTransactionList();
+            const userCreatedSplits = await API.fetchSplitTransactionList(true)
+            const userPayableSplits = await API.fetchSplitTransactionList(false)
             this.setState({
                 expenses: expenses, cashAccounts: cashAccountList,
                 transactionCategories: transactionCategories, incomes: incomes,
                 categoryExpenseData: categoryExpenseData, Scheduled: scheduledTransactionList,
+                userCreatedSplits: userCreatedSplits, userPayableSplits: userPayableSplits
             })
         }
         fetchThings().then(() => {
             this.setState({ isLoaded: true })
         })
     }
-
-
-
 
     render() {
         return (
@@ -188,6 +200,34 @@ class Home extends React.Component {
                                 </div>
                             </div>
                         }
+
+                        <div className='row m-2'>
+                            <div className='col border rounded border-white p-2 m-2'>
+                                <SplitTransactionList
+                                    splitTransactions={this.state.userCreatedSplits.results}
+                                    splitHandler={this.splitTransactionHandler}
+                                    splitType='created'
+                                    title="Recievable Splits"
+                                />
+                            </div>
+                            <div className='col'>
+                                <SplitTransactionForm
+                                    categories={this.state.transactionCategories}
+                                    splitHandler={this.splitTransactionHandler}
+                                />
+                            </div>
+                        </div>
+
+                        <div className='row m-2'>
+                            <div className='col border rounded border-white p-2 m-2'>
+                                <SplitTransactionList
+                                    splitTransactions={this.state.userPayableSplits.results}
+                                    splitHandler={this.splitTransactionHandler}
+                                    splitType='payable'
+                                    title="Payable Splits"
+                                />
+                            </div>
+                        </div>
 
                         <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">

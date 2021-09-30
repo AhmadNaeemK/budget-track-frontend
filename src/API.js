@@ -1,7 +1,9 @@
 import {
     REGISTER_URL, LOGIN_URL, USER_LIST_URL, EXPENSE_URL, EXPENSE_LIST_URL, INCOME_URL,
     INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL, CASH_ACCOUNT_LIST_URL, CATEGORY_EXPENSE_URL,
-    SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL,
+    SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
+    RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
+    SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL,
 
 } from "./Config";
 
@@ -152,13 +154,6 @@ const API = {
         return await categoryResponse.json()
     },
 
-    getUserList: async () => {
-        const config = {
-            method: 'GET'
-        }
-        return await fetch(USER_LIST_URL, config);
-    },
-
     fetchCategoryExpenseData: async (month) => {
         const config = {
             method: 'GET'
@@ -191,6 +186,102 @@ const API = {
         }
         const newURL = SCHEDULED_TRANSACTION_URL + String(transactionId);
         return await fetch(newURL, config)
+    },
+
+    fetchSentFriendRequestList: async() => {
+        const config ={
+            method: 'GET'
+        }
+        const friendRequests = await fetch(SENT_FRIEND_REQUEST_LIST_URL, config)
+        return await friendRequests.json();
+    },
+
+    fetchReceivedFriendRequestList: async() => {
+        const config ={
+            method: 'GET'
+        }
+        const friendRequests = await fetch(RECEIVED_FRIEND_REQUEST_LIST_URL, config)
+        return await friendRequests.json();
+    },
+
+    createFriendRequest: async(formData) => {
+        const config = {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        }
+        return await fetch(SENT_FRIEND_REQUEST_LIST_URL, config);
+    },
+
+    deleteFriendRequest: async(requestID) => {
+        const config = {
+            method: 'DELETE'
+        }
+        const newURL = FRIEND_REQUEST_URL + String(requestID)
+        return await fetch(newURL, config)
+    },
+
+    acceptFriendRequest: async(requestID) => {
+        const config ={
+            method: 'GET'
+        }
+        const newURL = FRIEND_REQUEST_ACCEPT_URL + String(requestID)
+        return await fetch(newURL, config)
+    },
+
+    fetchUserList: async (url) => {
+        const config = {
+            method: 'GET'
+        }
+        const userList = await fetch(url || USER_LIST_URL, config);
+        return await userList.json()
+    },
+
+    fetchFriendsList: async (url) => {
+        const config = {
+            method: 'GET'
+        }
+        const friendsList = await fetch(url || FRIEND_LIST_URL, config);
+        return await friendsList.json();
+    },
+
+    removeFriend: async (friendId) => {
+        const config = {
+            method: 'GET'
+        }
+        const removed = await fetch(UNFFRIEND_URL + String(friendId), config)
+        return removed
+    },
+
+    fetchSplitTransactionList: async (mySplits, url) => {
+        const config = {
+            method: 'GET'
+        }
+        const newURL = url || SPLIT_TRANSACTION_LIST_URL + `?my_split=${mySplits}`
+        const splitTransactions = await fetch(newURL, config)
+        return await splitTransactions.json()
+    },
+
+    createSplitTransaction: async (formData) => {
+        const config = {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        }
+        return await fetch(SPLIT_TRANSACTION_LIST_URL, config)
+    },
+
+    deleteSplitTransaction: async (splitId) => {
+        const config ={
+            method: "DELETE"
+        }
+        return await fetch(SPLIT_TRANSACTION_URL + String(splitId), config)
+    },
+
+    paySplit: async (formData) => {
+        const config = {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        }
+        return await fetch(PAY_SPLIT_URL, config)
     }
 
 }
