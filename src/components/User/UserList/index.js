@@ -1,7 +1,7 @@
 import React from 'react'
-import API from '../../API';
+import API from '../../../API';
 
-import { USER_LIST_URL, FRIEND_LIST_URL } from '../../Config';
+import { USER_LIST_URL, FRIEND_LIST_URL } from '../../../Config';
 
 import DataTable from 'react-data-table-component';
 import UserSearchBar from './searchBar';
@@ -38,8 +38,8 @@ class UserList extends React.Component {
                 name: props.userType === "Users" ? 'Send Request' : "UnFriend",
                 button: true,
                 cell: (row) => props.userType === "Users" ?
-                    <button className='btn btn-success' onClick={() => this.sendRequest(row)}>Send Request</button> :
-                    <button className='btn btn-danger' onClick={() => this.unFriend(row)}>UnFriend</button>
+                    <button type="button" className='btn btn-success' onClick={() => this.sendRequest(row)}>Send Request</button> :
+                    <button type="button" className='btn btn-danger' onClick={() => this.unFriend(row)}>UnFriend</button>
             }
         ];
     }
@@ -119,7 +119,6 @@ class UserList extends React.Component {
         cells: {
             style: {
                 paddingLeft: '16px', // override the cell padding for data cells
-                paddingRight: '16px',
                 marginRight: '40px',
                 alignItems: 'center',
                 display: 'flex',

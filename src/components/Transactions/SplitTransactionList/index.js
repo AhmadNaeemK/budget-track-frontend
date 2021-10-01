@@ -1,5 +1,5 @@
 import React from 'react'
-import API from '../../API';
+import API from '../../../API';
 
 class SplitTransactionList extends React.Component {
 
@@ -14,14 +14,14 @@ class SplitTransactionList extends React.Component {
 
     handlePay = async (event) => {
         const splitId = parseInt(event.target.id.split(/pay-btn-/)[1]);
-        const split = this.props.splitTransactions.find(split => split.id===splitId)
+        const split = this.props.splitTransactions.find(split => split.id === splitId)
         const payable_amount = split.total_amount / split.users_in_split.length
         const data = {
             split_id: splitId,
             amount: payable_amount
         }
         const res = await API.paySplit(data)
-        if (res.status=== 200){
+        if (res.status === 200) {
             alert("Payment Succesful")
         }
     }
@@ -35,10 +35,11 @@ class SplitTransactionList extends React.Component {
                     <tr>
                         <th>Id</th>
                         <th>Title</th>
-                        <th>Creator</th>
                         <th>Category</th>
-                        <th>Users</th>
-                        <th>Payed</th>
+                        <th>Creator</th>
+                        <th>Paying Friend</th>
+                        <th>Friends Involved</th>
+                        <th>Friends Who Paid</th>
                         <th>Amount</th>
                         <th colSpan="2"></th>
                     </tr>
@@ -47,19 +48,13 @@ class SplitTransactionList extends React.Component {
                             <tr key={split.id}>
                                 <td>{split.id}</td>
                                 <td>{split.title}</td>
-                                <td>{split.creator}</td>
-                                <td>{split.category}</td>
+                                <td>{this.props.categories[split.category][1]}</td>
+                                <td>{split.creator.username}</td>
+                                <td>{split.paying_friend.username}</td>
                                 <td>
                                     <ul style={{ listStyleType: 'none', margin: '0', padding: '0' }}>
-                                        {split.users_in_split.map((user, index) => (
-                                            <li key={user[0]}>{user[1]}</li>
-                                        ))}
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul style={{ listStyleType: 'none', margin: '0', padding: '0' }}>
-                                        {split.payed_users.map((user, index) => (
-                                            <li key={user[0]}>{user[1]}</li>
+                                        {split.all_friends_involved.map((user) => (
+                                            <li key={user.id}>{user.username}</li>
                                         ))}
                                     </ul>
                                 </td>

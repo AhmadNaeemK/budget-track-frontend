@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { LOGOUT_URL } from '../../Config';
+import { LOGOUT_URL } from '../../../Config';
 
 const Logout = (props) => {
 

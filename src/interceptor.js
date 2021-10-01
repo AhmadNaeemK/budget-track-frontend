@@ -46,6 +46,10 @@ export const unregister = fetchIntercept.register({
                     localStorage.setItem('access', data['access']);
                     window.location.reload();
                 })
+            } else {
+                localStorage.removeItem('access')
+                localStorage.removeItem('refresh')
+                window.location.href = '/'
             }
         }
         return response;

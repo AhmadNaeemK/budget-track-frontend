@@ -7,7 +7,6 @@ class CashAccountsChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedAccount: 0,
             cashAccountData: {}
         }
     }
@@ -27,11 +26,7 @@ class CashAccountsChart extends React.Component {
             }
             return data;
         }
-        return { cashAccountData: getCashAccountsData(props.accounts[state.selectedAccount]) };
-    }
-
-    handleChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        return { cashAccountData: getCashAccountsData(props.cashAccounts[props.selectedAccount]) };
     }
 
     render() {
@@ -52,13 +47,6 @@ class CashAccountsChart extends React.Component {
                         },
                     }}
                 />
-                <div className='d-flex justify-content-center'>
-                    <select name='selectedAccount' className='custom-select col-3' onChange={this.handleChange}>
-                        {this.props.accounts.map( (account, index) => (
-                            <option key={index} value={index}>{account.title}</option>
-                        )) }
-                    </select>
-                </div>
             </>
         )
     }

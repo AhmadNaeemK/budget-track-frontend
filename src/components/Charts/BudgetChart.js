@@ -13,37 +13,20 @@ class BudgetChart extends React.Component {
 
     static getDerivedStateFromProps(props, state) {
 
-        function getCashAccountsData(accounts) {
+        function getCashAccountsData(account) {
             const data = {
-                labels: accounts.map(account => account.title),
+                labels: ['balance', 'budget' ,'expense'],
                 datasets: [
                     {
-                        label: 'Balance',
-                        data: accounts.map(account => { return {x: account.title, balance: account.balance, budget: account.limit, expense: account.expenses } }),
-                        backgroundColor: ['#64c93c'],
-                        parsing: {
-                            yAxisKey: 'balance'
-                        }
-                    }, {
-                        label: 'Budget',
-                        data: accounts.map(account => { return {x: account.title, balance: account.balance, budget: account.limit, expense: account.expenses } }),
-                        backgroundColor: ['#c93c41'],
-                        parsing: {
-                            yAxisKey: 'budget'
-                        }
-                    }, {
-                        label: 'Expense',
-                        data: accounts.map(account => { return {x: account.title, balance: account.balance, budget: account.limit, expense: account.expenses } }),
-                        backgroundColor: ['#3cc9aa'],
-                        parsing: {
-                            yAxisKey: 'expense'
-                        }
+                        label: account.title,
+                        data: [account.balance, account.limit ,account.expenses],
+                        backgroundColor: ['#64c93c', '#c93c41', '#3cc9aa'],
                     }
                 ],
             }
             return data;
         }
-        return { cashAccountData: getCashAccountsData(props.accounts) };
+        return { cashAccountData: getCashAccountsData(props.accounts[props.selectedAccount]) };
     }
 
     render() {

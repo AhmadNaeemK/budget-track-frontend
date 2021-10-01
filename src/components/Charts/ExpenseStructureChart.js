@@ -9,7 +9,6 @@ class ExpenseStructureChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedAccount:0,
             expenseCategoryData: []
         }
     }
@@ -28,18 +27,16 @@ class ExpenseStructureChart extends React.Component {
             }
             return data;
         }
-        return { expenseCategoryData: getExpenseAccountsData(props.expenseData[Object.keys(props.expenseData)[state.selectedAccount]]) };
-    }
-
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
+        return {
+            expenseCategoryData: getExpenseAccountsData(
+                props.expenseData[Object.keys(props.expenseData)[props.selectedAccount]]
+            )
+        };
     }
 
     render() {
         return (
-            <>
+            <>  {this.state.expenseCategoryData.labels.length > 0 &&
                 <Pie
                     data={this.state.expenseCategoryData}
                     options={{
@@ -55,13 +52,7 @@ class ExpenseStructureChart extends React.Component {
                         },
                     }}
                 />
-                <div className='d-flex justify-content-center'>
-                    <select name='selectedAccount' className='custom-select col-3' onChange={this.handleChange}>
-                        {Object.keys(this.props.expenseData).map((account, index) => (
-                            <option key={index} value={index}>{account}</option>
-                        ))}
-                    </select>
-                </div>
+            }
             </>
         )
     }

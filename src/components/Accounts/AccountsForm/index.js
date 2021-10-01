@@ -1,6 +1,6 @@
 import React from 'react'
 
-import API from '../../API'
+import API from '../../../API';
 
 class AccountsForm extends React.Component {
 
@@ -26,8 +26,7 @@ class AccountsForm extends React.Component {
         if (this.props.title === "Create Account") {
             const res = await API.createCashAccount(this.state);
             if (res && res.status === 201) {
-                const cashAccounts = await API.fetchCashAccountList()
-                this.props.accountHandler(cashAccounts)
+                this.props.accountHandler()
                 this.setState(this.initialState)
             } else {
                 const error = await res.json()
@@ -40,8 +39,7 @@ class AccountsForm extends React.Component {
             }
             const res = await API.updateCashAccount(this.props.accountId, newState)
             if (res.status === 200) {
-                const cashAccounts = await API.fetchCashAccountList()
-                this.props.accountHandler(cashAccounts)
+                this.props.accountHandler()
                 this.setState(this.initialState)
             } else {
                 const error = await res.json()
@@ -59,19 +57,19 @@ class AccountsForm extends React.Component {
                     {this.props.title ?
                         <>
                             <h3>{this.props.title}</h3>
-                            <div className='form-group'>
+                            <div className='mb-3'>
                                 <label htmlFor='title'>Accounts Title</label>
                                 <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here'/>
                             </div>
                         </>
                         : null}
 
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='balance'>Balance</label>
                         <input className='form-control' type='number' name='balance' onChange={this.handleChange} placeholder='Add balance here'/>
                     </div>
 
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='limit'>Budget Limit</label>
                         <input className='form-control' type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here'/>
                     </div>

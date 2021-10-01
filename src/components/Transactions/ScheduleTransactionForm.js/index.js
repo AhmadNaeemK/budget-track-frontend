@@ -2,7 +2,7 @@ import React from 'react'
 
 import moment from 'moment';
 
-import API from '../../API';
+import API from '../../../API';
 
 class ScheduleTransactionForm extends React.Component {
 
@@ -34,17 +34,17 @@ class ScheduleTransactionForm extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         const timeFormated = moment(this.state.transaction_time).format('YYYY-MM-DDTHH:mm:ss.00000ZZ')
-        const newState = {...this.state, transaction_time: timeFormated}
+        const newState = { ...this.state, transaction_time: timeFormated }
         const res = await API.createScheduledTransaction(newState)
         if (res.status === 201) {
-            alert ("Transaction Scheduled")
+            alert("Transaction Scheduled")
             this.props.scheduledTransactionHandler()
         } else {
             const error = await res.json()
             alert(error[Object.keys(error)[0]])
         }
 
-        
+
     }
 
     render() {
@@ -52,28 +52,34 @@ class ScheduleTransactionForm extends React.Component {
             <div className='border rounded border-white p-4 m-2 '>
                 <form>
                     <h3>Schedule A Transaction</h3>
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='title'>Title</label>
                         <input className='form-control' type='text' name='title' placeholder='Add title here' onChange={this.handleChange} />
                     </div>
 
                     <div className='row'>
                         <div className='col'>
-                            <div className='form-group'>
+                            <div className='mb-3'>
                                 <label htmlFor='cash_account'>Cash Account</label>
-                                <select className='custom-select' name='cash_account' onChange={this.handleChange}>
+                                <select className='form-select' name='cash_account' onChange={this.handleChange}>
                                     {
                                         this.props.accounts.map((account) => (
                                             <option key={account.id} value={account.id}>{account.title}</option>
                                         ))
                                     }
                                 </select>
+                                <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
                             </div>
                         </div>
                         <div className='col'>
-                            <div className='form-group'>
+                            <div className='mb-3'>
                                 <label htmlFor='category'>Category</label>
-                                <select className='custom-select' name='category' onChange={this.handleChange}>
+                                <select className='form-select' name='category' onChange={this.handleChange}>
                                     {
                                         this.props.categories.map((category) => (
                                             <option key={category[0]} value={category[0]}>{category[1]}</option>
@@ -86,13 +92,13 @@ class ScheduleTransactionForm extends React.Component {
 
                     <div className='row'>
                         <div className='col'>
-                            <div className='form-group'>
+                            <div className='mb-3'>
                                 <label htmlFor='amount'>Amount</label>
                                 <input className='form-control' type='number' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
                             </div>
                         </div>
                         <div className='col'>
-                            <div className='form-group'>
+                            <div className='mb-3'>
                                 <label htmlFor='transaction_time'>Time</label>
                                 <input className='form-control' type='datetime-local' name='transaction_time' onChange={this.handleChange} placeholder="Add Date here" />
                             </div>

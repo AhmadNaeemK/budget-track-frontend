@@ -12,7 +12,7 @@ class MultiSelectComponent extends React.Component {
     }
 
     handleSelectChange = (value) => {
-        this.props.handleChange('users_in_split', value.map((obj => obj.value)))
+        this.props.handleChange('all_friends_involved', value.map((obj => obj.value)))
     }
 
     multiSelectStyle = {

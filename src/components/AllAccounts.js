@@ -2,8 +2,8 @@ import React from 'react';
 
 import API from '../API';
 
-import AccountsForm from './AccountsForm';
-import AccountsList from './Accounts';
+import AccountsForm from './Accounts/AccountsForm';
+import AccountsList from './Accounts/AccountsList';
 
 class AllAccounts extends React.Component {
 

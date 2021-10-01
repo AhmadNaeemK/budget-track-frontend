@@ -2,10 +2,10 @@ import React from 'react'
 
 import API from '../API';
 
-import TransactionForm from './TransactionForm';
+import TransactionForm from './Transactions/TransactionForm';
 
 import { monthNames } from '../Config';
-import TransactionList from './Transactions';
+import TransactionList from './Transactions/TransactionsList';
 import ExpenseStructureChart from './Charts/ExpenseStructureChart';
 
 
@@ -105,9 +105,6 @@ class AllTransactions extends React.Component {
                                     accounts={this.state.cashAccounts}
                                     categories={this.state.transactionCategories}
                                     transactionAccountHandler={this.transactionHandler} />
-                            </div>
-                            <div className='col p-2 mb-5' style={{ height: '50%', minWidth: '15%', maxWidth: '20%' }}>
-                                <ExpenseStructureChart expenseData={this.state.categoryExpenseData} month={monthNames[this.state.month - 1]} />
                             </div>
                         </div>
                         <div className='row m-2'>

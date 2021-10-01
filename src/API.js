@@ -3,7 +3,7 @@ import {
     INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL, CASH_ACCOUNT_LIST_URL, CATEGORY_EXPENSE_URL,
     SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
     RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
-    SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL,
+    SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL, MONTHLY_TRANSACTION_CHART_DATA,
 
 } from "./Config";
 
@@ -282,6 +282,14 @@ const API = {
             body: JSON.stringify(formData)
         }
         return await fetch(PAY_SPLIT_URL, config)
+    },
+
+    fetchMonthlyTransactionChartData: async () => {
+        const config ={
+            method: 'GET'
+        }
+        const data =  await fetch(MONTHLY_TRANSACTION_CHART_DATA, config)
+        return await data.json()
     }
 
 }

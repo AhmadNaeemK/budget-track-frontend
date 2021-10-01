@@ -1,6 +1,6 @@
 import React from 'react'
 
-import API from '../../API'
+import API from '../../../API'
 
 const TransactionList = (props) => {
     const transactions = props.transactions
@@ -67,9 +67,8 @@ const TransactionList = (props) => {
                             <td>
                                 <button id={`edit-btn-${transaction.id}`}
                                     className='btn btn-outline-success'
-                                    data-toggle='modal'
-                                    data-toggle='modal'
-                                    data-target={`#tModal`}
+                                    data-bs-toggle='modal'
+                                    data-bs-target={`#tModal`}
                                     onClick={handleEdit}>
                                     <i id={`edit-btn-${transaction.id}`} className='fas fa-edit'></i>
                                 </button>

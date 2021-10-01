@@ -20,6 +20,7 @@ const USER_LIST_URL = API_URL + '/user/list/'
 const FRIEND_LIST_URL = API_URL + '/user/friendsList/'
 
 const CATEGORY_EXPENSE_URL = API_URL + '/categoryExpenseData'
+const MONTHLY_TRANSACTION_CHART_DATA = API_URL + '/monthlyTransactionChartData/'
 
 const SCHEDULED_TRANSACTION_LIST_URL = API_URL + '/scheduledTransactionList/'
 const SCHEDULED_TRANSACTION_URL = API_URL + '/user/scheduledTransaction/'
@@ -67,5 +68,6 @@ export {
     SPLIT_TRANSACTION_LIST_URL,
     SPLIT_TRANSACTION_URL,
     PAY_SPLIT_URL,
+    MONTHLY_TRANSACTION_CHART_DATA,
     monthNames,
 }

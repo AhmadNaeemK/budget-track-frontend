@@ -1,7 +1,7 @@
 import React from 'react'
 import API from '../API';
 
-import AccountsForm from './AccountsForm'
+import AccountsForm from './Accounts/AccountsForm';
 
 class UserOnBoarding extends React.Component {
 

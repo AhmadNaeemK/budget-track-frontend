@@ -1,10 +1,11 @@
 import React from 'react'
 
 import MultiSelectComponent from './multiSelect'
+import AsyncSelect from 'react-select/async'
 
-import API from '../../API'
-import { FRIEND_LIST_URL } from '../../Config'
-import { getRandomColor } from '../Charts/Utils/chartUtils'
+import API from '../../../API'
+import { FRIEND_LIST_URL } from '../../../Config'
+import { getRandomColor } from '../../Charts/Utils/chartUtils'
 
 class SplitTransactionForm extends React.Component {
 
@@ -13,9 +14,10 @@ class SplitTransactionForm extends React.Component {
         this.state = {
             title: '',
             total_amount: 0,
-            users_in_split: [],
+            creator: localStorage.getItem('userid'),
             category: 1,
-            creator: localStorage.getItem('userid')
+            paying_friend: null,
+            all_friends_involved: []
         }
     }
 
@@ -27,7 +29,7 @@ class SplitTransactionForm extends React.Component {
                 return { value: friend.id, label: friend.username, color: getRandomColor() }
             })
 
-            resolve(friends)
+            resolve(friends.concat([{ value: localStorage.getItem('userid'), label: localStorage.getItem('username'), color: getRandomColor() }]))
         })
     })
 
@@ -40,7 +42,7 @@ class SplitTransactionForm extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         const res = await API.createSplitTransaction(this.state)
-        if (res.status === 201){
+        if (res.status === 201) {
             alert("Expense Splitted");
             event.target.parentNode.parentNode.reset();
             this.props.splitHandler();
@@ -52,7 +54,7 @@ class SplitTransactionForm extends React.Component {
             <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
                 <form>
                     <h3> Split with Friends </h3>
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='title'>Title</label>
                         <input
                             type='text'
@@ -62,7 +64,7 @@ class SplitTransactionForm extends React.Component {
                             onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
                         />
                     </div>
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='total-amount'>Total Amount</label>
                         <input
                             type='number'
@@ -72,10 +74,10 @@ class SplitTransactionForm extends React.Component {
                             onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
                         />
                     </div>
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <label htmlFor='category'>Category</label>
                         <select
-                            className='custom-select'
+                            className='form-select'
                             name='category'
                             onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
                         >
@@ -88,14 +90,29 @@ class SplitTransactionForm extends React.Component {
                             }
                         </select>
                     </div>
-                    <div className='form-group'>
-                        <label htmlFor='friends'>Friends</label>
+                    <div className='mb-3'>
+                        <label htmlFor='paying_friend'>Who Payed?</label>
+                        <AsyncSelect
+                            cacheOptions
+                            defaultOptions
+                            loadOptions={this.promiseFriends}
+                            onChange={(value) => { this.handleChange('paying_friend', value.value) }}
+                            styles={{
+                                option: (provided, state) => ({
+                                    ...provided,
+                                    color: 'black'
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div className='mb-3'>
+                        <label htmlFor='friends'>Friends Involved</label>
                         <MultiSelectComponent
                             promiseOptions={this.promiseFriends}
                             handleChange={this.handleChange}
                         />
                     </div>
-                    <div className='form-group'>
+                    <div className='mb-3'>
                         <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Create</button>
                     </div>
                 </form>

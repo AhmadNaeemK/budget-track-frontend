@@ -1,6 +1,6 @@
 import React from 'react'
 
-import API from '../../API'
+import API from '../../../API'
 
 const AccountsList = (props) => {
 
@@ -56,7 +56,7 @@ const AccountsList = (props) => {
                         }
                         </td>
                         <td>
-                            <button id={`edit-btn-${account.id}`} className='btn btn-outline-success' data-toggle='modal' data-target={`#aModal`} onClick={handleEdit}>
+                            <button id={`edit-btn-${account.id}`} className='btn btn-outline-success' data-bs-toggle='modal' data-bs-target='#aModal' onClick={handleEdit}>
                                 <i id={`edit-btn-${account.id}`} className='fas fa-edit'></i>
                             </button>
                         </td>
