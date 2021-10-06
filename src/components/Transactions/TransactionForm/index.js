@@ -15,7 +15,7 @@ class TransactionForm extends React.Component {
 
     constructor(props) {
         super(props);
-        if (props.title === 'Create Transactions') {
+        if (props.type === 'creation') {
             this.initialState.category = props.categories[0][0]
             this.initialState.cash_account = props.accounts[0].id
         }
@@ -78,7 +78,7 @@ class TransactionForm extends React.Component {
             }
         }
 
-        if (this.props.title === "Create Transactions") {
+        if (this.props.type === "creation") {
             await create();
         } else {
             await update();
@@ -88,10 +88,10 @@ class TransactionForm extends React.Component {
 
     render() {
         return (
-            <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
-                {this.props.title === "Create Transactions" ? (
+                <>
+                {this.props.type === "creation" ? (
                     <form>
-                        {this.props.title ? <h3>{this.props.title}</h3> : null}
+
                         <div className='mb-3'>
                             <label htmlFor='title'>Transaction Title</label>
                             <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder="Add title here" />
@@ -147,7 +147,7 @@ class TransactionForm extends React.Component {
                     </form>
                 )
                 }
-            </div>
+            </>
         )
     }
 }

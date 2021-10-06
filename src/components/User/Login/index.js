@@ -1,5 +1,4 @@
 import React from 'react'
-import { useState } from 'react';
 import { Link } from 'react-router-dom'
 
 import API from '../../../API';
@@ -8,7 +7,7 @@ async function checkNewUser() {
     const accounts = await API.fetchCashAccountList()
     const transactions = await API.fetchExpenseList(new Date().getMonth() + 1)
 
-    if (accounts[0].balance == 0 && transactions.count == 0) {
+    if (parseInt(accounts.results[0].balance) === 0 && parseInt(transactions.count) === 0) {
         return true
     }
     return false
@@ -29,6 +28,7 @@ class LoginForm extends React.Component {
         event.preventDefault();
         const result = await API.login(this.state);
         if (result.access) {
+            this.props.handleLogin(true)
             localStorage.setItem('access', result.access);
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user);

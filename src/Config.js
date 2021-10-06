@@ -35,6 +35,8 @@ const UNFFRIEND_URL = API_URL + '/user/removeFriend/'
 const SPLIT_TRANSACTION_LIST_URL = API_URL + '/splitTransactionList/'
 const SPLIT_TRANSACTION_URL = API_URL + '/splitTransaction/'
 const PAY_SPLIT_URL = API_URL + '/paySplit/'
+const SPLIT_PAYMENT_DATA_URL = API_URL + '/splitPaymentData'
+const MAX_SPLIT_DUE  = API_URL +'/splitsDueMax'
 
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -69,5 +71,7 @@ export {
     SPLIT_TRANSACTION_URL,
     PAY_SPLIT_URL,
     MONTHLY_TRANSACTION_CHART_DATA,
+    SPLIT_PAYMENT_DATA_URL,
+    MAX_SPLIT_DUE,
     monthNames,
 }

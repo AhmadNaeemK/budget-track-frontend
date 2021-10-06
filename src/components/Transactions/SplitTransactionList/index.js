@@ -1,8 +1,180 @@
+import { TimeScale } from 'chart.js';
 import React from 'react'
+
 import API from '../../../API';
+import { SPLIT_TRANSACTION_LIST_URL } from '../../../Config';
+import { categoryColor } from '../../Charts&Tables/Utils/chartUtils';
+
+import BaseDataTableComponent from '../../Charts&Tables/BaseDataTableComponent';
+import ModalComponent from '../../Modals'
+
+class PaySplitForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            paymentData: {},
+            amount: 0,
+        }
+    }
+
+    componentDidUpdate = async (prevProps) => {
+        if (this.props !== prevProps && this.props.split) {
+            const paymentData = await API.fetchSplitPaymentData(this.props.split.id)
+            this.setState({ paymentData: paymentData })
+        }
+    }
+
+    handleChange = (name, value) => {
+        this.setState({
+            [name]: value
+        })
+    }
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        const cleanedFormData = {
+            'amount': this.state.amount,
+            'split_id': this.props.split.id,
+        }
+        const res = await API.paySplit(cleanedFormData)
+        if (res.status === 200) {
+            alert("Payment Succesful");
+            event.target.parentNode.parentNode.reset();
+        }
+    }
+
+    render() {
+        return (
+            <>
+                {this.props.split &&
+                    < div className='d-flex justify-content-between'>
+                        <div>
+                            <p>Required Amount</p>
+                            <p>{this.state.paymentData.required}</p>
+                        </div>
+                        <div>
+                            <p>Paid Amount</p>
+                            <p>{this.state.paymentData.paid}</p>
+                        </div>
+                        <div>
+                            <p>Total Amount</p>
+                            <p>{this.props.split.total_amount}</p>
+                        </div>
+                    </div>
+                }
+                <form>
+                    <div className='mb-3'>
+                        <label htmlFor='amount'>Pay Amount</label>
+                        <input
+                            type='number'
+                            name='amount'
+                            className='form-control'
+                            placeholder='Add total amount here'
+                            onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
+                        />
+                    </div>
+                    <div className='mb-3'>
+                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Pay</button>
+                    </div>
+                </form>
+            </>
+        )
+    }
+}
 
 class SplitTransactionList extends React.Component {
 
+    columns = []
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            paying_split: null
+        }
+        this.constructor = this.columns = [{
+            name: 'Title',
+            id: 'title',
+            selector: row => row.title,
+            sortable: true,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Total Amount',
+            id: 'total_amount',
+            selector: row => row.total_amount,
+            sortable: true,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Creator',
+            id: 'creator',
+            selector: row => row.creator.username,
+            sortable: true,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Paying Friend',
+            id: 'paying_friend',
+            selector: row => row.paying_friend.username,
+            sortable: true,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Friends Involved',
+            id: 'all_friends_involved',
+            cell: (row, index, column, id) => (
+                <ul>
+                    {row.all_friends_involved.map(friend => (
+                        <li key={friend.id}>{friend.username}</li>
+                    ))}
+                </ul>
+            ),
+            sortable: true,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Delete',
+            button: true,
+            cell: (row) => <>
+                {localStorage.getItem('username') === row.creator.username &&
+                    <button type="button" className='btn btn-danger' onClick={() => this.deleteTransaction(row)}>Delete</button>
+                }
+            </>
+            ,
+            center: true,
+            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Edit',
+            button: true,
+            cell: (row) =>
+                <>
+                    {!row.completed_payment &&
+                        <button type="button"
+                            className='btn btn-success'
+                            data-bs-toggle='modal'
+                            data-bs-target='#splitPaymentModal'
+                            onClick={() => this.paySplit(row)}>Pay</button>
+                    }
+                </>
+            ,
+            center: true,
+            compact: true,
+            wrap: true,
+        }
+        ]
+    }
 
     handleDelete = async (event) => {
         const splitId = parseInt(event.target.id.split(/del-btn-/)[1]);
@@ -12,71 +184,53 @@ class SplitTransactionList extends React.Component {
         }
     }
 
-    handlePay = async (event) => {
-        const splitId = parseInt(event.target.id.split(/pay-btn-/)[1]);
-        const split = this.props.splitTransactions.find(split => split.id === splitId)
-        const payable_amount = split.total_amount / split.users_in_split.length
-        const data = {
-            split_id: splitId,
-            amount: payable_amount
+    paySplit = (row) => {
+        this.setState({
+            paying_split: row
         }
-        const res = await API.paySplit(data)
-        if (res.status === 200) {
-            alert("Payment Succesful")
-        }
+        )
     }
+
+    dataRequest = async (params) => {
+        const res = await API.fetchSplitTransactionList(SPLIT_TRANSACTION_LIST_URL + params)
+        return res
+    }
+
+    conditionalRows = [
+        {
+            when:  row => row.completed_payment ,
+            style: {
+                backgroundColor: categoryColor['Healthcare'],
+            },
+        },
+        {
+            when:  row => !row.completed_payment ,
+            style: {
+                backgroundColor: categoryColor['Grocery'],
+            },
+        }
+    ]
 
     render() {
         return (
-            <table className='table table-dark table-striped'>
-
-                <thead><tr><th className='bg-dark' colSpan='10'>{this.props.title}</th></tr></thead>
-                <tbody>
-                    <tr>
-                        <th>Id</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Creator</th>
-                        <th>Paying Friend</th>
-                        <th>Friends Involved</th>
-                        <th>Friends Who Paid</th>
-                        <th>Amount</th>
-                        <th colSpan="2"></th>
-                    </tr>
-                    {this.props.splitTransactions.length > 0 ?
-                        this.props.splitTransactions.map(split => (
-                            <tr key={split.id}>
-                                <td>{split.id}</td>
-                                <td>{split.title}</td>
-                                <td>{this.props.categories[split.category][1]}</td>
-                                <td>{split.creator.username}</td>
-                                <td>{split.paying_friend.username}</td>
-                                <td>
-                                    <ul style={{ listStyleType: 'none', margin: '0', padding: '0' }}>
-                                        {split.all_friends_involved.map((user) => (
-                                            <li key={user.id}>{user.username}</li>
-                                        ))}
-                                    </ul>
-                                </td>
-                                <td>{split.total_amount}</td>
-                                <td>
-                                    {this.props.splitType === 'created' ?
-                                        <button id={`del-btn-${split.id}`} className='btn btn-outline-danger' onClick={this.handleDelete}>
-                                            <i id={`del-btn-${split.id}`} className='fas fa-trash-alt'></i>
-                                        </button> :
-                                        <button id={`pay-btn-${split.id}`} className='btn btn-outline-success' onClick={this.handlePay}>
-                                            <i id={`pay-btn-${split.id}`} className='fas fa-check'></i>
-                                        </button>
-
-                                    }
-
-                                </td>
-                            </tr>
-                        )) :
-                        <td colSpan='10'>No Splits Found</td>
+            <>
+                <BaseDataTableComponent
+                    fetchDataRequest={this.dataRequest}
+                    paginated={true}
+                    searchAble={true}
+                    columns={this.columns}
+                    conditionalRowStyles={this.conditionalRows}
+                />
+                <ModalComponent
+                    id='splitPaymentModal'
+                    title='Pay the Split'
+                    modalBody={
+                        <PaySplitForm
+                            split={this.state.paying_split}
+                        />
                     }
-                </tbody>
-            </table>
+                />
+            </>
         )
     }
 }

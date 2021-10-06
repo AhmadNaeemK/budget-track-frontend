@@ -23,7 +23,7 @@ class AccountsForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        if (this.props.title === "Create Account") {
+        if (this.props.type === "creation") {
             const res = await API.createCashAccount(this.state);
             if (res && res.status === 201) {
                 this.props.accountHandler()
@@ -54,9 +54,8 @@ class AccountsForm extends React.Component {
         return (
             <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
                 <form>
-                    {this.props.title ?
+                    {this.props.type === 'creation' ?
                         <>
-                            <h3>{this.props.title}</h3>
                             <div className='mb-3'>
                                 <label htmlFor='title'>Accounts Title</label>
                                 <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here'/>

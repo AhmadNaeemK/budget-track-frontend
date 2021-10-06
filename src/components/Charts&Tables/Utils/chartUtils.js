@@ -14,6 +14,6 @@ export const categoryColor = {
   Healthcare: '#64c93c',
   Travel: '#3cc9aa',
   Food: '#8c3cc9',
-  Grocery: '#c97b3c',
+  Grocery: '#e97b1c',
   Other: '#a5a5a5'
 }

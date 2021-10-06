@@ -1,26 +1,10 @@
 import React from 'react';
 
-import { Router } from 'react-router';
-
 import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
 
 class SideBarComponent extends React.Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            loggedIn: false
-        }
-    }
-
-    static getDerivedStateFromProps(state, props) {
-        const newState = {
-            loggedIn: localStorage.getItem('username') ? true : false,
-        }
-        return newState
-    }
 
 
 
@@ -28,10 +12,10 @@ class SideBarComponent extends React.Component {
         console.log()
         return (
             <>
-                {this.state.loggedIn &&
+                {this.props.isLoggedIn &&
                     <div class="col-auto col-sm-1 col-md-3 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
                         <div className="d-flex flex-column flex-shrink-0 text-white bg-dark sticky-top">
-                            <Link className='m-2' style={{ textDecoration: 'none', color: 'white' }} to={this.state.loggedIn ? '/home' : '/'}>
+                            <Link className='m-2' style={{ textDecoration: 'none', color: 'white' }} to={this.props.isLoggedIn ? '/home' : '/'}>
                                 <h1>Budget Track</h1>
                             </Link>
                             <hr />
@@ -47,7 +31,7 @@ class SideBarComponent extends React.Component {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/' className='nav-link text-white' activeClassName='nav-link active'>
+                                    <NavLink to='/splitExpenses' className='nav-link text-white' activeClassName='nav-link active'>
                                         Split Expense
                                     </NavLink>
                                 </li>
@@ -59,6 +43,11 @@ class SideBarComponent extends React.Component {
                                 <li>
                                     <NavLink to='/incomes' className='nav-link text-white' activeClassName='nav-link active'>
                                         Incomes
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to='/scheduledTransactions' className='nav-link text-white' activeClassName='nav-link active'>
+                                        Scheduled Transactions
                                     </NavLink>
                                 </li>
                                 <li>

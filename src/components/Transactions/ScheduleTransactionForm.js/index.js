@@ -37,8 +37,9 @@ class ScheduleTransactionForm extends React.Component {
         const newState = { ...this.state, transaction_time: timeFormated }
         const res = await API.createScheduledTransaction(newState)
         if (res.status === 201) {
-            alert("Transaction Scheduled")
-            this.props.scheduledTransactionHandler()
+            alert("Transaction Scheduled");
+            event.parentNode.reset();
+            this.props.scheduledTransactionHandler();
         } else {
             const error = await res.json()
             alert(error[Object.keys(error)[0]])
@@ -49,9 +50,7 @@ class ScheduleTransactionForm extends React.Component {
 
     render() {
         return (
-            <div className='border rounded border-white p-4 m-2 '>
                 <form>
-                    <h3>Schedule A Transaction</h3>
                     <div className='mb-3'>
                         <label htmlFor='title'>Title</label>
                         <input className='form-control' type='text' name='title' placeholder='Add title here' onChange={this.handleChange} />
@@ -67,12 +66,6 @@ class ScheduleTransactionForm extends React.Component {
                                             <option key={account.id} value={account.id}>{account.title}</option>
                                         ))
                                     }
-                                </select>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
                                 </select>
                             </div>
                         </div>
@@ -111,7 +104,6 @@ class ScheduleTransactionForm extends React.Component {
                     </button>
 
                 </form>
-            </div>
         )
     }
 }

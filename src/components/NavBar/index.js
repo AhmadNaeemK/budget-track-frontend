@@ -5,30 +5,15 @@ import Logout from '../User/Logout'
 
 class NavBar extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            loggedIn: false
-        }
-    }
-
-    static getDerivedStateFromProps(state, props) {
-        const newState = {
-            loggedIn: localStorage.getItem('username') ? true : false,
-        }
-        return newState
-    }
 
     loggedOut = () => {
-        this.setState({
-            loggedIn: false
-        })
+        this.props.handleLogout(false)
     }
 
     render() {
         return (
             <nav className='navbar navbar-dark bg-dark'>
-                {!this.state.loggedIn ?
+                {!this.props.loggedIn ?
                     (<div className='container-fluid mt-2'>
                         <h1>Budget Tracker</h1>
                     </div>)
@@ -45,7 +30,7 @@ class NavBar extends React.Component {
                                         <i className='fas fa-user-circle fa-3x' type='button' data-bs-toggle='dropdown'></i>
                                         <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                             <li>
-                                                <Link style={{ textDecoration: 'none' }} to={'/friends'}> <p className="dropdown-item">Friend Requests</p> </Link> 
+                                                <Link style={{ textDecoration: 'none' }} to={'/friendRequests'}> <p className="dropdown-item">Friend Requests</p> </Link> 
                                             </li>
                                             <li><hr className="dropdown-divider" /></li>
                                             <li><Link style={{ textDecoration: 'none' }} to={'/friends'}> <p className="dropdown-item">Friends</p> </Link> </li>

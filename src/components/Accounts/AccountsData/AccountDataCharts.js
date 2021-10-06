@@ -1,10 +1,10 @@
 import React from 'react';
 
-import ExpenseStructureChart from '../../Charts/ExpenseStructureChart';
+import ExpenseStructureChart from '../../Charts&Tables/ExpenseStructureChart';
 
 import { monthNames } from '../../../Config';
-import CashAccountsChart from '../../Charts/CashAccountChart';
-import BudgetChart from '../../Charts/BudgetChart';
+import CashAccountsChart from '../../Charts&Tables/CashAccountChart';
+import BudgetChart from '../../Charts&Tables/BudgetChart';
 
 class AccountDataCharts extends React.Component {
 
@@ -32,15 +32,15 @@ class AccountDataCharts extends React.Component {
     render() {
         return (
             <>
-                <div className='d-flex justify-content-between align-items-center'>
-                    <div className='col-5 p-3'>
+                <div className='row justify-content-between align-items-center'>
+                    <div className=' col p-3'>
                         <h6> Current Balance </h6>
                         <h1>
                             {new Intl.NumberFormat()
                                 .format(this.props.cashAccounts[this.state.selectedAccount].balance)}
                         </h1>
                     </div>
-                    <div className='col-4'>
+                    <div className='col'>
                         <select name='selectedAccount' className='form-select' onChange={this.handleAccountChange}>
                             {this.props.cashAccounts.map((account, index) => (
                                 <option key={account.id} value={index}>{account.title}</option>
@@ -49,29 +49,21 @@ class AccountDataCharts extends React.Component {
                     </div>
                 </div>
                 <hr />
-                <div className='d-flex justify-content-between align-items-center mb-5'>
-                    <div className='col-sm-6'>
+                <div className='row justify-content-between align-items-center mb-5'>
+                    <div className='col-lg-6'>
                         <ExpenseStructureChart
                             selectedAccount={this.state.selectedAccount}
                             expenseData={this.props.expenseData}
                             month={monthNames[this.props.month - 1]} />
                     </div>
 
-                    <div className='col-sm-6'>
+                    <div className='col-lg-6'>
                         <CashAccountsChart
                             selectedAccount={this.state.selectedAccount}
                             cashAccounts={this.props.cashAccounts}
                         />
                     </div>
                 </div>
-                <div className='d-flex justify-content-between align-items-center'>
-                    <BudgetChart
-                        selectedAccount={this.state.selectedAccount}
-                        accounts={this.props.cashAccounts}
-                        month={monthNames[this.props.month - 1]}
-                    />
-                </div>
-
             </>
         )
     }
