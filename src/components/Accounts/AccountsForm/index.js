@@ -37,10 +37,10 @@ class AccountsForm extends React.Component {
             for (let s in this.state) {
                 if (this.state[s] !== '' && this.state[s] !== 0) newState = { ...newState, [s]: this.state[s] }
             }
-            const res = await API.updateCashAccount(this.props.accountId, newState)
+            const res = await API.updateCashAccount(this.props.account_edit.id, newState)
             if (res.status === 200) {
-                this.props.accountHandler()
-                this.setState(this.initialState)
+                const updatedAccount = await res.json()
+                this.props.accountHandler(updatedAccount)
             } else {
                 const error = await res.json()
                 alert(error[Object.keys(error)[0]])
@@ -58,19 +58,19 @@ class AccountsForm extends React.Component {
                         <>
                             <div className='mb-3'>
                                 <label htmlFor='title'>Accounts Title</label>
-                                <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here'/>
+                                <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here' />
                             </div>
                         </>
                         : null}
 
                     <div className='mb-3'>
                         <label htmlFor='balance'>Balance</label>
-                        <input className='form-control' type='number' name='balance' onChange={this.handleChange} placeholder='Add balance here'/>
+                        <input className='form-control' type='number' name='balance' onChange={this.handleChange} placeholder='Add balance here' />
                     </div>
 
                     <div className='mb-3'>
                         <label htmlFor='limit'>Budget Limit</label>
-                        <input className='form-control' type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here'/>
+                        <input className='form-control' type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here' />
                     </div>
 
                     <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>

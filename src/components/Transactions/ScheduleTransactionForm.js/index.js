@@ -38,7 +38,7 @@ class ScheduleTransactionForm extends React.Component {
         const res = await API.createScheduledTransaction(newState)
         if (res.status === 201) {
             alert("Transaction Scheduled");
-            event.parentNode.reset();
+            event.target.parentNode.reset();
             this.props.scheduledTransactionHandler();
         } else {
             const error = await res.json()

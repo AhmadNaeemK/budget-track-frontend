@@ -21,13 +21,13 @@ class FriendsList extends React.Component {
             },
             {
                 name: 'Email',
-                id:'email',
+                id: 'email',
                 selector: row => row.email,
             },
             {
                 name: "UnFriend",
                 button: true,
-                cell: (row) => 
+                cell: (row) =>
                     <button type="button" className='btn btn-danger' onClick={() => this.unFriend(row)}>UnFriend</button>
             }
         ];
@@ -36,7 +36,11 @@ class FriendsList extends React.Component {
     unFriend = async (row) => {
         const res = await API.removeFriend(row.id)
         if (res.status === 204) {
-            alert(`UnFriended ${row.username}`)
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
+        } else {
+            alert(await res.json())
         }
     }
 
@@ -46,14 +50,19 @@ class FriendsList extends React.Component {
         return res
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
 
     render() {
         return (
             <BaseDataTableComponent
-                paginated = {true}
-                searchAble = {true}
-                columns = {this.columns}
-                fetchDataRequest = { this.dataRequest }
+                paginated={true}
+                searchAble={true}
+                columns={this.columns}
+                fetchDataRequest={this.dataRequest}
+                setMethods={this.acceptChildMethodsForUpdate}
             />
         )
     }

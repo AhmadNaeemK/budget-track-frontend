@@ -14,7 +14,7 @@ class AllAccounts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            transaction_edit: null
+            account_edit: null
         }
         this.columns = [{
             name: 'Title',
@@ -69,15 +69,29 @@ class AllAccounts extends React.Component {
     deleteAccount = async (row) => {
         const res = await API.deleteCashAccount(row.id)
         if (res.status === 204) {
-            alert(`${row.id} deleted`)
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(await res.json())
         }
     }
 
+    updateAccount = (newAccount) => {
+        let data = this.getData()
+        const editRowIndex=data.findIndex(dataRow => dataRow.id === this.state.account_edit.id)
+        data[editRowIndex]=newAccount
+        this.updateData(data)
+    }
+
     dataRequest = async (params) => {
         const res = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + params)
         return res
+    }
+
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
     }
 
     render() {
@@ -112,6 +126,7 @@ class AllAccounts extends React.Component {
                             paginated={true}
                             searchAble={true}
                             fetchDataRequest={this.dataRequest}
+                            setMethods={this.acceptChildMethodsForUpdate}
                         />
                     </div>
                 </div>
@@ -122,8 +137,8 @@ class AllAccounts extends React.Component {
                     modalBody={
                         <AccountsForm
                             type='update'
-                            accountId={this.state.accountId}
-                            accountHandler={this.accountHandler} />
+                            account_edit={this.state.account_edit}
+                            accountHandler={this.updateAccount} />
                     }
                 />
             </div>

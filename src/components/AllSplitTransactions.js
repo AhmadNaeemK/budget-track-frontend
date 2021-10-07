@@ -31,7 +31,7 @@ class AllSplitTransactions extends React.Component {
                         data-bs-toggle='modal'
                         data-bs-target={`#split-transaction`}
                     >
-                        Schedule Transaction
+                        Split Expense
                     </button>
                     <ModalComponent
                         id='split-transaction'

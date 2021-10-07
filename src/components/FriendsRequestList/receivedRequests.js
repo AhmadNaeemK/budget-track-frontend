@@ -24,10 +24,16 @@ class ReceivedRequests extends React.Component {
                 selector: row => row.user.email,
             },
             {
-                name: 'Delete Request',
+                name: 'Accept',
                 button: true,
                 cell: (row) =>
                     <button type="button" className='btn btn-success' onClick={() => this.acceptRequest(row)}>Accept</button>
+            },
+            {
+                name: 'Delete',
+                button: true,
+                cell: (row) =>
+                    <button type="button" className='btn btn-danger' onClick={() => this.deleteRequest(row)}>Delete</button>
             }
         ];
     }
@@ -35,7 +41,20 @@ class ReceivedRequests extends React.Component {
     acceptRequest = async (row) => {
         const res = await API.acceptFriendRequest(row.id)
         if (res.status === 201) {
-            alert("Request Accepted")
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
+        } else {
+            alert(res[Object.keys(res)[0]])
+        }
+    }
+
+    deleteRequest = async (row) => {
+        const res = await API.deleteFriendRequest(row.id)
+        if (res.status === 204) {
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(res[Object.keys(res)[0]])
         }
@@ -47,6 +66,11 @@ class ReceivedRequests extends React.Component {
         return res
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
+
     render() {
         return (
             <BaseDataTableComponent
@@ -54,6 +78,7 @@ class ReceivedRequests extends React.Component {
                 searchAble={true}
                 fetchDataRequest={this.dataRequest}
                 columns={this.columns}
+                setMethods={this.acceptChildMethodsForUpdate}
             />
         )
     }

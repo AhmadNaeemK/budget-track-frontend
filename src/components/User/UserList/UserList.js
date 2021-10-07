@@ -37,7 +37,11 @@ class UsersList extends React.Component {
     sendRequest = async (row) => {
         const res = await API.createFriendRequest({ user: localStorage.userid, receiver: row.id })
         if (res.status === 201) {
-            alert("Request Sent")
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
+        } else {
+            alert(await res.json())
         }
     }
 
@@ -47,6 +51,10 @@ class UsersList extends React.Component {
         return res
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
 
     render() {
         return (
@@ -55,6 +63,7 @@ class UsersList extends React.Component {
                 searchAble = {true}
                 columns = {this.columns}
                 fetchDataRequest = { this.dataRequest }
+                setMethods ={this.acceptChildMethodsForUpdate}
             />
         )
     }

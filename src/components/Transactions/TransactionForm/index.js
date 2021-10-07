@@ -60,9 +60,8 @@ class TransactionForm extends React.Component {
             if (this.props.transaction.category === incomeCategory) {
                 const res = await API.updateIncome(transactionId, formData)
                 if (res && res.status === 200) {
-                    const newTransactions = await API.fetchIncomeList(new Date().getMonth() + 1)
-                    const newAccounts = await API.fetchCashAccountList()
-                    this.props.transactionAccountHandler('incomes', newTransactions, newAccounts)
+                    const updatedTransaction = await res.json()
+                    this.props.transactionHandler(updatedTransaction)
                 } else {
                     const error = await res.json()
                     alert(error[Object.keys(error)[0]])
@@ -70,7 +69,8 @@ class TransactionForm extends React.Component {
             } else {
                 const res = await API.updateExpense(transactionId, formData)
                 if (res && res.status === 200) {
-                    this.props.transactionAccountHandler('expenses')
+                    const updatedTransaction = await res.json()
+                    this.props.transactionHandler(updatedTransaction)
                 } else {
                     const error = await res.json()
                     alert(error[Object.keys(error)[0]])

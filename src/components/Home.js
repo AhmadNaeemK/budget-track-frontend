@@ -20,20 +20,13 @@ class Home extends React.Component {
         super(props);
         this.state = {
             isLoaded: false,
-            expenses: [],
-            incomes: [],
-            loggedIn: false,
             cashAccounts: [],
             transactionCategories: [],
             transaction_edit: null,
             accountId: null,
             month: new Date().getMonth() + 1,
             categoryExpenseData: [],
-            Scheduled: [],
-            userCreatedSplits: [],
-            userPayableSplits: [],
             monthlyTransactionChartData: {},
-            page_size: 5,
         }
     }
 
@@ -51,59 +44,19 @@ class Home extends React.Component {
     }
 
 
-    transactionAccountHandler = async (type, transaction, acc) => {
-        let newTransactions;
-        if (type === 'expenses') {
-            newTransactions = await API.fetchExpenseList(this.state.month)
-        } else if (type === 'incomes') {
-            newTransactions = await API.fetchIncomeList(this.state.month);
-        } else {
-            newTransactions = await API.fetchScheduledTransactionList();
-        }
-
-        const newCategoryData = await API.fetchCategoryExpenseData(this.state.month);
-        const newCashAccounts = await API.fetchCashAccountList();
-        this.setState({
-            [type]: newTransactions,
-            cashAccounts: newCashAccounts,
-            categoryExpenseData: newCategoryData,
-        })
-    }
-
-    scheduledTransactionHandler = async () => {
-        const newTransactions = await API.fetchScheduledTransactionList();
-        this.setState({
-            Scheduled: newTransactions,
-        })
-    }
-
-    splitTransactionHandler = async () => {
-        const newSplits = await API.fetchSplitTransactionList(true);
-        this.setState({
-            userCreatedSplits: newSplits,
-        })
-    }
-
-    accountHandler = async () => {
-        const newCategoryData = await API.fetchCategoryExpenseData(this.state.month);
-        const acc = await API.fetchCashAccountList()
-        this.setState({
-            cashAccounts: acc,
-            categoryExpenseData: newCategoryData
-        })
+    changeHandler() {
+        window.location.reload()
     }
 
     componentDidMount() {
         const fetchThings = async () => {
             const month = new Date().getMonth() + 1
-            const paginationParams = `?month=${month}&page_size=${this.state.page_size}`
-            const expenses = await API.fetchExpenseList(month, EXPENSE_LIST_URL + paginationParams);
             const cashAccountList = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20');
             const transactionCategories = await API.fetchTransactionCategories();
             const categoryExpenseData = await API.fetchCategoryExpenseData(month);
             const monthlyTransactionChartData = await API.fetchMonthlyTransactionChartData()
             this.setState({
-                expenses: expenses, cashAccounts: cashAccountList.results,
+                cashAccounts: cashAccountList.results,
                 transactionCategories: transactionCategories,
                 categoryExpenseData: categoryExpenseData,
                 monthlyTransactionChartData: monthlyTransactionChartData,
@@ -171,7 +124,7 @@ class Home extends React.Component {
                                                     <AccountsForm
                                                         type='creation'
                                                         accountId={this.state.accountId}
-                                                        accountHandler={this.accountHandler} />
+                                                        accountHandler={this.changeHandler} />
                                                 }
                                             />
                                         </div>
@@ -191,7 +144,7 @@ class Home extends React.Component {
                                                         type='creation'
                                                         transaction={this.state.transaction_edit}
                                                         accounts={this.state.cashAccounts}
-                                                        transactionAccountHandler={this.transactionAccountHandler}
+                                                        transactionAccountHandler={this.changeHandler}
                                                         categories={this.state.transactionCategories}
                                                     />
                                                 }
@@ -212,7 +165,7 @@ class Home extends React.Component {
                                                     <ScheduleTransactionForm
                                                         accounts={this.state.cashAccounts}
                                                         categories={this.state.transactionCategories}
-                                                        scheduledTransactionHandler={() => { console.log("Scheduled") }}
+                                                        scheduledTransactionHandler={this.changeHandler}
                                                     />
                                                 }
                                             />
@@ -227,6 +180,19 @@ class Home extends React.Component {
                                     />
                                 </div>
                                 <div className='border rounded border-white p-2 m-2'>
+                                    <div className='d-flex align-items-center justify-content-between px-2'>
+                                        <h3> Split Expenses </h3>
+                                        <Link className='d-flex m-2' to='/splitExpenses' style={{ textDecoration: 'none', color: 'white' }}>
+                                            <h3 className='mr-2'>See More </h3>
+                                            <i className='fas fa-long-arrow-alt-up fa-2x ml-4'
+                                                style={{
+                                                    transform: 'rotate(45deg)',
+                                                    marginInlineStart: '5px',
+                                                    fontWeight: '1rem'
+                                                }}
+                                            />
+                                        </Link>
+                                    </div>
                                     <MaxSplitData />
                                 </div>
                             </div>

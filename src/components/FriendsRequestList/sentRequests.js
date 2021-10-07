@@ -35,7 +35,9 @@ class SentRequests extends React.Component {
     deleteRequest = async (row) => {
         const res = await API.deleteFriendRequest(row.id)
         if (res.status === 204) {
-            console.log(`Request to ${row.receiver.username} deleted`)
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(res[Object.keys(res)[0]])
         }
@@ -47,6 +49,11 @@ class SentRequests extends React.Component {
         return res
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
+
     render() {
         return (
             <BaseDataTableComponent
@@ -54,6 +61,7 @@ class SentRequests extends React.Component {
                 searchAble={true}
                 fetchDataRequest={this.dataRequest}
                 columns={this.columns}
+                setMethods={this.acceptChildMethodsForUpdate}
             />
         )
     }

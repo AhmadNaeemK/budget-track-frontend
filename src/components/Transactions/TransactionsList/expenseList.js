@@ -8,7 +8,6 @@ import ModalComponent from '../../Modals';
 import TransactionForm from '../TransactionForm';
 
 class ExpenseList extends React.Component {
-
     columns = []
     buttons = [{
         name: 'Delete',
@@ -24,7 +23,7 @@ class ExpenseList extends React.Component {
                 className='btn btn-success'
                 data-bs-toggle='modal'
                 data-bs-target='#tModal'
-                onClick={() => this.editTransaction(row)}>Edit</button>
+                onClick={() => this.handleEditTransaction(row)}>Edit</button>
     }]
     constructor(props) {
         super(props);
@@ -71,10 +70,7 @@ class ExpenseList extends React.Component {
         }
     }
 
-
-    
-
-    editTransaction = (row) => {
+    handleEditTransaction = (row) => {
         this.setState({
             transaction_edit: row
         })
@@ -83,15 +79,28 @@ class ExpenseList extends React.Component {
     deleteTransaction = async (row) => {
         const res = await API.deleteExpense(row.id)
         if (res.status === 204) {
-            alert(`${row.id} deleted`)
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(await res.json())
         }
+    }
+    updateTransaction = (newTransaction) => {
+        let data = this.getData()
+        const editRowIndex=data.findIndex(dataRow => dataRow.id === this.state.transaction_edit.id)
+        data[editRowIndex]=newTransaction
+        this.updateData(data)
     }
 
     dataRequest = async (params) => {
         const res = API.fetchExpenseList(this.props.month, EXPENSE_LIST_URL + params + `&month=${this.props.month}`)
         return res
+    }
+
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
     }
 
     render() {
@@ -102,6 +111,7 @@ class ExpenseList extends React.Component {
                     paginated={this.props.paginated}
                     searchAble={this.props.searchAble}
                     fetchDataRequest={this.dataRequest}
+                    setMethods = {this.acceptChildMethodsForUpdate}
                 />
                 <ModalComponent
                     id='tModal'
@@ -109,7 +119,7 @@ class ExpenseList extends React.Component {
                     modalBody={
                         <TransactionForm
                             transaction={this.state.transaction_edit}
-                            transactionAccountHandler={() => { console.log("Transaction Edited") }}
+                            transactionHandler={this.updateTransaction}
                             categories={this.props.transactionCategories}
                         />
                     }

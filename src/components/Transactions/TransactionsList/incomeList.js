@@ -55,20 +55,29 @@ class IncomeList extends React.Component {
                     className='btn btn-success'
                     data-bs-toggle='modal'
                     data-bs-target='#tModal'
-                    onClick={() => this.editTransaction(row)}>Edit</button>
+                    onClick={() => this.handleEditTransaction(row)}>Edit</button>
         }]
     }
 
     deleteTransaction = async (row) => {
         const res = await API.deleteIncome(row.id)
         if (res.status === 204) {
-            alert(`${row.id} deleted`)
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(await res.json())
         }
     }
 
-    editTransaction = (row) => {
+    updateTransaction = (newTransaction) => {
+        let data = this.getData()
+        const editRowIndex=data.findIndex(dataRow => dataRow.id === this.state.transaction_edit.id)
+        data[editRowIndex]=newTransaction
+        this.updateData(data)
+    }
+
+    handleEditTransaction = (row) => {
         this.setState({
             transaction_edit: row
         })
@@ -79,6 +88,11 @@ class IncomeList extends React.Component {
         return res
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
+
     render() {
         return (
             <>
@@ -87,6 +101,7 @@ class IncomeList extends React.Component {
                     paginated={this.props.paginated}
                     searchAble={this.props.searchAble}
                     fetchDataRequest={this.dataRequest}
+                    setMethods = {this.acceptChildMethodsForUpdate}
                 />
                 <ModalComponent
                     id='tModal'
@@ -94,7 +109,7 @@ class IncomeList extends React.Component {
                     modalBody={
                         <TransactionForm
                             transaction={this.state.transaction_edit}
-                            transactionAccountHandler={() => { console.log("Transaction Edited") }}
+                            transactionHandler={this.updateTransaction}
                             categories={this.props.transactionCategories}
                         />
                     }

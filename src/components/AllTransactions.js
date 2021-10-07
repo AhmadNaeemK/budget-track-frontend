@@ -22,20 +22,6 @@ class AllTransactions extends React.Component {
 
     }
 
-    static getDerivedStateFromProps(props, state) {
-        state['type'] = props.type;
-        return state
-    }
-
-    handleDelete = async (event) => {
-        const transactionId = parseInt(event.target.parentNode.parentNode.id);
-        const res = await API.deleteTransactions(transactionId);
-        const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
-        if (res.status === 204) {
-            const newTransactions = this.state.transactions.filter(transaction => transaction.id !== transactionId);
-            this.setState({ transactions: newTransactions, categoryExpenseData: categoryExpenseData });
-        }
-    }
 
     handleEdit = (event) => {
         const transactionId = parseInt(event.target.parentNode.parentNode.id);
@@ -72,14 +58,10 @@ class AllTransactions extends React.Component {
 
     componentDidMount() {
         (async () => {
-            const AllTransactions = this.props.type === "Expenses" ? await API.fetchExpenseList(this.state.month) :
-                await API.fetchIncomeList(this.state.month);
             const cashAccounts = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20')
-            const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month)
             const transactionCategories = await API.fetchTransactionCategories()
             this.setState({
-                transactions: AllTransactions.results, nextURL: AllTransactions.next,
-                cashAccounts: cashAccounts.results, categoryExpenseData: categoryExpenseData,
+                cashAccounts: cashAccounts.results,
                 transactionCategories: transactionCategories
             })
         })().then(() => { this.setState({ isLoaded: true }) });
@@ -93,6 +75,7 @@ class AllTransactions extends React.Component {
             nextURL: moreTransactions.next,
         });
     }
+
 
     render() {
         return (

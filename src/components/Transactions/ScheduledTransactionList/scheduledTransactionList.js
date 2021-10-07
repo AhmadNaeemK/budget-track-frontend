@@ -51,7 +51,9 @@ class ScheduledTransactionList extends React.Component {
     deleteTransaction = async (row) => {
         const res = await API.deleteScheduledTransaction(row.id)
         if (res.status === 204) {
-            this.render()
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
         } else {
             alert(await res.json())
         }
@@ -61,6 +63,10 @@ class ScheduledTransactionList extends React.Component {
         const res = await API.fetchScheduledTransactionList(SCHEDULED_TRANSACTION_LIST_URL + params)
         return res
     }
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
 
     render() {
         return (
@@ -69,6 +75,7 @@ class ScheduledTransactionList extends React.Component {
                 searchAble={true}
                 fetchDataRequest={this.dataRequest}
                 columns={this.columns}
+                setMethods={this.acceptChildMethodsForUpdate}
             />
         )
     }

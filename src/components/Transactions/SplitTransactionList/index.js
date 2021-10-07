@@ -147,7 +147,7 @@ class SplitTransactionList extends React.Component {
             button: true,
             cell: (row) => <>
                 {localStorage.getItem('username') === row.creator.username &&
-                    <button type="button" className='btn btn-danger' onClick={() => this.deleteTransaction(row)}>Delete</button>
+                    <button type="button" className='btn btn-danger' onClick={() => this.deleteSplit(row)}>Delete</button>
                 }
             </>
             ,
@@ -176,11 +176,14 @@ class SplitTransactionList extends React.Component {
         ]
     }
 
-    handleDelete = async (event) => {
-        const splitId = parseInt(event.target.id.split(/del-btn-/)[1]);
-        const res = await API.deleteSplitTransaction(splitId)
+    deleteSplit = async (row) => {
+        const res = await API.deleteSplitTransaction(row.id)
         if (res.status === 204) {
-            this.props.splitHandler()
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
+        } else {
+            alert(await res.json())
         }
     }
 
@@ -211,6 +214,11 @@ class SplitTransactionList extends React.Component {
         }
     ]
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
+
     render() {
         return (
             <>
@@ -220,6 +228,7 @@ class SplitTransactionList extends React.Component {
                     searchAble={true}
                     columns={this.columns}
                     conditionalRowStyles={this.conditionalRows}
+                    setMethods={this.acceptChildMethodsForUpdate}
                 />
                 <ModalComponent
                     id='splitPaymentModal'

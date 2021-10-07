@@ -23,7 +23,7 @@ const CATEGORY_EXPENSE_URL = API_URL + '/categoryExpenseData'
 const MONTHLY_TRANSACTION_CHART_DATA = API_URL + '/monthlyTransactionChartData/'
 
 const SCHEDULED_TRANSACTION_LIST_URL = API_URL + '/scheduledTransactionList/'
-const SCHEDULED_TRANSACTION_URL = API_URL + '/user/scheduledTransaction/'
+const SCHEDULED_TRANSACTION_URL = API_URL + '/scheduledTransaction/'
 
 const SENT_FRIEND_REQUEST_LIST_URL = API_URL + '/user/sentFriendRequestList/'
 const RECEIVED_FRIEND_REQUEST_LIST_URL = API_URL + '/user/receivedFriendRequestList/'

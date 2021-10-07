@@ -53,6 +53,7 @@ class MaxSplitData extends React.Component {
                     columns={this.columns}
                     fetchDataRequest={this.dataRequest}
                     conditionalRowStyles={this.conditionalRows}
+                    setMethods={() => {}}
                 />
             </>
         )

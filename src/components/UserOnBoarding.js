@@ -1,6 +1,6 @@
 import React from 'react'
 import API from '../API';
-
+import { CASH_ACCOUNT_LIST_URL } from '../Config';
 import AccountsForm from './Accounts/AccountsForm';
 
 class UserOnBoarding extends React.Component {
@@ -16,8 +16,8 @@ class UserOnBoarding extends React.Component {
 
     componentDidMount() {
         (async () => {
-            const accounts = await API.fetchCashAccountList();
-            this.setState({accounts: accounts,  accountId: accounts[0].id });
+            const accounts = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20')
+            this.setState({accounts: accounts.results,  accountId: accounts[0].id });
         })().then(() => {this.setState({isLoaded: true})});
     }
 

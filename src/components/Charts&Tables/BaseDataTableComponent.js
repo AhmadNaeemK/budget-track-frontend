@@ -79,6 +79,7 @@ class BaseDataTableComponent extends React.Component {
     }
 
     componentDidMount() {
+        this.props.setMethods(this.changeData, this.getData)
         this.loadResults(1, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
             .then(() => { this.setState({ isLoaded: true }) })
     }
@@ -95,7 +96,18 @@ class BaseDataTableComponent extends React.Component {
         }
 
         return <SearchBar handleClear={handleClear} handleSearch={handleSearch} />
-    }s
+    }
+
+    changeData = (newData) => {
+        // this.loadResults(this.state.currentPage, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
+        this.setState({
+            data:  newData
+        })
+    }
+
+    getData = () => {
+        return this.state.data
+    }
 
     render() {
         return (
