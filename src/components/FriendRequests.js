@@ -3,7 +3,6 @@ import React from 'react'
 import API from '../API'
 import ReceivedRequests from './FriendsRequestList/receivedRequests'
 import SentRequests from './FriendsRequestList/sentRequests'
-import FriendsList from './User/UserList/FriendsList'
 
 class AllFriendRequest extends React.Component {
     constructor(props) {
@@ -52,16 +51,16 @@ class AllFriendRequest extends React.Component {
                         <div className='form-check' onChange={event => this.setState({
                             selectedList: event.target.value
                         })}>
-                            <div class="form-check form-check-inline">
-                                <input class="btn-check" type="radio" name="received" id="received"
+                            <div className="form-check form-check-inline">
+                                <input className="btn-check" type="radio" name="received" id="received"
                                     value="received" checked={this.state.selectedList === 'received'} />
-                                <label class="btn btn-outline-secondary" htmlFor="received">Received</label>
+                                <label className="btn btn-outline-secondary" htmlFor="received">Received</label>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="btn-check" type="radio" name="sent" id="sent" value="sent"
+                            <div className="form-check form-check-inline">
+                                <input className="btn-check" type="radio" name="sent" id="sent" value="sent"
                                     checked={this.state.selectedList === 'sent'}
                                 />
-                                <label class="btn btn-outline-secondary" htmlFor="sent">Sent</label>
+                                <label className="btn btn-outline-secondary" htmlFor="sent">Sent</label>
                             </div>
                         </div>
                     </div>

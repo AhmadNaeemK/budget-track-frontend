@@ -21,6 +21,7 @@ class AllAccounts extends React.Component {
             id: 'title',
             selector: row => row.title,
             sortable: true,
+            wrap: true,
         },
         {
             name: 'Balance',
@@ -41,22 +42,28 @@ class AllAccounts extends React.Component {
             sortable: true,
         },
         {
-            name: 'Delete',
+            name: 'Actions',
             button: true,
-            cell: (row) => <>{row.title !== 'Cash' &&
-                <button type="button" className='btn btn-danger' onClick={() => this.deleteAccount(row)}>Delete</button>
+            cell: (row) => 
+            <div className='d-flex'>{row.title !== 'Cash' &&
+                <div className='m-1'>
+                    <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteAccount(row)}>
+                        <i className='far fa-trash-alt' />
+                    </button>
+                </div>
             }
-            </>
-        },
-        {
-            name: 'Edit',
-            button: true,
-            cell: (row) =>
-                <button type="button"
-                    className='btn btn-success'
-                    data-bs-toggle='modal'
-                    data-bs-target='#aModal'
-                    onClick={() => this.editAccount(row)}>Edit</button>
+                <div className='m-1'>
+                    <button type="button"
+                        className='btn btn-outline-success'
+                        data-bs-toggle='modal'
+                        data-bs-target='#aModal'
+                        onClick={() => this.editAccount(row)}
+                    >
+                        <i className='far fa-edit' />
+                    </button>
+                </div>
+            </div>,
+            minWidth: '20%'
         }]
     }
 
@@ -79,8 +86,8 @@ class AllAccounts extends React.Component {
 
     updateAccount = (newAccount) => {
         let data = this.getData()
-        const editRowIndex=data.findIndex(dataRow => dataRow.id === this.state.account_edit.id)
-        data[editRowIndex]=newAccount
+        const editRowIndex = data.findIndex(dataRow => dataRow.id === this.state.account_edit.id)
+        data[editRowIndex] = newAccount
         this.updateData(data)
     }
 
@@ -118,7 +125,7 @@ class AllAccounts extends React.Component {
 
                 <div className='row'>
                     <div className='col'>
-                    <div className='d-flex justify-content-start m-4'>
+                        <div className='d-flex justify-content-start m-4'>
                             <h2>Accounts</h2>
                         </div>
                         <BaseDataTableComponent

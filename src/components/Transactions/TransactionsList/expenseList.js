@@ -1,7 +1,7 @@
 import React from 'react'
 
 import API from '../../../API'
-import { EXPENSE_LIST_URL, INCOME_LIST_URL } from '../../../Config';
+import { EXPENSE_LIST_URL } from '../../../Config';
 
 import BaseDataTableComponent from '../../Charts&Tables/BaseDataTableComponent';
 import ModalComponent from '../../Modals';
@@ -10,21 +10,29 @@ import TransactionForm from '../TransactionForm';
 class ExpenseList extends React.Component {
     columns = []
     buttons = [{
-        name: 'Delete',
+        name: 'Actions',
         button: true,
         cell: (row) =>
-            <button type="button" className='btn btn-danger' onClick={() => this.deleteTransaction(row)}>Delete</button>
+            <div className='d-flex'>
+                <div className='m-1'>
+                    <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteTransaction(row)}>
+                        <i className='far fa-trash-alt' />
+                    </button>
+                </div>
+                <div className='m-1'>
+                    <button type="button"
+                        className='btn btn-outline-success'
+                        data-bs-toggle='modal'
+                        data-bs-target='#tModal'
+                        onClick={() => this.handleEditTransaction(row)}
+                    >
+                        <i className='far fa-edit' />
+                    </button>
+                </div>
+            </div>
+        , minWidth: '15%',
     },
-    {
-        name: 'Edit',
-        button: true,
-        cell: (row) =>
-            <button type="button"
-                className='btn btn-success'
-                data-bs-toggle='modal'
-                data-bs-target='#tModal'
-                onClick={() => this.handleEditTransaction(row)}>Edit</button>
-    }]
+    ]
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +43,7 @@ class ExpenseList extends React.Component {
             id: 'title',
             selector: row => row.title,
             sortable: true,
+            wrap: true,
         },
         {
             name: 'Cash Account',
@@ -46,7 +55,7 @@ class ExpenseList extends React.Component {
             name: 'Date',
             id: 'transaction_time',
             selector: row => {
-                const date =  new Date(row.transaction_time)
+                const date = new Date(row.transaction_time)
                 return `${date.getDate()} - ${date.getMonth()} - ${date.getFullYear()}`
             },
             sortable: true,
@@ -54,7 +63,7 @@ class ExpenseList extends React.Component {
         {
             name: 'Category',
             id: 'categroy',
-            selector: row => row.category,
+            selector: row => row.category[1],
             sortable: true,
         },
         {
@@ -65,7 +74,7 @@ class ExpenseList extends React.Component {
         },
         ]
 
-        if (props.require_buttons){
+        if (props.require_buttons) {
             this.columns = [...this.columns, ...this.buttons]
         }
     }
@@ -88,8 +97,8 @@ class ExpenseList extends React.Component {
     }
     updateTransaction = (newTransaction) => {
         let data = this.getData()
-        const editRowIndex=data.findIndex(dataRow => dataRow.id === this.state.transaction_edit.id)
-        data[editRowIndex]=newTransaction
+        const editRowIndex = data.findIndex(dataRow => dataRow.id === this.state.transaction_edit.id)
+        data[editRowIndex] = newTransaction
         this.updateData(data)
     }
 
@@ -111,7 +120,7 @@ class ExpenseList extends React.Component {
                     paginated={this.props.paginated}
                     searchAble={this.props.searchAble}
                     fetchDataRequest={this.dataRequest}
-                    setMethods = {this.acceptChildMethodsForUpdate}
+                    setMethods={this.acceptChildMethodsForUpdate}
                 />
                 <ModalComponent
                     id='tModal'

@@ -1,4 +1,3 @@
-import { TimeScale } from 'chart.js';
 import React from 'react'
 
 import API from '../../../API';
@@ -38,8 +37,17 @@ class PaySplitForm extends React.Component {
         }
         const res = await API.paySplit(cleanedFormData)
         if (res.status === 200) {
-            alert("Payment Succesful");
-            event.target.parentNode.parentNode.reset();
+            const newSplitPaymentDetails = await API.fetchSplitPaymentData(this.props.split.id)
+            const userIndex = this.props.split.all_friends_involved.findIndex(friend => friend.username === localStorage.getItem('username'))
+            this.props.split.all_friends_involved[userIndex].payable = newSplitPaymentDetails.required
+            this.props.split.all_friends_involved[userIndex].paid = newSplitPaymentDetails.paid
+            const split = this.props.split
+            this.props.updateTable(split)
+            alert('Payment Succesful')
+        }
+        else {
+            const error = res.json()
+            alert(error[Object.keys(error)[0]])
         }
     }
 
@@ -49,7 +57,7 @@ class PaySplitForm extends React.Component {
                 {this.props.split &&
                     < div className='d-flex justify-content-between'>
                         <div>
-                            <p>Required Amount</p>
+                            <p>Payable Amount</p>
                             <p>{this.state.paymentData.required}</p>
                         </div>
                         <div>
@@ -91,13 +99,18 @@ class SplitTransactionList extends React.Component {
         this.state = {
             paying_split: null
         }
-        this.constructor = this.columns = [{
+        this.columns = [{
             name: 'Title',
             id: 'title',
             selector: row => row.title,
             sortable: true,
-            center: true,
-            compact: true,
+            wrap: true,
+        },
+        {
+            name: 'Category',
+            id: 'Category',
+            selector: row => row.category[1],
+            sortable: true,
             wrap: true,
         },
         {
@@ -105,74 +118,62 @@ class SplitTransactionList extends React.Component {
             id: 'total_amount',
             selector: row => row.total_amount,
             sortable: true,
-            center: true,
-            compact: true,
-            wrap: true,
         },
         {
             name: 'Creator',
             id: 'creator',
             selector: row => row.creator.username,
             sortable: true,
-            center: true,
-            compact: true,
-            wrap: true,
         },
         {
             name: 'Paying Friend',
             id: 'paying_friend',
             selector: row => row.paying_friend.username,
             sortable: true,
-            center: true,
-            compact: true,
-            wrap: true,
         },
         {
             name: 'Friends Involved',
             id: 'all_friends_involved',
-            cell: (row, index, column, id) => (
-                <ul>
+            cell: (row) => (
+                <ul style={{ listStyle: 'none', minWidth: '90%', padding:'0'}}>
                     {row.all_friends_involved.map(friend => (
-                        <li key={friend.id}>{friend.username}</li>
+                        <li key={friend.id} className='d-flex justify-content-between'>
+                            <div className='m-1'>{friend.username} </div>
+                            <div className='m-1'><b>{friend.payable}</b> </div>
+                        </li>
                     ))}
                 </ul>
             ),
             sortable: true,
-            center: true,
-            compact: true,
-            wrap: true,
+            minWidth:'15%'
         },
         {
-            name: 'Delete',
+            name: 'Actions',
             button: true,
-            cell: (row) => <>
+            minWidth: '15%',
+            cell: (row) => <div className='d-flex'>
                 {localStorage.getItem('username') === row.creator.username &&
-                    <button type="button" className='btn btn-danger' onClick={() => this.deleteSplit(row)}>Delete</button>
+                    <div className='m-1'>
+                        <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteSplit(row)}>
+                            <i className='far fa-trash-alt' />
+                        </button>
+                    </div>
                 }
-            </>
-            ,
-            center: true,
-            compact: true,
-            wrap: true,
-        },
-        {
-            name: 'Edit',
-            button: true,
-            cell: (row) =>
-                <>
-                    {!row.completed_payment &&
+                {row.paying_friend.username !== localStorage.getItem('username') &&
+                    <div className='m-1'>
                         <button type="button"
-                            className='btn btn-success'
+                            className='btn btn-outline-success'
                             data-bs-toggle='modal'
                             data-bs-target='#splitPaymentModal'
-                            onClick={() => this.paySplit(row)}>Pay</button>
-                    }
-                </>
+                            onClick={() => this.handlePaySplit(row)}
+                        >
+                            <i className='fas fa-hand-holding-usd fa-lg' />
+                        </button>
+                    </div>
+                }
+            </div>
             ,
-            center: true,
-            compact: true,
-            wrap: true,
-        }
+        },
         ]
     }
 
@@ -187,11 +188,17 @@ class SplitTransactionList extends React.Component {
         }
     }
 
-    paySplit = (row) => {
+    handlePaySplit = (row) => {
         this.setState({
             paying_split: row
-        }
-        )
+        })
+    }
+
+    updateAfterPayment = (newSplit) => {
+        let data = this.getData()
+        const editRowIndex = data.findIndex(dataRow => dataRow.id === this.state.paying_split.id)
+        data[editRowIndex] = newSplit
+        this.updateData(data)
     }
 
     dataRequest = async (params) => {
@@ -201,15 +208,15 @@ class SplitTransactionList extends React.Component {
 
     conditionalRows = [
         {
-            when:  row => row.completed_payment ,
+            when: row => row.paying_friend.username === localStorage.getItem('username'),
             style: {
-                backgroundColor: categoryColor['Healthcare'],
+                color: categoryColor['Healthcare'],
             },
         },
         {
-            when:  row => !row.completed_payment ,
+            when: row => row.paying_friend.username !== localStorage.getItem('username'),
             style: {
-                backgroundColor: categoryColor['Grocery'],
+                color: categoryColor['Grocery'],
             },
         }
     ]
@@ -218,6 +225,8 @@ class SplitTransactionList extends React.Component {
         this.updateData = updateData
         this.getData = getData
     }
+
+
 
     render() {
         return (
@@ -236,6 +245,7 @@ class SplitTransactionList extends React.Component {
                     modalBody={
                         <PaySplitForm
                             split={this.state.paying_split}
+                            updateTable={this.updateAfterPayment}
                         />
                     }
                 />

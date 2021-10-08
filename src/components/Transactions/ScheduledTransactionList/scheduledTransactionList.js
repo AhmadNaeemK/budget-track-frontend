@@ -15,6 +15,7 @@ class ScheduledTransactionList extends React.Component {
                 name: 'Title',
                 selector: row => row.title,
                 sortable: true,
+                wrap: true
             },
             {
                 name: 'Cash Account',
@@ -24,7 +25,7 @@ class ScheduledTransactionList extends React.Component {
             {
                 name: 'Date',
                 selector: row => {
-                    const date =  new Date(row.transaction_time)
+                    const date = new Date(row.transaction_time)
                     return `${date.getDate()} - ${date.getMonth()} - ${date.getFullYear()}`
                 },
                 sortable: true,
@@ -40,10 +41,13 @@ class ScheduledTransactionList extends React.Component {
                 sortable: true,
             },
             {
-                name: 'Delete',
+                name: 'Action',
                 button: true,
+                minWidth: '15%',
                 cell: (row) =>
-                    <button type="button" className='btn btn-danger' onClick={() => this.deleteTransaction(row)}>Delete</button>
+                    <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteTransaction(row)}>
+                        <i className='far fa-trash-alt' />
+                    </button>
             }
         ];
     }

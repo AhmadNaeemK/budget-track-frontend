@@ -24,10 +24,13 @@ class SentRequests extends React.Component {
                 selector: row => row.receiver.email,
             },
             {
-                name: 'Delete Request',
+                name: 'Delete',
                 button: true,
+                minWidth: '30%',
                 cell: (row) => 
-                    <button type="button" className='btn btn-danger' onClick={() => this.deleteRequest(row)}>Del</button> 
+                    <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteRequest(row)}>
+                        <i className='far fa-trash-alt' />
+                    </button> 
             }
         ];
     }

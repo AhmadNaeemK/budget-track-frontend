@@ -27,6 +27,7 @@ class FriendsList extends React.Component {
             {
                 name: "UnFriend",
                 button: true,
+                minWidth: '30%',
                 cell: (row) =>
                     <button type="button" className='btn btn-danger' onClick={() => this.unFriend(row)}>UnFriend</button>
             }

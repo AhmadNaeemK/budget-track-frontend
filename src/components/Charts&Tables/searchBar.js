@@ -14,7 +14,7 @@ class SearchBar extends React.Component {
 
     render() {
         return (
-            <div className='col-4'>
+            <div className='col-4 pt-4'>
                 <form>
                     <div className='input-group mb-3'>
                         <input className="form-control" type='text' placeholder='Search' onChange={this.onSearch} />

@@ -43,9 +43,9 @@ class App extends React.Component {
     return (
       <Router>
         <div className='container-fluid'>
-          <div class="row flex-nowrap">
+          <div className="row flex-nowrap">
             <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
-            <div class="col p-0">
+            <div className="col p-0">
               <NavBar loggedIn={this.state.isLoggedIn} handleLogout={this.handleIsLoggedIn} />
               <Routes>
                 <Route path='/' element={<LoginForm handleLogin={this.handleIsLoggedIn} />} />

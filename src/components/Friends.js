@@ -28,16 +28,16 @@ class FriendsPage extends React.Component {
                     <div className='form-check' onChange={event => this.setState({
                         selectedList: event.target.value
                     })}>
-                        <div class="form-check form-check-inline">
-                            <input class="btn-check" type="radio" name="friends" id="friends"
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="friends" id="friends"
                                 value="friends" checked={this.state.selectedList === 'friends'} />
-                            <label class="btn btn-outline-secondary" htmlFor="friends">Friends</label>
+                            <label className="btn btn-outline-secondary" htmlFor="friends">Friends</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="btn-check" type="radio" name="users" id="users" value="users"
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="users" id="users" value="users"
                                 checked={this.state.selectedList === 'users'}
                             />
-                            <label class="btn btn-outline-secondary" htmlFor="users">Find More Friends</label>
+                            <label className="btn btn-outline-secondary" htmlFor="users">Add Friends</label>
                         </div>
                     </div>
                 </div>

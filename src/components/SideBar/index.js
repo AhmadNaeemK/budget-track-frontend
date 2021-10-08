@@ -13,7 +13,7 @@ class SideBarComponent extends React.Component {
         return (
             <>
                 {this.props.isLoggedIn &&
-                    <div class="col-auto col-sm-1 col-md-3 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
+                    <div className="col-auto col-sm-3 col-md-2 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
                         <div className="d-flex flex-column flex-shrink-0 text-white bg-dark sticky-top">
                             <Link className='m-2' style={{ textDecoration: 'none', color: 'white' }} to={this.props.isLoggedIn ? '/home' : '/'}>
                                 <h1>Budget Track</h1>
@@ -57,20 +57,6 @@ class SideBarComponent extends React.Component {
                                 </li>
                             </ul>
                             <hr />
-                            <div class="dropdown pb-4 mt-1100">
-                                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    More option
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                                    <li><a class="dropdown-item" href="#">New project...</a></li>
-                                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider" />
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Sign out</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 }

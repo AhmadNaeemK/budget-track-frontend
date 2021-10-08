@@ -17,7 +17,7 @@ class UserOnBoarding extends React.Component {
     componentDidMount() {
         (async () => {
             const accounts = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20')
-            this.setState({accounts: accounts.results,  accountId: accounts[0].id });
+            this.setState({accounts: accounts.results});
         })().then(() => {this.setState({isLoaded: true})});
     }
 
@@ -33,7 +33,7 @@ class UserOnBoarding extends React.Component {
                         <h1>Add How Much Money You Have</h1>
                         <div>
                             <AccountsForm
-                                accountId={this.state.accountId}
+                                account_edit={this.state.accounts[0]}
                                 accountHandler={this.onSuccess}
                             />
                         </div>

@@ -27,6 +27,7 @@ class UsersList extends React.Component {
             {
                 name: 'Send Request',
                 button: true,
+                minWidth: '30%',
                 cell: (row) => 
                     <button type="button" className='btn btn-success' onClick={() => this.sendRequest(row)}>Send Request</button> 
             }

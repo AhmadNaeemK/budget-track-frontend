@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 import API from '../API';
 
-import { CASH_ACCOUNT_LIST_URL, EXPENSE_LIST_URL } from '../Config';
+import { CASH_ACCOUNT_LIST_URL } from '../Config';
 import AccountDataCharts from './Accounts/AccountsData/AccountDataCharts';
 import MonthlyTransactionChart from './Charts&Tables/MonthlyTransactionChart';
 import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm.js';
@@ -28,19 +28,6 @@ class Home extends React.Component {
             categoryExpenseData: [],
             monthlyTransactionChartData: {},
         }
-    }
-
-    // edit forms
-    transactionEditHandler = (t) => {
-        this.setState({
-            transaction_edit: t
-        })
-    }
-
-    accountIdHandler = (a) => {
-        this.setState({
-            accountId: a
-        })
     }
 
 
@@ -74,7 +61,7 @@ class Home extends React.Component {
                 {this.state.isLoaded &&
                     <>
                         <div className='row'>
-                            <div className='col-sm-7 col-12'>
+                            <div className='col-lg-7 col-12'>
                                 <div className='row p-2 m-2'>
                                     <div className='col'>
                                         <MonthlyTransactionChart
@@ -87,8 +74,8 @@ class Home extends React.Component {
                                     <div className='d-flex align-items-center justify-content-between px-2'>
                                         <h2> Recent Expenses </h2>
                                         <Link className='d-flex m-2' to='/expenses' style={{ textDecoration: 'none', color: 'white' }}>
-                                            <h3 className='mr-2'>See More </h3>
-                                            <i className='fas fa-long-arrow-alt-up fa-2x ml-4'
+                                            <h6 className='mr-2'>See More </h6>
+                                            <i className='fas fa-long-arrow-alt-up ml-4'
                                                 style={{
                                                     transform: 'rotate(45deg)',
                                                     marginInlineStart: '5px',
@@ -107,10 +94,10 @@ class Home extends React.Component {
 
                             </div>
 
-                            <div className='col-sm-5 col-12'>
-                                <div className='border rounded border-white p-2 m-2'>
+                            <div className='col-lg-5 col-12'>
+                                <div className='p-2 m-2'>
                                     <div className='row'>
-                                        <div className='col'>
+                                        <div className='col m-2'>
                                             <button className='btn btn-outline-primary'
                                                 data-bs-toggle='modal'
                                                 data-bs-target={`#create-account`}>
@@ -124,12 +111,12 @@ class Home extends React.Component {
                                                     <AccountsForm
                                                         type='creation'
                                                         accountId={this.state.accountId}
-                                                        accountHandler={this.changeHandler} />
+                                                        accountHandler={()=>{}} />
                                                 }
                                             />
                                         </div>
 
-                                        <div className='col'>
+                                        <div className='col m-2'>
                                             <button className='btn btn-outline-primary'
                                                 data-bs-toggle='modal'
                                                 data-bs-target={`#create-transaction`}
@@ -150,7 +137,7 @@ class Home extends React.Component {
                                                 }
                                             />
                                         </div>
-                                        <div className='col'>
+                                        <div className='col m-2'>
                                             <button
                                                 className='btn btn-outline-primary'
                                                 data-bs-toggle='modal'
@@ -165,7 +152,7 @@ class Home extends React.Component {
                                                     <ScheduleTransactionForm
                                                         accounts={this.state.cashAccounts}
                                                         categories={this.state.transactionCategories}
-                                                        scheduledTransactionHandler={this.changeHandler}
+                                                        scheduledTransactionHandler={() => {}}
                                                     />
                                                 }
                                             />
@@ -183,8 +170,8 @@ class Home extends React.Component {
                                     <div className='d-flex align-items-center justify-content-between px-2'>
                                         <h3> Split Expenses </h3>
                                         <Link className='d-flex m-2' to='/splitExpenses' style={{ textDecoration: 'none', color: 'white' }}>
-                                            <h3 className='mr-2'>See More </h3>
-                                            <i className='fas fa-long-arrow-alt-up fa-2x ml-4'
+                                            <h6 className='mr-2'>See More </h6>
+                                            <i className='fas fa-long-arrow-alt-up ml-4'
                                                 style={{
                                                     transform: 'rotate(45deg)',
                                                     marginInlineStart: '5px',

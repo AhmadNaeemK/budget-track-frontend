@@ -26,8 +26,8 @@ class AccountsForm extends React.Component {
         if (this.props.type === "creation") {
             const res = await API.createCashAccount(this.state);
             if (res && res.status === 201) {
-                this.props.accountHandler()
                 this.setState(this.initialState)
+                window.location.reload()
             } else {
                 const error = await res.json()
                 alert(error[Object.keys(error)[0]])
@@ -52,31 +52,28 @@ class AccountsForm extends React.Component {
 
     render() {
         return (
-            <div className={'border rounded border-white p-4 m-2 ' + this.props.className} >
-                <form>
-                    {this.props.type === 'creation' ?
-                        <>
-                            <div className='mb-3'>
-                                <label htmlFor='title'>Accounts Title</label>
-                                <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here' />
-                            </div>
-                        </>
-                        : null}
+            <form>
+                {this.props.type === 'creation' ?
+                    <>
+                        <div className='mb-3'>
+                            <label htmlFor='title'>Accounts Title</label>
+                            <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder='Add title here' />
+                        </div>
+                    </>
+                    : null}
 
-                    <div className='mb-3'>
-                        <label htmlFor='balance'>Balance</label>
-                        <input className='form-control' type='number' name='balance' onChange={this.handleChange} placeholder='Add balance here' />
-                    </div>
+                <div className='mb-3'>
+                    <label htmlFor='balance'>Balance</label>
+                    <input className='form-control' type='number' name='balance' onChange={this.handleChange} placeholder='Add balance here' />
+                </div>
 
-                    <div className='mb-3'>
-                        <label htmlFor='limit'>Budget Limit</label>
-                        <input className='form-control' type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here' />
-                    </div>
+                <div className='mb-3'>
+                    <label htmlFor='limit'>Budget Limit</label>
+                    <input className='form-control' type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here' />
+                </div>
 
-                    <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
-                </form>
-
-            </div>
+                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
+            </form>
         )
     }
 }

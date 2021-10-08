@@ -1,9 +1,6 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2';
 import { monthNames } from '../../Config';
-import { getRandomColor } from './Utils/chartUtils';
-
-import chroma from 'chroma-js';
 
 
 class MonthlyTransactionChart extends React.Component {
@@ -46,16 +43,16 @@ class MonthlyTransactionChart extends React.Component {
                     <div className='form-check' onChange={event => this.setState({
                         selectedType: event.target.value
                     })}>
-                        <div class="form-check form-check-inline">
-                            <input class="btn-check" type="radio" name="income" id="income"
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="income" id="income"
                                 value="income" checked={this.state.selectedType === 'income'} />
-                            <label class="btn btn-outline-secondary" htmlFor="income">Income</label>
+                            <label className="btn btn-outline-secondary" htmlFor="income">Income</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="btn-check" type="radio" name="expense" id="expense" value="expense"
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="expense" id="expense" value="expense"
                                 checked={this.state.selectedType === 'expense'}
                             />
-                            <label class="btn btn-outline-secondary" htmlFor="expense">Expense</label>
+                            <label className="btn btn-outline-secondary" htmlFor="expense">Expense</label>
                         </div>
                     </div>
                 </div>

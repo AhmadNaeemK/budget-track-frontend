@@ -45,7 +45,10 @@ class SplitTransactionForm extends React.Component {
         if (res.status === 201) {
             alert("Expense Splitted");
             event.target.parentNode.parentNode.reset();
-            this.props.splitHandler();
+            window.location.reload()
+        } else {
+            const error = await res.json()
+            alert(error[Object.keys(error)[0]])
         }
     }
 

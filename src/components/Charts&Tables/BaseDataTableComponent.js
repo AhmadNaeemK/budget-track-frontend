@@ -18,15 +18,14 @@ class BaseDataTableComponent extends React.Component {
         },
         headCells: {
             style: {
-                paddingLeft: '8px', // override the cell padding for head cells
-                paddingRight: '8px',
+                margin: 'auto',
                 justifyContent: 'center',
             },
         },
         cells: {
             style: {
-                padding: '0px', // override the cell padding for data cells
-                margin: '0px',
+                padding: '2px', // override the cell padding for data cells
+                marginLeft: '2px',
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
@@ -40,7 +39,7 @@ class BaseDataTableComponent extends React.Component {
             data: [],
             totalRows: 0,
             isLoaded: false,
-            pageSize: 10,
+            pageSize: 5,
             currentPage: 1,
             searchTerm: '',
             sort_field: '',
@@ -84,6 +83,13 @@ class BaseDataTableComponent extends React.Component {
             .then(() => { this.setState({ isLoaded: true }) })
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            this.loadResults(1, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
+                .then(() => { this.setState({ isLoaded: true }) })
+        }
+    }
+
     subHeaderCreator() {
         const handleClear = async () => {
             this.setState({ searchTerm: "" })
@@ -99,9 +105,8 @@ class BaseDataTableComponent extends React.Component {
     }
 
     changeData = (newData) => {
-        // this.loadResults(this.state.currentPage, this.state.searchTerm, this.state.pageSize, this.state.sort_field)
         this.setState({
-            data:  newData
+            data: newData
         })
     }
 

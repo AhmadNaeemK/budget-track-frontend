@@ -4,7 +4,6 @@ import ExpenseStructureChart from '../../Charts&Tables/ExpenseStructureChart';
 
 import { monthNames } from '../../../Config';
 import CashAccountsChart from '../../Charts&Tables/CashAccountChart';
-import BudgetChart from '../../Charts&Tables/BudgetChart';
 
 class AccountDataCharts extends React.Component {
 

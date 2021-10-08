@@ -3,7 +3,7 @@ import React from 'react'
 import BaseDataTableComponent from '../Charts&Tables/BaseDataTableComponent';
 
 import API from '../../API';
-import { RECEIVED_FRIEND_REQUEST_LIST_URL, SENT_FRIEND_REQUEST_LIST_URL } from '../../Config';
+import { RECEIVED_FRIEND_REQUEST_LIST_URL} from '../../Config';
 
 class ReceivedRequests extends React.Component {
 
@@ -24,17 +24,23 @@ class ReceivedRequests extends React.Component {
                 selector: row => row.user.email,
             },
             {
-                name: 'Accept',
+                name: 'Actions',
                 button: true,
+                minWidth: '30%',
                 cell: (row) =>
-                    <button type="button" className='btn btn-success' onClick={() => this.acceptRequest(row)}>Accept</button>
+                    <div className='d-flex'>
+                        <div className='m-1'>
+                            <button type="button" className='btn btn-outline-success' onClick={() => this.acceptRequest(row)}>
+                                <i className='fas fa-check' />
+                            </button>
+                        </div>
+                        <div className='m-1'>
+                            <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteRequest(row)}>
+                                <i className='fas fa-times' />
+                            </button>
+                        </div>
+                    </div>
             },
-            {
-                name: 'Delete',
-                button: true,
-                cell: (row) =>
-                    <button type="button" className='btn btn-danger' onClick={() => this.deleteRequest(row)}>Delete</button>
-            }
         ];
     }
 

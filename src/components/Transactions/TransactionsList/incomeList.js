@@ -42,21 +42,28 @@ class IncomeList extends React.Component {
             sortable: true,
         },
         {
-            name: 'Delete',
+            name: 'Actions',
             button: true,
             cell: (row) =>
-                <button type="button" className='btn btn-danger' onClick={() => this.deleteTransaction(row)}>Delete</button>
-        },
-        {
-            name: 'Edit',
-            button: true,
-            cell: (row) =>
-                <button type="button"
-                    className='btn btn-success'
-                    data-bs-toggle='modal'
-                    data-bs-target='#tModal'
-                    onClick={() => this.handleEditTransaction(row)}>Edit</button>
-        }]
+                <div className='d-flex'>
+                    <div className='m-1'>
+                        <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteTransaction(row)}>
+                            <i className='far fa-trash-alt' />
+                        </button>
+                    </div>
+                    <div className='m-1'>
+                        <button type="button"
+                            className='btn btn-outline-success'
+                            data-bs-toggle='modal'
+                            data-bs-target='#tModal'
+                            onClick={() => this.handleEditTransaction(row)}
+                        >
+                            <i className='far fa-edit' />
+                        </button>
+                    </div>
+                </div>
+            , minWidth: '15%',
+        },]
     }
 
     deleteTransaction = async (row) => {

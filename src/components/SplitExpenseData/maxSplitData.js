@@ -33,15 +33,15 @@ class MaxSplitData extends React.Component {
 
     conditionalRows = [
         {
-            when:  row => row.payable_amount === 0 ,
+            when:  row => row.split.paying_friend.username === localStorage.getItem('username') ,
             style: {
-                backgroundColor: categoryColor['Healthcare'],
+                color: categoryColor['Healthcare'],
             },
         },
         {
-            when:  row => row.payable_amount > 0 ,
+            when:  row => row.split.paying_friend.username !== localStorage.getItem('username') ,
             style: {
-                backgroundColor: categoryColor['Grocery'],
+                color: categoryColor['Grocery'],
             },
         }
     ]
