@@ -1,6 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+// styles
+import { GlobalStyle } from './GlobalStyle';
+
 // component
 import NavBar from './components/NavBar';
 import Home from './components/Home';
@@ -11,12 +14,11 @@ import UserOnboarding from './components/UserOnBoarding'
 import RegistrationForm from './components/User/Register';
 import FriendsPage from './components/Friends';
 import SideBarComponent from './components/SideBar';
-
-// styles
-import { GlobalStyle } from './GlobalStyle';
 import AllFriendRequest from './components/FriendRequests';
 import AllScheduledTransactions from './components/AllScheduledTransactions';
 import AllSplitTransactions from './components/AllSplitTransactions';
+import SplitDetail from './components/SplitDetail';
+
 
 class App extends React.Component {
 
@@ -59,6 +61,7 @@ class App extends React.Component {
                 <Route path='/friendRequests' element={<AllFriendRequest />} />
                 <Route path='/scheduledTransactions' element={<AllScheduledTransactions />} />
                 <Route path='/splitExpenses' element={<AllSplitTransactions />} />
+                <Route path='/splitExpense/:splitId' element={<SplitDetail />} />
               </Routes>
             </div>
           </div>

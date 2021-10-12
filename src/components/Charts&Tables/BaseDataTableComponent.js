@@ -4,34 +4,9 @@ import SearchBar from './searchBar';
 
 import DataTable from 'react-data-table-component';
 
-class BaseDataTableComponent extends React.Component {
+import { customStyles } from './Utils/tableStyles';
 
-    customStyles = {
-        tableWrapper: {
-            border: '2px',
-            borderRadius: '20%',
-        },
-        rows: {
-            style: {
-                minHeight: '72px', // override the row height
-            },
-        },
-        headCells: {
-            style: {
-                margin: 'auto',
-                justifyContent: 'center',
-            },
-        },
-        cells: {
-            style: {
-                padding: '2px', // override the cell padding for data cells
-                marginLeft: '2px',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-            },
-        },
-    };
+class BaseDataTableComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -131,7 +106,7 @@ class BaseDataTableComponent extends React.Component {
                 paginationServer={true}
                 paginationPerPage={this.state.pageSize}
                 paginationTotalRows={this.state.totalRows}
-                customStyles={this.customStyles}
+                customStyles={customStyles}
                 title={this.props.title}
                 subHeader={this.props.searchAble}
                 subHeaderComponent={this.subHeaderCreator()}

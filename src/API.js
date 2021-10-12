@@ -253,6 +253,14 @@ const API = {
         return await splitTransactions.json()
     },
 
+    fetchSplitTransaction: async (splitId) => {
+        const config ={
+            method: "GET"
+        }
+        const res = await fetch(SPLIT_TRANSACTION_URL + String(splitId), config)
+        return await res.json()
+    },
+
     createSplitTransaction: async (formData) => {
         const config = {
             method: 'POST',
@@ -267,6 +275,7 @@ const API = {
         }
         return await fetch(SPLIT_TRANSACTION_URL + String(splitId), config)
     },
+
 
     paySplit: async (formData) => {
         const config = {
