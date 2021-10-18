@@ -141,7 +141,13 @@ class SplitTransactionList extends React.Component {
         this.getData = getData
     }
 
-
+    componentDidMount() {
+        if (this.props.createdSplit) {
+            let data = this.getData()
+            data.push(this.props.createdSplit)
+            this.updateData(data)
+        }
+    }
 
     render() {
         return (

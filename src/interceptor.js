@@ -23,7 +23,7 @@ export const unregister = fetchIntercept.register({
         return Promise.reject(error);
     },
 
-    response: (response) => {
+    response: (response, request) => {
         // Modify the reponse object
         if (localStorage.getItem('refresh') && response.status === 401 ) {
             let decoded = jwt_decode(localStorage.getItem('refresh'));
@@ -57,6 +57,8 @@ export const unregister = fetchIntercept.register({
 
     responseError: function (error) {
         // Handle an fetch error
+        console.log(1234)
         console.log(error);
+        console.log(error.request);
     }
 });

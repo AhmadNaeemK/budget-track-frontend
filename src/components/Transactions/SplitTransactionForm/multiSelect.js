@@ -12,7 +12,7 @@ class MultiSelectComponent extends React.Component {
     }
 
     handleSelectChange = (value) => {
-        this.props.handleChange('all_friends_involved', value.map((obj => obj.value)))
+        this.props.handleChange(this.props.field, value.map((obj => obj.value)))
     }
 
     multiSelectStyle = {
@@ -48,6 +48,7 @@ class MultiSelectComponent extends React.Component {
                 isMulti
                 cacheOptions
                 defaultOptions
+                value={this.props.value}
                 loadOptions={this.props.promiseOptions}
                 styles={this.multiSelectStyle}
                 onChange={this.handleSelectChange}

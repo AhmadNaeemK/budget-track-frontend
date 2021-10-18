@@ -45,7 +45,16 @@ class SplitTransactionForm extends React.Component {
         if (res.status === 201) {
             alert("Expense Splitted");
             event.target.parentNode.parentNode.reset();
-            window.location.reload()
+            const split = await res.json()
+            this.props.updateTable(split);
+            this.setState({
+                title: '',
+                total_amount: 0,
+                creator: localStorage.getItem('userid'),
+                category: 1,
+                paying_friend: null,
+                all_friends_involved: []
+            })
         } else {
             const error = await res.json()
             alert(error[Object.keys(error)[0]])
@@ -111,6 +120,7 @@ class SplitTransactionForm extends React.Component {
                     <MultiSelectComponent
                         promiseOptions={this.promiseFriends}
                         handleChange={this.handleChange}
+                        field='all_friends_involved'
                     />
                 </div>
                 <div className='mb-3'>

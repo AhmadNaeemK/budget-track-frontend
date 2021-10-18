@@ -12,7 +12,8 @@ class SplitTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            paying_split: null
+            paying_split: null,
+            edit_split: null
         }
         this.columns = [{
             name: 'Title',
@@ -95,6 +96,16 @@ class SplitTable extends React.Component {
         })
     }
 
+
+    deleteSplit = async (row) => {
+        const res = await API.deleteSplitTransaction(row.id)
+        if (res.status === 204) {
+            window.location.href = '/splitExpenses'
+        } else {
+            alert(await res.json())
+        }
+    }
+
     render() {
         return (
             <>
@@ -144,14 +155,14 @@ class FriendsInvolvedTable extends React.Component {
         }
     ]
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             data: props.friends_involved
         }
     }
 
-    static  getDerivedStateFromProps(props,state) {
+    static getDerivedStateFromProps(props, state) {
         state = {
             data: props.friends_involved
         }
@@ -167,7 +178,6 @@ class FriendsInvolvedTable extends React.Component {
                 data={this.state.data}
                 pagination={false}
                 customStyles={customStyles}
-                title="Friends Involved"
             />
         )
     }
@@ -178,7 +188,7 @@ class SplitDetail extends React.Component {
 
     constructor(props) {
         super(props)
-        this.splitId = window.location.toString().split('/').pop()
+        this.splitId = this.props.match.params.splitId
         this.state = {
             split: {},
             isLoaded: false,
@@ -208,7 +218,6 @@ class SplitDetail extends React.Component {
                 {this.state.isLoaded &&
                     <>
                         <div className='row m-2'>
-
                             <div className='col'>
                                 <SplitTable
                                     split={[this.state.split]}

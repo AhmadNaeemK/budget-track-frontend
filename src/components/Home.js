@@ -30,9 +30,16 @@ class Home extends React.Component {
         }
     }
 
+    createAccount = (createdAccount) => {
+        const accounts = this.state.cashAccounts
+        accounts.push(createdAccount)
+        this.setState({
+            cashAccounts: accounts
+        })
+    }
 
-    changeHandler() {
-        window.location.reload()
+    createTransaction = (transaction) => {
+
     }
 
     componentDidMount() {
@@ -110,8 +117,7 @@ class Home extends React.Component {
                                                 modalBody={
                                                     <AccountsForm
                                                         type='creation'
-                                                        accountId={this.state.accountId}
-                                                        accountHandler={()=>{}} />
+                                                        accountHandler={this.createAccount} />
                                                 }
                                             />
                                         </div>

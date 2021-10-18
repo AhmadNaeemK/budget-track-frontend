@@ -21,7 +21,6 @@ class AllScheduledTransactions extends React.Component {
         }
     }
 
-
     componentDidMount() {
         (async () => {
             const cashAccounts = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20')
@@ -33,6 +32,16 @@ class AllScheduledTransactions extends React.Component {
         })().then(() => { this.setState({ isLoaded: true }) });
     }
 
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
+    }
+
+    scheduledTransactionHandler = (scheduledTransaction) => {
+        const data = this.getData();
+        data.push(scheduledTransaction);
+        this.updateData(data);
+    }
 
     render() {
         return (
@@ -55,7 +64,7 @@ class AllScheduledTransactions extends React.Component {
                                     <ScheduleTransactionForm
                                         accounts={this.state.cashAccounts}
                                         categories={this.state.categories}
-                                        scheduledTransactionHandler={() => { console.log("Scheduled") }}
+                                        scheduledTransactionHandler={this.scheduledTransactionHandler}
                                     />
                                 }
                             />
@@ -67,6 +76,7 @@ class AllScheduledTransactions extends React.Component {
                                 </div>
                                 <ScheduledTransactionList
                                     categories={this.state.categories}
+                                    setMethods={this.acceptChildMethodsForUpdate}
                                 />
                             </div>
                         </div>

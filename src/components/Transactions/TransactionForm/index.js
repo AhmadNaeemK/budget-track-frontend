@@ -52,6 +52,7 @@ class TransactionForm extends React.Component {
                     alert(error[Object.keys(error)[0]])
                 }
             }
+            this.setState(this.initialState)
         }
 
         const update = async () => {
@@ -76,6 +77,7 @@ class TransactionForm extends React.Component {
                     alert(error[Object.keys(error)[0]])
                 }
             }
+            this.setState(this.initialState)
         }
 
         if (this.props.type === "creation") {

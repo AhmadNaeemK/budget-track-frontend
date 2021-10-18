@@ -44,25 +44,25 @@ class AllAccounts extends React.Component {
         {
             name: 'Actions',
             button: true,
-            cell: (row) => 
-            <div className='d-flex'>{row.title !== 'Cash' &&
-                <div className='m-1'>
-                    <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteAccount(row)}>
-                        <i className='far fa-trash-alt' />
-                    </button>
-                </div>
-            }
-                <div className='m-1'>
-                    <button type="button"
-                        className='btn btn-outline-success'
-                        data-bs-toggle='modal'
-                        data-bs-target='#aModal'
-                        onClick={() => this.editAccount(row)}
-                    >
-                        <i className='far fa-edit' />
-                    </button>
-                </div>
-            </div>,
+            cell: (row) =>
+                <div className='d-flex'>{row.title !== 'Cash' &&
+                    <div className='m-1'>
+                        <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteAccount(row)}>
+                            <i className='far fa-trash-alt' />
+                        </button>
+                    </div>
+                }
+                    <div className='m-1'>
+                        <button type="button"
+                            className='btn btn-outline-success'
+                            data-bs-toggle='modal'
+                            data-bs-target='#aModal'
+                            onClick={() => this.editAccount(row)}
+                        >
+                            <i className='far fa-edit' />
+                        </button>
+                    </div>
+                </div>,
             minWidth: '20%'
         }]
     }
@@ -84,10 +84,16 @@ class AllAccounts extends React.Component {
         }
     }
 
-    updateAccount = (newAccount) => {
+    updateAccount = (updatedAccount) => {
         let data = this.getData()
         const editRowIndex = data.findIndex(dataRow => dataRow.id === this.state.account_edit.id)
-        data[editRowIndex] = newAccount
+        data[editRowIndex] = updatedAccount
+        this.updateData(data)
+    }
+
+    createAccount = (createdAccount) => {
+        let data = this.getData()
+        data.push(createdAccount)
         this.updateData(data)
     }
 
@@ -118,7 +124,9 @@ class AllAccounts extends React.Component {
                         title='Create Account'
                         modalBody={
                             <AccountsForm
-                                type='creation' accountHandler={() => { window.location.reload() }} />
+                                type='creation' 
+                                accountHandler={this.createAccount}
+                            />
                         }
                     />
                 </div>

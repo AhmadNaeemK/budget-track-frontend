@@ -1,5 +1,8 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // styles
 import { GlobalStyle } from './GlobalStyle';
@@ -49,20 +52,20 @@ class App extends React.Component {
             <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
             <div className="col p-0">
               <NavBar loggedIn={this.state.isLoggedIn} handleLogout={this.handleIsLoggedIn} />
-              <Routes>
-                <Route path='/' element={<LoginForm handleLogin={this.handleIsLoggedIn} />} />
-                <Route path='/signup' element={<RegistrationForm />} />
-                <Route path='/onboarding' element={<UserOnboarding />} />
-                <Route path='/home' element={<Home />} />
-                <Route path='/expenses' element={<AllTransactions type='expense' />} />
-                <Route path='/incomes' element={<AllTransactions type='income' />} />
-                <Route path='/accounts' element={<AllAccounts />} />
-                <Route path='/friends' element={<FriendsPage />} />
-                <Route path='/friendRequests' element={<AllFriendRequest />} />
-                <Route path='/scheduledTransactions' element={<AllScheduledTransactions />} />
-                <Route path='/splitExpenses' element={<AllSplitTransactions />} />
-                <Route path='/splitExpense/:splitId' element={<SplitDetail />} />
-              </Routes>
+              <Switch>
+                <Route exact path='/'> <LoginForm handleLogin={this.handleIsLoggedIn} /> </Route>
+                <Route path='/signup'> <RegistrationForm /> </Route>
+                <Route path='/onboarding' > <UserOnboarding /> </Route>
+                <Route path='/home'> <Home /> </Route>
+                <Route path='/expenses'> <AllTransactions type='expense' /> </Route>
+                <Route path='/incomes'> <AllTransactions type='income' /> </Route>
+                <Route path='/accounts'> <AllAccounts /> </Route>
+                <Route path='/friends'> <FriendsPage /> </Route>
+                <Route path='/friendRequests'> <AllFriendRequest /> </Route>
+                <Route path='/scheduledTransactions'> <AllScheduledTransactions /> </Route>
+                <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
+                <Route path='/splitExpense/:splitId' component={SplitDetail} />
+              </Switch>
             </div>
           </div>
         </div>

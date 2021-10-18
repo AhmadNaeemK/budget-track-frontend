@@ -27,7 +27,8 @@ class AccountsForm extends React.Component {
             const res = await API.createCashAccount(this.state);
             if (res && res.status === 201) {
                 this.setState(this.initialState)
-                window.location.reload()
+                const account = await res.json()
+                this.props.accountHandler(account)
             } else {
                 const error = await res.json()
                 alert(error[Object.keys(error)[0]])
@@ -41,6 +42,7 @@ class AccountsForm extends React.Component {
             if (res.status === 200) {
                 const updatedAccount = await res.json()
                 this.props.accountHandler(updatedAccount)
+                this.setState(this.initialState)
             } else {
                 const error = await res.json()
                 alert(error[Object.keys(error)[0]])

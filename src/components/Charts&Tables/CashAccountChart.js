@@ -31,7 +31,6 @@ class CashAccountsChart extends React.Component {
 
     render() {
         return (
-            <>
                 <Pie
                     data={this.state.cashAccountData}
                     options={{
@@ -47,7 +46,6 @@ class CashAccountsChart extends React.Component {
                         },
                     }}
                 />
-            </>
         )
     }
 

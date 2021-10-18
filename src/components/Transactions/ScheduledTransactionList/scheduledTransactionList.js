@@ -72,6 +72,10 @@ class ScheduledTransactionList extends React.Component {
         this.getData = getData
     }
 
+    componentDidMount = () => {
+        this.props.setMethods(this.updateData, this.getData);
+    }
+
     render() {
         return (
             <BaseDataTableComponent

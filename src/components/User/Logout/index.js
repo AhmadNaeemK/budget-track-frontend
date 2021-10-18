@@ -1,37 +1,40 @@
 import React from 'react';
-
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { LOGOUT_URL } from '../../../Config';
 
-const Logout = (props) => {
+class Logout extends React.Component {
 
-    const navigate = useNavigate();
+    handleLogout = () => {
+        console.log('logged out');
+        fetch(
+            LOGOUT_URL, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('access'),
+            },
+            user: {
+                username: localStorage.getItem('username'),
+                userid: localStorage.getItem('userid')
+            },
+        });
+        localStorage.removeItem('userid');
+        localStorage.removeItem('username');
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        this.props.loggedOut();
+    }
 
-    const handleLogout= () => {
-            console.log('logged out');
-            fetch (
-                LOGOUT_URL,{
-                    method: 'GET',
-                    mode: 'cors',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('access'), 
-                    },
-                    user: {username: localStorage.getItem('username'),
-                        userid: localStorage.getItem('userid')},
-                });
-            localStorage.removeItem('userid');
-            localStorage.removeItem('username');
-            localStorage.removeItem('access');
-            localStorage.removeItem('refresh');
-            props.loggedOut();
-            navigate('/');
-        }
-
-    return <button className='btn btn-primary' onClick={handleLogout}>Logout</button>
-    
+    render() {
+        return (
+            <Link to='/'>
+                <button className='btn btn-primary' onClick={this.handleLogout}> Logout</button>
+            </Link>
+        )
+    }
 }
 
 export default Logout

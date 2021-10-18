@@ -11,7 +11,8 @@ class AllSplitTransactions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            transactionCategories: []
+            transactionCategories: [],
+            createdSplit: null,
         }
     }
 
@@ -19,6 +20,12 @@ class AllSplitTransactions extends React.Component {
         const transactionCategories = await API.fetchTransactionCategories()
         this.setState({
             transactionCategories: transactionCategories
+        })
+    }
+
+    getNewSplit = (split) => {
+        this.setState({
+            createdSplit: split
         })
     }
 
@@ -39,6 +46,7 @@ class AllSplitTransactions extends React.Component {
                         modalBody={
                             <SplitTransactionForm
                                 categories={this.state.transactionCategories}
+                                updateTable={this.getNewSplit}
                             />
                         }
                     />
@@ -51,6 +59,7 @@ class AllSplitTransactions extends React.Component {
                         </div>
                         <SplitTransactionList
                             categories={this.state.transactionCategories}
+                            createdSplit = {this.state.createdSplit}
                         />
                     </div>
                 </div>

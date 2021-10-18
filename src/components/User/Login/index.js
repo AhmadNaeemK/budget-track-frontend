@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import API from '../../../API';
 
@@ -16,11 +16,12 @@ async function checkNewUser() {
 class LoginForm extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            username: '',
             email: '',
             password: '',
+            isNewUser: null,
+            isLoggedIn: null,
         }
     }
 
@@ -34,11 +35,10 @@ class LoginForm extends React.Component {
             localStorage.setItem('username', result.user);
             localStorage.setItem('userid', result.id);
             const isNewUser = await checkNewUser()
-            if (!isNewUser) {
-                window.location.href = '/home';
-            } else {
-                window.location.href = '/onboarding'
-            }
+            this.setState({
+                isLoggedIn: true,
+                isNewUser: isNewUser
+            })
         }
     }
 
@@ -49,39 +49,48 @@ class LoginForm extends React.Component {
     }
 
     componentDidMount() {
-        if (localStorage.getItem('access')){
-            window.location.href = '/home'
+        if (localStorage.getItem('access')) {
+            this.setState({
+                isLoggedIn: true
+            })
         }
     }
 
     render() {
-        return (
-            <div className='container-fluid p-2'>
-                <div className='d-flex justify-content-center mt-5'>
-                    <div className='col-5'>
-                        <form>
-                            <h3>Sign In</h3>
 
-                            <div className="mb-3">
-                                <label>Email</label>
-                                <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={this.handleChange} />
+        if (this.state.isLoggedIn && this.state.isNewUser) {
+            return <Redirect to='/onboarding' />
+        } else if (this.state.isLoggedIn && !this.state.isNewUser) {
+            return <Redirect to='/home' />
+        } else {
+            return (
+                <div className='container-fluid p-2'>
+                    <div className='d-flex justify-content-center mt-5'>
+                        <div className='col-5'>
+                            <form>
+                                <h3>Sign In</h3>
+
+                                <div className="mb-3">
+                                    <label>Email</label>
+                                    <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={this.handleChange} />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label>Password</label>
+                                    <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
+                                </div>
+
+                                <button type="submit" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Submit</button>
+                            </form>
+
+                            <div>
+                                <Link to='/signup'> Create Your Account </Link>
                             </div>
-
-                            <div className="mb-3">
-                                <label>Password</label>
-                                <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
-                            </div>
-
-                            <button type="submit" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Submit</button>
-                        </form>
-
-                        <div>
-                            <Link to='/signup'> Create Your Account </Link>
                         </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 
 }
