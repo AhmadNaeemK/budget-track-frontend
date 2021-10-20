@@ -38,15 +38,13 @@ class ScheduleTransactionForm extends React.Component {
         const res = await API.createScheduledTransaction(newState)
         if (res.status === 201) {
             alert("Transaction Scheduled");
-            event.target.parentNode.reset();
+            this.setState(this.initialState)
             const scheduledTransaction = await res.json()
             this.props.scheduledTransactionHandler(scheduledTransaction);
         } else {
             const error = await res.json()
             alert(error[Object.keys(error)[0]])
         }
-
-
     }
 
     render() {
@@ -54,14 +52,14 @@ class ScheduleTransactionForm extends React.Component {
                 <form>
                     <div className='mb-3'>
                         <label htmlFor='title'>Title</label>
-                        <input className='form-control' type='text' name='title' placeholder='Add title here' onChange={this.handleChange} />
+                        <input className='form-control' type='text' value={this.state.title} name='title' placeholder='Add title here' onChange={this.handleChange} />
                     </div>
 
                     <div className='row'>
                         <div className='col'>
                             <div className='mb-3'>
                                 <label htmlFor='cash_account'>Cash Account</label>
-                                <select className='form-select' name='cash_account' onChange={this.handleChange}>
+                                <select className='form-select' value={this.state.cash_account} name='cash_account' onChange={this.handleChange}>
                                     {
                                         this.props.accounts.map((account) => (
                                             <option key={account.id} value={account.id}>{account.title}</option>
@@ -73,7 +71,7 @@ class ScheduleTransactionForm extends React.Component {
                         <div className='col'>
                             <div className='mb-3'>
                                 <label htmlFor='category'>Category</label>
-                                <select className='form-select' name='category' onChange={this.handleChange}>
+                                <select className='form-select' name='category' value={this.state.category} onChange={this.handleChange}>
                                     {
                                         this.props.categories.map((category) => (
                                             <option key={category[0]} value={category[0]}>{category[1]}</option>
@@ -88,13 +86,13 @@ class ScheduleTransactionForm extends React.Component {
                         <div className='col'>
                             <div className='mb-3'>
                                 <label htmlFor='amount'>Amount</label>
-                                <input className='form-control' type='number' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
+                                <input className='form-control' value={this.state.amount} type='number' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
                             </div>
                         </div>
                         <div className='col'>
                             <div className='mb-3'>
                                 <label htmlFor='transaction_time'>Time</label>
-                                <input className='form-control' type='datetime-local' name='transaction_time' onChange={this.handleChange} placeholder="Add Date here" />
+                                <input className='form-control' value={this.state.transaction_time} type='datetime-local' name='transaction_time' onChange={this.handleChange} placeholder="Add Date here" />
                             </div>
                         </div>
                     </div>

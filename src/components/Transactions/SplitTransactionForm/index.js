@@ -44,7 +44,6 @@ class SplitTransactionForm extends React.Component {
         const res = await API.createSplitTransaction(this.state)
         if (res.status === 201) {
             alert("Expense Splitted");
-            event.target.parentNode.parentNode.reset();
             const split = await res.json()
             this.props.updateTable(split);
             this.setState({
@@ -69,6 +68,7 @@ class SplitTransactionForm extends React.Component {
                     <input
                         type='text'
                         name='title'
+                        value={this.state.title}
                         className='form-control'
                         placeholder='Add title here'
                         onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
@@ -79,6 +79,7 @@ class SplitTransactionForm extends React.Component {
                     <input
                         type='number'
                         name='total_amount'
+                        value={this.state.total_amount}
                         className='form-control'
                         placeholder='Add total amount here'
                         onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
@@ -89,6 +90,7 @@ class SplitTransactionForm extends React.Component {
                     <select
                         className='form-select'
                         name='category'
+                        value={this.state.category}
                         onChange={(event) => { this.handleChange(event.target.name, event.target.value) }}
                     >
                         {
@@ -106,6 +108,7 @@ class SplitTransactionForm extends React.Component {
                         cacheOptions
                         defaultOptions
                         loadOptions={this.promiseFriends}
+                        value={this.state.paying_friend}
                         onChange={(value) => { this.handleChange('paying_friend', value.value) }}
                         styles={{
                             option: (provided, state) => ({

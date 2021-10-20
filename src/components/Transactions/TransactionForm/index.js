@@ -85,7 +85,6 @@ class TransactionForm extends React.Component {
         } else {
             await update();
         }
-        event.target.parentNode.reset()
     }
 
     render() {
@@ -96,14 +95,14 @@ class TransactionForm extends React.Component {
 
                         <div className='mb-3'>
                             <label htmlFor='title'>Transaction Title</label>
-                            <input className='form-control' type='text' name='title' onChange={this.handleChange} placeholder="Add title here" />
+                            <input className='form-control' value={this.state.title} type='text' name='title' onChange={this.handleChange} placeholder="Add title here" />
                         </div>
 
                         <div className='row'>
                             <div className='col'>
                                 <div className='mb-3'>
                                     <label htmlFor='cash_account'>Cash Account</label>
-                                    <select className='form-select' name='cash_account' onChange={this.handleChange}>
+                                    <select className='form-select' value={this.state.cash_account} name='cash_account' onChange={this.handleChange}>
                                         {
                                             this.props.accounts.map((account) => (
                                                 <option key={account.id} value={account.id}>{account.title}</option>
@@ -115,7 +114,7 @@ class TransactionForm extends React.Component {
                             <div className='col'>
                                 <div className='mb-3'>
                                     <label htmlFor='category'>Category</label>
-                                    <select className='form-select' name='category' onChange={this.handleChange}>
+                                    <select className='form-select' value={this.state.category} name='category' onChange={this.handleChange}>
                                         {
                                             this.props.categories.map((category) => (
                                                 <option key={category[0]} value={category[0]}>{category[1]}</option>
@@ -128,7 +127,7 @@ class TransactionForm extends React.Component {
 
                         <div className='mb-3'>
                             <label htmlFor='amount'>Amount</label>
-                            <input className='form-control' type='number' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
+                            <input className='form-control' value={this.state.amount} type='number' name='amount' onChange={this.handleChange} placeholder="Add amount here" />
                         </div>
 
 
@@ -140,7 +139,7 @@ class TransactionForm extends React.Component {
                     <form>
                         <div className='mb-3'>
                             <label htmlFor='amount'>Amount</label>
-                            <input className='form-control' type='number' name='amount' onChange={this.handleChange} />
+                            <input className='form-control' value={this.state.amount} type='number' name='amount' onChange={this.handleChange} />
                         </div>
 
                         <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
