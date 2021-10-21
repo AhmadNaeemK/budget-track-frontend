@@ -1,85 +1,56 @@
 import React from 'react'
 
-import FriendsRequestList from './FriendsRequestList'
-import UserList from './UserList'
-
-import API from '../API'
+import FriendsList from './User/UserList/FriendsList'
+import UsersList from './User/UserList/UserList';
 
 
 
 class FriendsPage extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            isLoaded: false,
-            friendRequestsSent: [],
-            friendRequestsReceived: []
+            selectedList: 'friends'
         }
     }
 
-    sentRequestHandler = async () => {
-        const friendRequestsSent = await API.fetchSentFriendRequestList();
+    handleListSelect = (event) => {
         this.setState({
-            friendRequestsSent: friendRequestsSent,
+            selectedList: event.target.value
         })
-    }
-
-    receivedRequestHandler = async () => {
-        const friendRequestsReceived = await API.fetchReceivedFriendRequestList();
-
-        this.setState({
-            friendRequestsReceived: friendRequestsReceived
-        })
-    }
-
-    componentDidMount() {
-        (async () => {
-            const friendRequestsSent = await API.fetchSentFriendRequestList();
-            const friendRequestsReceived = await API.fetchReceivedFriendRequestList();
-
-            this.setState({
-                friendRequestsSent: friendRequestsSent,
-                friendRequestsReceived: friendRequestsReceived
-            })
-        })().then(() => { this.setState({ isLoaded: true }) });
     }
 
     render() {
         return (
-            <div>
-                {this.state.isLoaded &&
-                    <>
-                        <div className='row m-2'>
-                            <div className='col-5 border rounded border-white p-2 m-2'>
-                                <h4>Sent Requests</h4>
-                                <FriendsRequestList
-                                    requests={this.state.friendRequestsSent}
-                                    requestType='sent'
-                                    requestHandler={this.sentRequestHandler}
-                                />
-                            </div>
-                            <div className='col-5 border rounded border-white p-2 m-2'>
-                                <h4>Received Requests</h4>
-                                <FriendsRequestList
-                                    requests={this.state.friendRequestsReceived}
-                                    requestType={'received'}
-                                    requestHandler={this.receivedRequestHandler}
-                                />
-                            </div>
+            <div className='container mt-3'>
+                <div className='d-flex justify-content-between'>
+                    <h2>Friends</h2>
+                    <div className='form-check' onChange={event => this.setState({
+                        selectedList: event.target.value
+                    })}>
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="friends" id="friends"
+                                value="friends" checked={this.state.selectedList === 'friends'} />
+                            <label className="btn btn-outline-secondary" htmlFor="friends">Friends</label>
                         </div>
+                        <div className="form-check form-check-inline">
+                            <input className="btn-check" type="radio" name="users" id="users" value="users"
+                                checked={this.state.selectedList === 'users'}
+                            />
+                            <label className="btn btn-outline-secondary" htmlFor="users">Add Friends</label>
+                        </div>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col'>
+                        {this.state.selectedList === 'friends' ?
+                            <FriendsList /> :
+                            <UsersList />
+                        }
+                    </div>
+                </div>
+            </div >
 
-                        <div className='row m-2'>
-                            <div className='col-5 border rounded border-white p-2 m-2' style={{minWidth: '800px'}}>
-                                <UserList userType='Users' requestHandler={this.sentRequestHandler} title="Users"/>
-                            </div>
-                            <div className='col-5 border rounded border-white p-2 m-2' style={{minWidth: '800px'}}>
-                                <UserList userType='Friends' title="Friends"/>
-                            </div>
-                        </div>
-                    </>
-                }
-            </div>
         )
     }
 }

@@ -1,114 +1,59 @@
 import React from 'react'
 
-import TransactionList from './Transactions';
-import TransactionForm from './TransactionForm';
-import AccountsList from './Accounts'
-import AccountsForm from './AccountsForm'
-import ExpenseStructureChart from './Charts/ExpenseStructureChart'
-import CashAccountsChart from './Charts/CashAccountChart';
-import BudgetChart from './Charts/BudgetChart';
-import ScheduleTransactionForm from './ScheduleTransactionForm.js';
-import SplitTransactionList from './SplitTransactionList';
+import TransactionForm from './Transactions/TransactionForm';
+import AccountsForm from './Accounts/AccountsForm'
+import ModalComponent from './Modals'
 
 import { Link } from 'react-router-dom'
 
 import API from '../API';
 
-import { EXPENSE_LIST_URL, monthNames} from '../Config';
-import SplitTransactionForm from './SplitTransactionForm';
+import { CASH_ACCOUNT_LIST_URL } from '../Config';
+import AccountDataCharts from './Accounts/AccountsData/AccountDataCharts';
+import MonthlyTransactionChart from './Charts&Tables/MonthlyTransactionChart';
+import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm.js';
+import ExpenseList from './Transactions/TransactionsList/expenseList';
+import MaxSplitData from './SplitExpenseData/maxSplitData';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoaded: false,
-            expenses: [],
-            incomes: [],
-            loggedIn: false,
             cashAccounts: [],
             transactionCategories: [],
             transaction_edit: null,
             accountId: null,
             month: new Date().getMonth() + 1,
             categoryExpenseData: [],
-            Scheduled: [],
-            userCreatedSplits: [],
-            userPayableSplits: [],
-            page_size: 6,
+            monthlyTransactionChartData: {},
         }
     }
 
-    // edit forms
-    transactionEditHandler = (t) => {
+    createAccount = (createdAccount) => {
+        const accounts = this.state.cashAccounts
+        accounts.push(createdAccount)
         this.setState({
-            transaction_edit: t
+            cashAccounts: accounts
         })
     }
 
-    accountIdHandler = (a) => {
-        this.setState({
-            accountId: a
-        })
-    }
+    createTransaction = (transaction) => {
 
-
-    transactionAccountHandler = async (type, transaction, acc) => {
-        let newTransactions;
-        if (type === 'expenses') {
-            newTransactions = await API.fetchExpenseList(this.state.month)
-        } else if (type === 'incomes') {
-            newTransactions = await API.fetchIncomeList(this.state.month);
-        } else {
-            newTransactions = await API.fetchScheduledTransactionList();
-        }
-
-        const newCategoryData = await API.fetchCategoryExpenseData(this.state.month);
-        const newCashAccounts = await API.fetchCashAccountList();
-        this.setState({
-            [type]: newTransactions,
-            cashAccounts: newCashAccounts,
-            categoryExpenseData: newCategoryData,
-        })
-    }
-
-    scheduledTransactionHandler = async () => {
-        const newTransactions = await API.fetchScheduledTransactionList();
-        this.setState({
-            Scheduled: newTransactions,
-        })
-    }
-
-    splitTransactionHandler = async () => {
-        const newSplits = await API.fetchSplitTransactionList(true);
-        this.setState({
-            userCreatedSplits: newSplits,
-        })
-    }
-
-    accountHandler = (acc) => {
-        this.setState({
-            cashAccounts: acc
-        })
     }
 
     componentDidMount() {
-        this.setState({ loggedIn: localStorage.getItem('userid') ? true : false });
         const fetchThings = async () => {
             const month = new Date().getMonth() + 1
-            const paginationParams = `?month=${month}&page_size=${this.state.page_size}`
-            const expenses = await API.fetchExpenseList(month, EXPENSE_LIST_URL + paginationParams);
-            const incomes = await API.fetchIncomeList(month);
-            const cashAccountList = await API.fetchCashAccountList();
+            const cashAccountList = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20');
             const transactionCategories = await API.fetchTransactionCategories();
             const categoryExpenseData = await API.fetchCategoryExpenseData(month);
-            const scheduledTransactionList = await API.fetchScheduledTransactionList();
-            const userCreatedSplits = await API.fetchSplitTransactionList(true)
-            const userPayableSplits = await API.fetchSplitTransactionList(false)
+            const monthlyTransactionChartData = await API.fetchMonthlyTransactionChartData()
             this.setState({
-                expenses: expenses, cashAccounts: cashAccountList,
-                transactionCategories: transactionCategories, incomes: incomes,
-                categoryExpenseData: categoryExpenseData, Scheduled: scheduledTransactionList,
-                userCreatedSplits: userCreatedSplits, userPayableSplits: userPayableSplits
+                cashAccounts: cashAccountList.results,
+                transactionCategories: transactionCategories,
+                categoryExpenseData: categoryExpenseData,
+                monthlyTransactionChartData: monthlyTransactionChartData,
             })
         }
         fetchThings().then(() => {
@@ -118,159 +63,134 @@ class Home extends React.Component {
 
     render() {
         return (
-            <div className='container-fluid m-2 p-2'>
+            <div className='container mt-2'>
 
                 {this.state.isLoaded &&
                     <>
-                        <div className='row m-2'>
-                            <div className='col border rounded border-white p-2 m-2'>
-                                <TransactionList
-                                    transactions={this.state.expenses.results}
-                                    transactionAccountHandler={this.transactionAccountHandler}
-                                    cashAccounts={this.state.cashAccounts}
-                                    categories={this.state.transactionCategories}
-                                    transactionEditHandler={this.transactionEditHandler}
-                                    transactionType="Expenses" />
-                                <Link to='/expenses'> <button className='btn btn-dark w-100'><b>All Expenses</b></button> </Link>
-                            </div>
-                            <div className='col border rounded border-white p-2 m-2'>
-                                <TransactionList
-                                    transactions={this.state.incomes.results}
-                                    transactionAccountHandler={this.transactionAccountHandler}
-                                    cashAccounts={this.state.cashAccounts}
-                                    categories={this.state.transactionCategories}
-                                    transactionEditHandler={this.transactionEditHandler}
-                                    transactionType="Income" />
-                                <Link to='/incomes'> <button className='btn btn-dark w-100'><b>All Incomes</b></button> </Link>
-                            </div>
-                            <div className='col'>
-                                <div className='row'>
+                        <div className='row'>
+                            <div className='col-lg-7 col-12'>
+                                <div className='row p-2 m-2'>
                                     <div className='col'>
-                                        <TransactionForm title='Create Transactions'
-                                            accounts={this.state.cashAccounts}
-                                            categories={this.state.transactionCategories}
-                                            transactionAccountHandler={this.transactionAccountHandler} />
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    <div className='col'>
-                                        <ScheduleTransactionForm
-                                            accounts={this.state.cashAccounts}
-                                            categories={this.state.transactionCategories}
-                                            scheduledTransactionHandler={this.scheduledTransactionHandler}
+                                        <MonthlyTransactionChart
+                                            monthlyData={this.state.monthlyTransactionChartData}
                                         />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div className='row m-2'>
-                            <div className='col p-2 mb-5' style={{ height: '100%', minWidth: '20%', maxWidth: '25%' }}>
-                                <ExpenseStructureChart expenseData={this.state.categoryExpenseData} month={monthNames[this.state.month - 1]} />
-                            </div>
-                            <div className='col p-2 mb-5' style={{ height: '100%', minWidth: '20%', maxWidth: '25%' }}>
-                                <CashAccountsChart accounts={this.state.cashAccounts} month={monthNames[this.state.month - 1]} />
-                            </div>
-                            <div className='col p-2 mb-5' style={{ height: '100%', minWidth: '20%', maxWidth: '50%' }}>
-                                <BudgetChart accounts={this.state.cashAccounts} month={monthNames[this.state.month - 1]} />
-                            </div>
-                        </div>
+                                <div className='row border rounded border-white p-2 m-2'>
+                                    <div className='d-flex align-items-center justify-content-between px-2'>
+                                        <h2> Recent Expenses </h2>
+                                        <Link className='d-flex m-2' to='/expenses' style={{ textDecoration: 'none', color: 'white' }}>
+                                            <h6 className='mr-2'>See More </h6>
+                                            <i className='fas fa-long-arrow-alt-up ml-4'
+                                                style={{
+                                                    transform: 'rotate(45deg)',
+                                                    marginInlineStart: '5px',
+                                                    fontWeight: '1rem'
+                                                }}
+                                            />
+                                        </Link>
+                                    </div>
 
-                        <div className='row m-2'>
-                            <div className='col border rounded border-white p-2 m-2'>
-                                <AccountsList accounts={this.state.cashAccounts}
-                                    transactionAccountHandler={this.transactionAccountHandler}
-                                    accountIdHandler={this.accountIdHandler} />
-                                <Link to='/accounts'> <button className='btn btn-dark w-100'><b>All Accounts</b></button> </Link>
-                            </div>
-                            <div className='col'>
-                                <AccountsForm title='Create Account' accountHandler={this.accountHandler} />
-                            </div>
-                        </div>
-                        {this.state.Scheduled.length > 0 &&
-                            <div className='rom m-2'>
-                                <div className='col border rounded border-white p-2 m-2'>
-                                    <TransactionList
-                                        transactions={this.state.Scheduled}
-                                        cashAccounts={this.state.cashAccounts}
-                                        categories={this.state.transactionCategories}
-                                        transactionAccountHandler={this.scheduledTransactionHandler}
-                                        transactionType="Scheduled"
+                                    <ExpenseList
+                                        paginated={false}
+                                        searchAble={false}
+                                        month={this.state.month}
                                     />
                                 </div>
-                            </div>
-                        }
 
-                        <div className='row m-2'>
-                            <div className='col border rounded border-white p-2 m-2'>
-                                <SplitTransactionList
-                                    splitTransactions={this.state.userCreatedSplits.results}
-                                    splitHandler={this.splitTransactionHandler}
-                                    splitType='created'
-                                    title="Recievable Splits"
-                                />
                             </div>
-                            <div className='col'>
-                                <SplitTransactionForm
-                                    categories={this.state.transactionCategories}
-                                    splitHandler={this.splitTransactionHandler}
-                                />
-                            </div>
-                        </div>
 
-                        <div className='row m-2'>
-                            <div className='col border rounded border-white p-2 m-2'>
-                                <SplitTransactionList
-                                    splitTransactions={this.state.userPayableSplits.results}
-                                    splitHandler={this.splitTransactionHandler}
-                                    splitType='payable'
-                                    title="Payable Splits"
-                                />
-                            </div>
-                        </div>
+                            <div className='col-lg-5 col-12'>
+                                <div className='p-2 m-2'>
+                                    <div className='row'>
+                                        <div className='col m-2'>
+                                            <button className='btn primaryBtn'
+                                                data-bs-toggle='modal'
+                                                data-bs-target={`#create-account`}>
+                                                Create Account
+                                            </button>
 
-                        <div className="modal fade" id="tModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="ModalLongTitle">Edit Transactions</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <TransactionForm
-                                            transaction={this.state.transaction_edit}
-                                            transactionAccountHandler={this.transactionAccountHandler}
-                                            categories={this.state.transactionCategories}
-                                        />
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <ModalComponent
+                                                id='create-account'
+                                                title='Create Account'
+                                                modalBody={
+                                                    <AccountsForm
+                                                        type='creation'
+                                                        accountHandler={this.createAccount} />
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className='col m-2'>
+                                            <button className='btn primaryBtn'
+                                                data-bs-toggle='modal'
+                                                data-bs-target={`#create-transaction`}
+                                            >
+                                                Create Transaction
+                                            </button>
+                                            <ModalComponent
+                                                id='create-transaction'
+                                                title='Create Transaction'
+                                                modalBody={
+                                                    <TransactionForm
+                                                        type='creation'
+                                                        transaction={this.state.transaction_edit}
+                                                        accounts={this.state.cashAccounts}
+                                                        transactionAccountHandler={this.changeHandler}
+                                                        categories={this.state.transactionCategories}
+                                                    />
+                                                }
+                                            />
+                                        </div>
+                                        <div className='col m-2'>
+                                            <button
+                                                className='btn primaryBtn'
+                                                data-bs-toggle='modal'
+                                                data-bs-target={`#schedule-transaction`}
+                                            >
+                                                Schedule Transaction
+                                            </button>
+                                            <ModalComponent
+                                                id='schedule-transaction'
+                                                title='Schedule Transaction'
+                                                modalBody={
+                                                    <ScheduleTransactionForm
+                                                        accounts={this.state.cashAccounts}
+                                                        categories={this.state.transactionCategories}
+                                                        scheduledTransactionHandler={() => {}}
+                                                    />
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="modal fade" id="aModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="ModalLongTitle">Edit Account</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                <div className='border rounded border-white p-2 m-2'>
+                                    <AccountDataCharts
+                                        cashAccounts={this.state.cashAccounts}
+                                        month={this.state.month}
+                                        expenseData={this.state.categoryExpenseData}
+                                    />
+                                </div>
+                                <div className='border rounded border-white p-2 m-2'>
+                                    <div className='d-flex align-items-center justify-content-between px-2'>
+                                        <h3> Split Expenses </h3>
+                                        <Link className='d-flex m-2' to='/splitExpenses' style={{ textDecoration: 'none', color: 'white' }}>
+                                            <h6 className='mr-2'>See More </h6>
+                                            <i className='fas fa-long-arrow-alt-up ml-4'
+                                                style={{
+                                                    transform: 'rotate(45deg)',
+                                                    marginInlineStart: '5px',
+                                                    fontWeight: '1rem'
+                                                }}
+                                            />
+                                        </Link>
                                     </div>
-                                    <div className="modal-body">
-                                        <AccountsForm
-                                            accountId={this.state.accountId}
-                                            accountHandler={this.accountHandler} />
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
+                                    <MaxSplitData />
                                 </div>
                             </div>
+
+
                         </div>
                     </>
                 }

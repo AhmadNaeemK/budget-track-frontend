@@ -3,7 +3,7 @@ import {
     INCOME_LIST_URL, TRANSACTION_CATEGORY_URL, CASH_ACCOUNT_URL, CASH_ACCOUNT_LIST_URL, CATEGORY_EXPENSE_URL,
     SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
     RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
-    SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL,
+    SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL, MONTHLY_TRANSACTION_CHART_DATA, SPLIT_PAYMENT_DATA_URL, MAX_SPLIT_DUE,
 
 } from "./Config";
 
@@ -55,10 +55,6 @@ const API = {
     deleteExpense: async (expenseId) => {
         const config = {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'),
-            },
         }
         const newURL = EXPENSE_URL + String(expenseId)
         return await fetch(newURL, config);
@@ -93,10 +89,6 @@ const API = {
     deleteIncome: async (incomeId) => {
         const config = {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('access'),
-            },
         }
         const newURL = INCOME_URL + String(incomeId)
         return await fetch(newURL, config);
@@ -111,13 +103,13 @@ const API = {
         return await fetch(newURL, config);
     },
 
-    fetchCashAccountList: async () => {
+    fetchCashAccountList: async (url) => {
 
         const config = {
             method: 'GET',
         }
 
-        const accountResponse = await fetch(CASH_ACCOUNT_LIST_URL, config)
+        const accountResponse = await fetch(url || CASH_ACCOUNT_LIST_URL, config)
         return await accountResponse.json()
     },
 
@@ -172,11 +164,11 @@ const API = {
         return await fetch(SCHEDULED_TRANSACTION_LIST_URL, config)
     },
 
-    fetchScheduledTransactionList: async() => {
+    fetchScheduledTransactionList: async(url) => {
         const config = {
             method: "GET"
         }
-        const res = await fetch(SCHEDULED_TRANSACTION_LIST_URL, config)
+        const res = await fetch(url || SCHEDULED_TRANSACTION_LIST_URL, config)
         return await res.json()
     },
 
@@ -188,19 +180,19 @@ const API = {
         return await fetch(newURL, config)
     },
 
-    fetchSentFriendRequestList: async() => {
+    fetchSentFriendRequestList: async(url) => {
         const config ={
             method: 'GET'
         }
-        const friendRequests = await fetch(SENT_FRIEND_REQUEST_LIST_URL, config)
+        const friendRequests = await fetch(url || SENT_FRIEND_REQUEST_LIST_URL, config)
         return await friendRequests.json();
     },
 
-    fetchReceivedFriendRequestList: async() => {
+    fetchReceivedFriendRequestList: async(url) => {
         const config ={
             method: 'GET'
         }
-        const friendRequests = await fetch(RECEIVED_FRIEND_REQUEST_LIST_URL, config)
+        const friendRequests = await fetch(url || RECEIVED_FRIEND_REQUEST_LIST_URL, config)
         return await friendRequests.json();
     },
 
@@ -252,13 +244,21 @@ const API = {
         return removed
     },
 
-    fetchSplitTransactionList: async (mySplits, url) => {
+    fetchSplitTransactionList: async (url) => {
         const config = {
             method: 'GET'
         }
-        const newURL = url || SPLIT_TRANSACTION_LIST_URL + `?my_split=${mySplits}`
-        const splitTransactions = await fetch(newURL, config)
+        const newURL = SPLIT_TRANSACTION_LIST_URL 
+        const splitTransactions = await fetch(url || newURL, config)
         return await splitTransactions.json()
+    },
+
+    fetchSplitTransaction: async (splitId) => {
+        const config ={
+            method: "GET"
+        }
+        const res = await fetch(SPLIT_TRANSACTION_URL + String(splitId), config)
+        return await res.json()
     },
 
     createSplitTransaction: async (formData) => {
@@ -276,12 +276,31 @@ const API = {
         return await fetch(SPLIT_TRANSACTION_URL + String(splitId), config)
     },
 
+
     paySplit: async (formData) => {
         const config = {
             method: 'POST',
             body: JSON.stringify(formData)
         }
         return await fetch(PAY_SPLIT_URL, config)
+    },
+
+    fetchSplitPaymentData: async (splitId) => {
+        const res = await fetch(SPLIT_PAYMENT_DATA_URL + `/${splitId}`)
+        return await res.json()
+    },
+
+    fetchMaxSplitsDue: async () => {
+        const res = await fetch(MAX_SPLIT_DUE)
+        return await res.json()
+    },
+
+    fetchMonthlyTransactionChartData: async () => {
+        const config ={
+            method: 'GET'
+        }
+        const data =  await fetch(MONTHLY_TRANSACTION_CHART_DATA, config)
+        return await data.json()
     }
 
 }

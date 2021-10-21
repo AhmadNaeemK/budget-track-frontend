@@ -1,99 +1,162 @@
 import React from 'react';
 
 import API from '../API';
+import { CASH_ACCOUNT_LIST_URL } from '../Config';
 
-import AccountsForm from './AccountsForm';
-import AccountsList from './Accounts';
+import AccountsForm from './Accounts/AccountsForm';
+import BaseDataTableComponent from './Charts&Tables/BaseDataTableComponent';
+import ModalComponent from './Modals';
 
 class AllAccounts extends React.Component {
 
-    constructor(props) {
-        super(props)
+    columns = []
 
+    constructor(props) {
+        super(props);
         this.state = {
-            isLoaded: false,
-            accounts: [],
-            accountId: null,
-            budget_limit: 0,
+            account_edit: null
+        }
+        this.columns = [{
+            name: 'Title',
+            id: 'title',
+            selector: row => row.title,
+            sortable: true,
+            wrap: true,
+        },
+        {
+            name: 'Balance',
+            id: 'balance',
+            selector: row => row.balance,
+            sortable: true,
+        },
+        {
+            name: 'Limit',
+            id: 'limit',
+            selector: row => row.limit,
+            sortable: true,
+        },
+        {
+            name: 'Expenses',
+            id: 'expenses',
+            selector: row => row.expenses,
+            sortable: true,
+        },
+        {
+            name: 'Actions',
+            button: true,
+            cell: (row) =>
+                <div className='d-flex'>{row.title !== 'Cash' &&
+                    <div className='m-1'>
+                        <button type="button" className='btn btn-outline-danger redBtn' onClick={() => this.deleteAccount(row)}>
+                            <i className='fa fa-trash' />
+                        </button>
+                    </div>
+                }
+                    <div className='m-1'>
+                        <button type="button"
+                            className='btn btn-outline-success'
+                            data-bs-toggle='modal'
+                            data-bs-target='#aModal'
+                            onClick={() => this.editAccount(row)}
+                        >
+                            <i className='fa fa-pencil-square-o' />
+                        </button>
+                    </div>
+                </div>,
+            minWidth: '20%'
+        }]
+    }
+
+    editAccount = (row) => {
+        this.setState({
+            account_edit: row
+        })
+    }
+
+    deleteAccount = async (row) => {
+        const res = await API.deleteCashAccount(row.id)
+        if (res.status === 204) {
+            let data = this.getData();
+            data = data.filter(dataRow => dataRow.id !== row.id);
+            this.updateData(data);
+        } else {
+            alert(await res.json())
         }
     }
 
-    accountIdHandler = (a) => {
-        this.setState({
-            accountId: a
-        })
+    updateAccount = (updatedAccount) => {
+        let data = this.getData()
+        const editRowIndex = data.findIndex(dataRow => dataRow.id === this.state.account_edit.id)
+        data[editRowIndex] = updatedAccount
+        this.updateData(data)
     }
 
-    accountHandler = (acc) => {
-        this.setState({
-            accounts: acc
-        })
+    createAccount = (createdAccount) => {
+        let data = this.getData()
+        data.push(createdAccount)
+        this.updateData(data)
     }
 
-    transactionAccountHandler = (type, transaction, acc) => {
-        this.setState({
-            accounts: acc
-        })
+    dataRequest = async (params) => {
+        const res = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + params)
+        return res
     }
 
-
-    componentDidMount() {
-        (async () => {
-            const accounts = await API.fetchCashAccountList();
-            this.setState({ accounts: accounts });
-        })().then(() => {this.setState({isLoaded: true})});
+    acceptChildMethodsForUpdate = (updateData, getData) => {
+        this.updateData = updateData
+        this.getData = getData
     }
 
     render() {
-        return (<>
-            { this.state.isLoaded && 
-                <div className='m-2 p-2'>
-                    <div className='d-flex justify-content-center'>
+        return (
+            <div className='container mt-3'>
 
-                        {/* <div className='w-20'>
-                        <CashAccountsChart accounts={this.state.accounts} />
+                <div className='d-flex mb-3'>
+                    <button
+                        className='btn primaryBtn'
+                        data-bs-toggle='modal'
+                        data-bs-target={`#account-create`}
+                    >
+                        Create Account
+                    </button>
+                    <ModalComponent
+                        id='account-create'
+                        title='Create Account'
+                        modalBody={
+                            <AccountsForm
+                                type='creation' 
+                                accountHandler={this.createAccount}
+                            />
+                        }
+                    />
+                </div>
+
+                <div className='row'>
+                    <div className='col'>
+                        <div className='d-flex justify-content-start m-4'>
+                            <h2>Accounts</h2>
                         </div>
-
-                        <div className='w-20'>
-                        <ExpenseAccountsChart expenseAccounts={this.state.expenseAccountsData} month={monthNames[this.state.month - 1]} />
-                        </div> */}
-
-                        <AccountsForm className='w-50'
-                            title='Create Account' accountHandler={this.accountHandler} />
-                    </div>
-
-
-                    <div className='border rounded border-white p-2 m-2'>
-                        <AccountsList
-                            accounts={this.state.accounts}
-                            transactionAccountHandler={this.tranactionAccountHandler}
-                            accountIdHandler={this.accountIdHandler}
+                        <BaseDataTableComponent
+                            columns={this.columns}
+                            paginated={true}
+                            searchAble={true}
+                            fetchDataRequest={this.dataRequest}
+                            setMethods={this.acceptChildMethodsForUpdate}
                         />
                     </div>
-
-                    <div className="modal fade" id="aModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="ModalLongTitle">Edit Account</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <AccountsForm
-                                        accountId={this.state.accountId}
-                                        accountHandler={this.accountHandler} />
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            }
-            </>
+
+                <ModalComponent
+                    id='aModal'
+                    title='Edit Account'
+                    modalBody={
+                        <AccountsForm
+                            type='update'
+                            account_edit={this.state.account_edit}
+                            accountHandler={this.updateAccount} />
+                    }
+                />
+            </div>
         )
     }
 

@@ -1,36 +1,82 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-// component
-import NavBar from './components/NavBar';
-import Home from './components/Home';
-import LoginForm from './components/Login';
-import AllTransactions from './components/AllTransactions'
-import AllAccounts from './components/AllAccounts';
-import UserOnboarding from './components/UserOnBoarding'
-import RegistrationForm from './components/Register';
-import FriendsPage from './components/Friends';
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.css';
+
+import './App.css'
 
 // styles
 import { GlobalStyle } from './GlobalStyle';
 
-const App = () => (
-  <Router>
-    <NavBar />
-    <Routes>
-      <Route path='/' element={<LoginForm />} />
-      <Route path='/signup' element={<RegistrationForm />} />
-      <Route path='/onboarding' element={<UserOnboarding />} />
-      <Route path='/home' element={<Home />} />
-      <Route path='/expenses' element={<AllTransactions type='Expenses'/>} />
-      <Route path='/incomes' element={<AllTransactions type='Incomes'/>} />
-      <Route path='/accounts' element={<AllAccounts />} />
-      <Route path='/friends' element={<FriendsPage />} />
+// component
+import NavBar from './components/NavBar';
+import Home from './components/Home';
+import LoginForm from './components/User/Login';
+import AllTransactions from './components/AllTransactions'
+import AllAccounts from './components/AllAccounts';
+import UserOnboarding from './components/UserOnBoarding'
+import RegistrationForm from './components/User/Register';
+import FriendsPage from './components/Friends';
+import SideBarComponent from './components/SideBar';
+import AllFriendRequest from './components/FriendRequests';
+import AllScheduledTransactions from './components/AllScheduledTransactions';
+import AllSplitTransactions from './components/AllSplitTransactions';
+import SplitDetail from './components/SplitDetail';
 
-    </Routes>
-    <GlobalStyle />
-  </ Router>
-)
+
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoggedIn: false
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoggedIn: localStorage.getItem('refresh') ? true : false
+    })
+  }
+
+  handleIsLoggedIn = (status) => {
+    this.setState({
+      isLoggedIn: status
+    })
+  }
+
+  render() {
+    return (
+      <Router>
+        <div className='container-fluid'>
+          <div className="row flex-nowrap">
+            <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
+            <div className="col p-0">
+              <NavBar loggedIn={this.state.isLoggedIn} handleLogout={this.handleIsLoggedIn} />
+              <Switch>
+                <Route exact path='/'> <LoginForm handleLogin={this.handleIsLoggedIn} /> </Route>
+                <Route path='/signup'> <RegistrationForm /> </Route>
+                <Route path='/onboarding' > <UserOnboarding /> </Route>
+                <Route path='/home'> <Home /> </Route>
+                <Route path='/expenses'> <AllTransactions type='expense' /> </Route>
+                <Route path='/incomes'> <AllTransactions type='income' /> </Route>
+                <Route path='/accounts'> <AllAccounts /> </Route>
+                <Route path='/friends'> <FriendsPage /> </Route>
+                <Route path='/friendRequests'> <AllFriendRequest /> </Route>
+                <Route path='/scheduledTransactions'> <AllScheduledTransactions /> </Route>
+                <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
+                <Route path='/splitExpense/:splitId' component={SplitDetail} />
+              </Switch>
+            </div>
+          </div>
+        </div>
+        <GlobalStyle />
+      </ Router>
+    )
+  }
+}
 
 export default App;
 
