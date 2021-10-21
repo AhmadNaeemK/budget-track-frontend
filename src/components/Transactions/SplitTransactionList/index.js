@@ -78,14 +78,14 @@ class SplitTransactionList extends React.Component {
                 <div className='m-1'>
                     <Link to={`/splitExpense/${row.id}`}>
                         <button type="button" className='btn btn-outline-secondary'>
-                            <i className='fas fa-info' />
+                            <i className='fa fa-info' />
                         </button>
                     </Link>
                 </div>
                 {localStorage.getItem('username') === row.creator.username &&
                     <div className='m-1'>
                         <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteSplit(row)}>
-                            <i className='far fa-trash-alt' />
+                            <i className='fa fa-trash' />
                         </button>
                     </div>
                 }
@@ -97,7 +97,7 @@ class SplitTransactionList extends React.Component {
                             data-bs-target='#splitPaymentModal'
                             onClick={() => this.handlePaySplit(row)}
                         >
-                            <i className='fas fa-hand-holding-usd fa-lg' />
+                            <i className='fa fa-usd' />
                         </button>
                     </div>
                 }

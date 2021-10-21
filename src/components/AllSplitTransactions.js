@@ -34,7 +34,7 @@ class AllSplitTransactions extends React.Component {
             <div className='container mt-3'>
                 <div className='d-flex mb-3'>
                     <button
-                        className='btn btn-outline-primary'
+                        className='btn primaryBtn'
                         data-bs-toggle='modal'
                         data-bs-target={`#split-transaction`}
                     >

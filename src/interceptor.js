@@ -56,8 +56,6 @@ export const unregister = fetchIntercept.register({
     },
 
     responseError: function (error) {
-        // Handle an fetch error
-        console.log(1234)
         console.log(error);
         console.log(error.request);
     }

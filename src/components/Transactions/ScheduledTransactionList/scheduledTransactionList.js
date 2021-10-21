@@ -46,7 +46,7 @@ class ScheduledTransactionList extends React.Component {
                 minWidth: '15%',
                 cell: (row) =>
                     <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteTransaction(row)}>
-                        <i className='far fa-trash-alt' />
+                        <i className='fa fa-trash' />
                     </button>
             }
         ];

@@ -6,8 +6,6 @@ import { NavLink } from 'react-router-dom';
 
 class SideBarComponent extends React.Component {
 
-
-
     render() {
         console.log()
         return (
@@ -15,13 +13,15 @@ class SideBarComponent extends React.Component {
                 {this.props.isLoggedIn &&
                     <div className="col-auto col-sm-3 col-md-2 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
                         <div className="d-flex flex-column flex-shrink-0 text-white bg-dark sticky-top">
-                            <Link className='m-2' style={{ textDecoration: 'none', color: 'white' }} to={this.props.isLoggedIn ? '/home' : '/'}>
-                                <h1>Budget Track</h1>
-                            </Link>
+                            <div className='d-flex align-items-center justify-content-center mt-3'>
+                                <Link style={{ textDecoration: 'none', color: 'white' }} to={this.props.isLoggedIn ? '/home' : '/'}>
+                                    <h1>Budget Track</h1>
+                                </Link>
+                            </div>
                             <hr />
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
-                                    <NavLink to="/home" className='nav-link text-white' activeClassName='nav-link active'>
+                                    <NavLink to="/home" className='nav-link text-white' activeClassName='active primaryBtn'>
                                         Home
                                     </NavLink>
                                 </li>

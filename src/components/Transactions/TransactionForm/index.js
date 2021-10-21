@@ -131,7 +131,7 @@ class TransactionForm extends React.Component {
                         </div>
 
 
-                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
                             Add
                         </button>
                     </form>
@@ -142,7 +142,7 @@ class TransactionForm extends React.Component {
                             <input className='form-control' value={this.state.amount} type='number' name='amount' onChange={this.handleChange} />
                         </div>
 
-                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
                             Update
                         </button>
                     </form>

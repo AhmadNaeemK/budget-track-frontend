@@ -18,7 +18,7 @@ class SearchBar extends React.Component {
                 <form>
                     <div className='input-group mb-3'>
                         <input className="form-control" type='text' placeholder='Search' onChange={this.onSearch} />
-                        <button type='button' className='btn btn-primary' onClick={this.onClear}> X </button>
+                        <button type='button' className='btn primaryBtn' onClick={this.onClear}> X </button>
                     </div>
                 </form>
             </div>

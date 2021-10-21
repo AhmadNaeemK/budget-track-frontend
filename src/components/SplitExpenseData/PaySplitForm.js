@@ -77,7 +77,7 @@ class PaySplitForm extends React.Component {
                         />
                     </div>
                     <div className='mb-3'>
-                        <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Pay</button>
+                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>Pay</button>
                     </div>
                 </form>
             </>

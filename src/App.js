@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.css';
+
+import './App.css'
 
 // styles
 import { GlobalStyle } from './GlobalStyle';

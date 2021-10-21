@@ -62,7 +62,7 @@ const RegistrationForm = () => {
                                         placeholder="Enter password" value={formData.password} onChange={handleChange} />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary btn-block" onClick={handleSubmit}>Sign Up</button>
+                                <button type="submit" className="btn primaryBtn btn-block" onClick={handleSubmit}>Sign Up</button>
                             </form>
 
                             <div>

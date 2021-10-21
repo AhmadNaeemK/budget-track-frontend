@@ -98,7 +98,7 @@ class ScheduleTransactionForm extends React.Component {
                     </div>
 
 
-                    <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>
+                    <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
                         Schedule
                     </button>
 

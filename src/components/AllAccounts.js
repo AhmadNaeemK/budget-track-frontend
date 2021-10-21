@@ -47,8 +47,8 @@ class AllAccounts extends React.Component {
             cell: (row) =>
                 <div className='d-flex'>{row.title !== 'Cash' &&
                     <div className='m-1'>
-                        <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteAccount(row)}>
-                            <i className='far fa-trash-alt' />
+                        <button type="button" className='btn btn-outline-danger redBtn' onClick={() => this.deleteAccount(row)}>
+                            <i className='fa fa-trash' />
                         </button>
                     </div>
                 }
@@ -59,7 +59,7 @@ class AllAccounts extends React.Component {
                             data-bs-target='#aModal'
                             onClick={() => this.editAccount(row)}
                         >
-                            <i className='far fa-edit' />
+                            <i className='fa fa-pencil-square-o' />
                         </button>
                     </div>
                 </div>,
@@ -113,7 +113,7 @@ class AllAccounts extends React.Component {
 
                 <div className='d-flex mb-3'>
                     <button
-                        className='btn btn-outline-primary'
+                        className='btn primaryBtn'
                         data-bs-toggle='modal'
                         data-bs-target={`#account-create`}
                     >

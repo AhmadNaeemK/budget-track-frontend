@@ -34,11 +34,8 @@ class AccountsForm extends React.Component {
                 alert(error[Object.keys(error)[0]])
             }
         } else {
-            let newState = {};
-            for (let s in this.state) {
-                if (this.state[s] !== '' && this.state[s] !== 0) newState = { ...newState, [s]: this.state[s] }
-            }
-            const res = await API.updateCashAccount(this.props.account_edit.id, newState)
+            let formData = {balance: this.state.balance, budget: this.state.budget};
+            const res = await API.updateCashAccount(this.props.account_edit.id, formData)
             if (res.status === 200) {
                 const updatedAccount = await res.json()
                 this.props.accountHandler(updatedAccount)
@@ -74,7 +71,7 @@ class AccountsForm extends React.Component {
                     <input className='form-control' value={this.state.limit} type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here' />
                 </div>
 
-                <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Add</button>
+                <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>Add</button>
             </form>
         )
     }

@@ -127,7 +127,7 @@ class SplitTransactionForm extends React.Component {
                     />
                 </div>
                 <div className='mb-3'>
-                    <button type='submit' className='btn btn-primary' onClick={this.handleSubmit}>Create</button>
+                    <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>Create</button>
                 </div>
             </form>
         )

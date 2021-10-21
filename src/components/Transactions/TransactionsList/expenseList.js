@@ -16,7 +16,7 @@ class ExpenseList extends React.Component {
             <div className='d-flex'>
                 <div className='m-1'>
                     <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteTransaction(row)}>
-                        <i className='far fa-trash-alt' />
+                        <i className='fa fa-trash' />
                     </button>
                 </div>
                 <div className='m-1'>
@@ -26,7 +26,7 @@ class ExpenseList extends React.Component {
                         data-bs-target='#tModal'
                         onClick={() => this.handleEditTransaction(row)}
                     >
-                        <i className='far fa-edit' />
+                        <i className='fa fa-pencil-square-o' />
                     </button>
                 </div>
             </div>

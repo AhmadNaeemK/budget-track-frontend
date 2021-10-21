@@ -80,7 +80,7 @@ class LoginForm extends React.Component {
                                     <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Submit</button>
+                                <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Submit</button>
                             </form>
 
                             <div>

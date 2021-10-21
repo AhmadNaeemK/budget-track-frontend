@@ -67,7 +67,7 @@ class AllTransactions extends React.Component {
                         <div className='d-flex mb-3'>
                             <div>
                                 <button
-                                    className='btn btn-outline-primary'
+                                    className='btn primaryBtn'
                                     data-bs-toggle='modal'
                                     data-bs-target={`#split-transaction`}
                                 >

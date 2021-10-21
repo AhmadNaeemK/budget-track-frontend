@@ -1,6 +1,5 @@
 import React from 'react'
 
-import API from '../API'
 import ReceivedRequests from './FriendsRequestList/receivedRequests'
 import SentRequests from './FriendsRequestList/sentRequests'
 
@@ -8,38 +7,8 @@ class AllFriendRequest extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoaded: false,
-            friendRequestsSent: [],
-            friendRequestsReceived: [],
             selectedList: 'received'
         }
-    }
-
-    sentRequestHandler = async () => {
-        const friendRequestsSent = await API.fetchSentFriendRequestList();
-        this.setState({
-            friendRequestsSent: friendRequestsSent,
-        })
-    }
-
-    receivedRequestHandler = async () => {
-        const friendRequestsReceived = await API.fetchReceivedFriendRequestList();
-
-        this.setState({
-            friendRequestsReceived: friendRequestsReceived
-        })
-    }
-
-    componentDidMount() {
-        (async () => {
-            const friendRequestsSent = await API.fetchSentFriendRequestList();
-            const friendRequestsReceived = await API.fetchReceivedFriendRequestList();
-
-            this.setState({
-                friendRequestsSent: friendRequestsSent,
-                friendRequestsReceived: friendRequestsReceived
-            })
-        })().then(() => { this.setState({ isLoaded: true }) });
     }
 
     render() {

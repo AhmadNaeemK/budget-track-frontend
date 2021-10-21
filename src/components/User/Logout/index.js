@@ -31,7 +31,7 @@ class Logout extends React.Component {
     render() {
         return (
             <Link to='/'>
-                <button className='btn btn-primary' onClick={this.handleLogout}> Logout</button>
+                <button className='btn primaryBtn' onClick={this.handleLogout}> Logout</button>
             </Link>
         )
     }

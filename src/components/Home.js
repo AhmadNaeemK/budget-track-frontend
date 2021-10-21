@@ -105,7 +105,7 @@ class Home extends React.Component {
                                 <div className='p-2 m-2'>
                                     <div className='row'>
                                         <div className='col m-2'>
-                                            <button className='btn btn-outline-primary'
+                                            <button className='btn primaryBtn'
                                                 data-bs-toggle='modal'
                                                 data-bs-target={`#create-account`}>
                                                 Create Account
@@ -123,7 +123,7 @@ class Home extends React.Component {
                                         </div>
 
                                         <div className='col m-2'>
-                                            <button className='btn btn-outline-primary'
+                                            <button className='btn primaryBtn'
                                                 data-bs-toggle='modal'
                                                 data-bs-target={`#create-transaction`}
                                             >
@@ -145,7 +145,7 @@ class Home extends React.Component {
                                         </div>
                                         <div className='col m-2'>
                                             <button
-                                                className='btn btn-outline-primary'
+                                                className='btn primaryBtn'
                                                 data-bs-toggle='modal'
                                                 data-bs-target={`#schedule-transaction`}
                                             >

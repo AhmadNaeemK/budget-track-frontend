@@ -1,0 +1,25 @@
+.redBtn{
+    color: rgb(204, 75, 65)   
+}
+
+.primaryBtn{
+    color: white;
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 1), rgba(48, 111, 150, 1));
+}
+
+.primaryBtn:hover{
+    color: white;
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5));
+}
+
+.nav-link.active{
+    color: white;
+    background: none;
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 1), rgba(48, 111, 150, 1)) !important;
+}
+
+.nav-link.active:hover{
+    color: white;
+    background: none;
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5)) !important;
+}
