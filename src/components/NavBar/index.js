@@ -5,7 +5,6 @@ import Logout from '../User/Logout'
 
 class NavBar extends React.Component {
 
-
     loggedOut = () => {
         this.props.handleLogout(false)
     }
@@ -29,7 +28,7 @@ class NavBar extends React.Component {
                             <div></div>
                             <div className='row align-items-center m-2'>
                                 <div className='col pt-2'>
-                                    <p>{this.state.username}</p>
+                                    <p>{this.props.username}</p>
                                 </div>
                                 <div className='col'>
                                     <div className='dropdown'>

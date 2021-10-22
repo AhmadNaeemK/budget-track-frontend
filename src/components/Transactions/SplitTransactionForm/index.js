@@ -108,7 +108,6 @@ class SplitTransactionForm extends React.Component {
                         cacheOptions
                         defaultOptions
                         loadOptions={this.promiseFriends}
-                        value={this.state.paying_friend}
                         onChange={(value) => { this.handleChange('paying_friend', value.value) }}
                         styles={{
                             option: (provided, state) => ({

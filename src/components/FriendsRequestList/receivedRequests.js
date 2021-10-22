@@ -31,12 +31,12 @@ class ReceivedRequests extends React.Component {
                     <div className='d-flex'>
                         <div className='m-1'>
                             <button type="button" className='btn btn-outline-success' onClick={() => this.acceptRequest(row)}>
-                                <i className='fas fa-check' />
+                                <i className='fa fa-check' />
                             </button>
                         </div>
                         <div className='m-1'>
                             <button type="button" className='btn btn-outline-danger' onClick={() => this.deleteRequest(row)}>
-                                <i className='fas fa-times' />
+                                <i className='fa fa-times' />
                             </button>
                         </div>
                     </div>
