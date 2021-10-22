@@ -29,7 +29,7 @@ class LoginForm extends React.Component {
         event.preventDefault();
         const result = await API.login(this.state);
         if (result.access) {
-            this.props.handleLogin(true)
+            this.props.handleLogin(true, result.user)
             localStorage.setItem('access', result.access);
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user);

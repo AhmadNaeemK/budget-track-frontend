@@ -12,6 +12,7 @@ const RegistrationForm = () => {
         username: '',
         email: '',
         password: '',
+        phone_number: '',
     }
 
     const [formData, setFormData] = useState(initialData)
@@ -60,6 +61,19 @@ const RegistrationForm = () => {
                                     <label>Password</label>
                                     <input type="password" className="form-control" name='password'
                                         placeholder="Enter password" value={formData.password} onChange={handleChange} />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="phone_number">Phone Number</label>
+                                    <input
+                                        className="form-control"
+                                        type="tel"
+                                        name="phone_number"
+                                        onChange={handleChange}
+                                        placeholder="+xxxxxxxxxxxx"
+                                        value={formData.phone_number}
+                                        required
+                                    />
                                 </div>
 
                                 <button type="submit" className="btn primaryBtn btn-block" onClick={handleSubmit}>Sign Up</button>

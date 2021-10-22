@@ -11,7 +11,7 @@ import API from '../API';
 import { CASH_ACCOUNT_LIST_URL } from '../Config';
 import AccountDataCharts from './Accounts/AccountsData/AccountDataCharts';
 import MonthlyTransactionChart from './Charts&Tables/MonthlyTransactionChart';
-import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm.js';
+import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm/index.js';
 import ExpenseList from './Transactions/TransactionsList/expenseList';
 import MaxSplitData from './SplitExpenseData/maxSplitData';
 

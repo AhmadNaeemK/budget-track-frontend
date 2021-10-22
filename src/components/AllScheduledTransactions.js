@@ -4,7 +4,7 @@ import API from '../API';
 import { CASH_ACCOUNT_LIST_URL } from '../Config';
 
 import ModalComponent from './Modals';
-import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm.js';
+import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm/index.js';
 import ScheduledTransactionList from './Transactions/ScheduledTransactionList/scheduledTransactionList';
 
 

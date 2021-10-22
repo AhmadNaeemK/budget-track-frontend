@@ -31,19 +31,22 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false
+      isLoggedIn: false,
+      username: '',
     }
   }
 
   componentDidMount() {
     this.setState({
-      isLoggedIn: localStorage.getItem('refresh') ? true : false
+      isLoggedIn: localStorage.getItem('refresh') ? true : false,
+      username: localStorage.getItem('username')
     })
   }
 
-  handleIsLoggedIn = (status) => {
+  handleIsLoggedIn = (status, username) => {
     this.setState({
-      isLoggedIn: status
+      isLoggedIn: status,
+      username: username
     })
   }
 
@@ -54,7 +57,7 @@ class App extends React.Component {
           <div className="row flex-nowrap">
             <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
             <div className="col p-0">
-              <NavBar loggedIn={this.state.isLoggedIn} handleLogout={this.handleIsLoggedIn} />
+              <NavBar loggedIn={this.state.isLoggedIn} username={this.state.username} handleLogout={this.handleIsLoggedIn} />
               <Switch>
                 <Route exact path='/'> <LoginForm handleLogin={this.handleIsLoggedIn} /> </Route>
                 <Route path='/signup'> <RegistrationForm /> </Route>
