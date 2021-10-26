@@ -21,11 +21,11 @@ class Logout extends React.Component {
                 userid: localStorage.getItem('userid')
             },
         });
+        this.props.loggedOut();
         localStorage.removeItem('userid');
         localStorage.removeItem('username');
         localStorage.removeItem('access');
         localStorage.removeItem('refresh');
-        this.props.loggedOut();
     }
 
     render() {
