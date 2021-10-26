@@ -38,6 +38,7 @@ const PAY_SPLIT_URL = API_URL + '/paySplit/'
 const SPLIT_PAYMENT_DATA_URL = API_URL + '/splitPaymentData'
 const MAX_SPLIT_DUE  = API_URL +'/splitsDueMax'
 
+const NOTIFICATION_SOCKET_URL = 'ws://127.0.0.1:8000/ws/notification/'
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -73,5 +74,6 @@ export {
     MONTHLY_TRANSACTION_CHART_DATA,
     SPLIT_PAYMENT_DATA_URL,
     MAX_SPLIT_DUE,
+    NOTIFICATION_SOCKET_URL,
     monthNames,
 }

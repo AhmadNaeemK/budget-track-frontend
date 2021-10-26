@@ -6,12 +6,14 @@ import Logout from '../User/Logout'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { NOTIFICATION_SOCKET_URL } from '../../Config';
+
 class NavBar extends React.Component {
 
     loggedOut = () => {
         this.props.handleLogout(false, null, null);
-        if (this.friendRequestSocket) {
-            this.friendRequestSocket.close();
+        if (this.notificationSocket) {
+            this.notificationSocket.close();
         }
     }
 
@@ -22,18 +24,17 @@ class NavBar extends React.Component {
     }
 
     componentDidUpdate(prevProps){
-        if (this.friendRequestSocket) {
-            this.friendRequestSocket.close();
+        if (this.notificationSocket) {
+            this.notificationSocket.close();
         }
         if (this.props !== prevProps && this.props.loggedIn){
-            this.friendRequestSocket = new WebSocket(
-                'ws://127.0.0.1:8000/ws/friendRequestsNotification/' + this.props.userid
+            this.notificationSocket = new WebSocket(
+                NOTIFICATION_SOCKET_URL + this.props.userid
             );
-            this.friendRequestSocket.onmessage = function (event) {
-                const friend_request = JSON.parse(event.data).friend_request;
-                const message = `${friend_request.user.username} has sent you a Friend Request`
+            this.notificationSocket.onmessage = function (event) {
+                const notification = JSON.parse(event.data).notification;
                 toast(
-                    message, 
+                    notification, 
                     {
                     position: "top-right",
                     autoClose: 5000,
