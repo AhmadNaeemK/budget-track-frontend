@@ -23,3 +23,37 @@
     background: none;
     background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5)) !important;
 }
+
+.nav-item.display-pic{
+    border: 0px;
+    border-radius: 50%;
+    max-width: 50px;
+}
+
+.profile-display-pic-container{
+    position: relative;
+}
+
+.profile-display-pic{
+    border: 0px;
+    border-radius: 50%;
+    max-width: 140px;
+    max-height: 140px;
+    object-fit: cover;
+}
+
+.profile-display-pic.edit-btn{
+    position: absolute;
+    background-color: var(--darkGrey);
+    color: var(--bs-primary);
+    right: 20%;
+    top: 15%;
+}
+
+.profile-card{
+    border: 0px;
+    border-radius: 10px;
+    box-shadow: #191919 0px 0px 5px 5px;
+    padding: 10px;
+    margin-top: 5%;
+}

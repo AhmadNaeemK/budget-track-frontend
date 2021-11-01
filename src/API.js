@@ -4,7 +4,7 @@ import {
     SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
     RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
     SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL, MONTHLY_TRANSACTION_CHART_DATA, SPLIT_PAYMENT_DATA_URL, MAX_SPLIT_DUE,
-
+    USER_DISPLAY_PICTURE, API_URL
 } from "./Config";
 
 import { unregister } from "./interceptor.js";
@@ -20,6 +20,11 @@ const API = {
             body: JSON.stringify(formData),
         })
         return res;
+    },
+
+    fetchUser: async (userId) => {
+        const userResult = await fetch(API_URL + `/user/${userId}`) 
+        return await userResult.json()
     },
 
     login: async (formData) => {
@@ -301,6 +306,25 @@ const API = {
         }
         const data =  await fetch(MONTHLY_TRANSACTION_CHART_DATA, config)
         return await data.json()
+    },
+
+    fetchUserDisplayPicture: async (imageUrl) => {
+        const config ={
+            method: 'GET'
+        }
+        const displayPicture = await fetch(imageUrl, config)
+        return displayPicture.json();
+    },
+
+    updateUserDisplayPicture: async(formData) => {
+        const config={
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access')}`
+            },
+            body: formData
+        }
+        return await fetch(USER_DISPLAY_PICTURE, config)
     }
 
 }

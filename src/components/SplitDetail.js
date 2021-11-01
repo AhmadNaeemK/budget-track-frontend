@@ -72,7 +72,7 @@ class SplitTable extends React.Component {
                         </button>
                     </div>
                 }
-                {row.paying_friend.username !== localStorage.getItem('username') &&
+                {(row.paying_friend.username !== localStorage.getItem('username') && !row.completed_payment ) &&
                     <div className='m-1'>
                         <button type="button"
                             className='btn btn-outline-success'

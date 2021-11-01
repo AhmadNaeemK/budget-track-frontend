@@ -24,6 +24,8 @@ import AllFriendRequest from './components/FriendRequests';
 import AllScheduledTransactions from './components/AllScheduledTransactions';
 import AllSplitTransactions from './components/AllSplitTransactions';
 import SplitDetail from './components/SplitDetail';
+import UserProfile from './components/Profile'
+import API from './API';
 
 
 class App extends React.Component {
@@ -32,23 +34,32 @@ class App extends React.Component {
     super(props);
     this.state = {
       isLoggedIn: false,
-      username: '',
+      user: null
     }
   }
 
   componentDidMount() {
+    if (localStorage.getItem('userid')){
+    API.fetchUser(localStorage.getItem('userid')).then(
+      (user) => {
+        this.setState({
+          isLoggedIn: localStorage.getItem('refresh') ? true : false,
+          user: user
+        })
+      })
+    }
+  }
+
+  handleIsLoggedIn = (status, user) => {
     this.setState({
-      isLoggedIn: localStorage.getItem('refresh') ? true : false,
-      username: localStorage.getItem('username'),
-      userid: localStorage.getItem('userid')
+      isLoggedIn: status,
+      user: user
     })
   }
 
-  handleIsLoggedIn = (status, username, userid) => {
+  updateUser = (user) => {
     this.setState({
-      isLoggedIn: status,
-      username: username,
-      userid: userid
+      user: user
     })
   }
 
@@ -59,10 +70,9 @@ class App extends React.Component {
           <div className="row flex-nowrap">
             <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
             <div className="col p-0">
-              <NavBar 
+              <NavBar
                 loggedIn={this.state.isLoggedIn}
-                username={this.state.username}
-                userid={this.state.userid}
+                user={this.state.user}
                 handleLogout={this.handleIsLoggedIn} />
               <Switch>
                 <Route exact path='/'> <LoginForm handleLogin={this.handleIsLoggedIn} /> </Route>
@@ -77,6 +87,7 @@ class App extends React.Component {
                 <Route path='/scheduledTransactions'> <AllScheduledTransactions /> </Route>
                 <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
                 <Route path='/splitExpense/:splitId' component={SplitDetail} />
+                <Route path='/profile'> <UserProfile user={this.state.user} updateUser={this.updateUser} /> </Route>
               </Switch>
             </div>
           </div>

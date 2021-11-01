@@ -7,12 +7,14 @@ import jwt_decode from 'jwt-decode';
 export const unregister = fetchIntercept.register({
     request: function (url, config) {
         // Modify the url or config here
+
         if (localStorage.getItem('access') && ![LOGIN_URL, REGISTER_URL].includes(url) ) {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access')}`
+            }
             config = {
-                ...config, headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access')}`
-                }
+                headers, ...config
             }
         }
         return [url, config];
