@@ -67,7 +67,7 @@ class NavBar extends React.Component {
                 <nav className='navbar navbar-dark bg-dark'>
                     {!this.props.loggedIn ?
                         (<div className='container-fluid mt-2'>
-                            <h1>Budget Tracker</h1>
+                            <Link style={{ textDecoration: 'none', color: 'white' }} to='/'><h1>Budget Tracker</h1></Link>
                         </div>)
                         :
                         (

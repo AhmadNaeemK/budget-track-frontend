@@ -25,6 +25,7 @@ class EditProfilePicForm extends React.Component {
         if (res.status === 202){
             const user = await API.fetchUser(localStorage.getItem('userid'))
             this.props.updateUser(user)
+            this.state = this.initial_state
         }
     }
 

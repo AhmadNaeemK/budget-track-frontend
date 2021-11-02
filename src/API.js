@@ -4,7 +4,7 @@ import {
     SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
     RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
     SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL, MONTHLY_TRANSACTION_CHART_DATA, SPLIT_PAYMENT_DATA_URL, MAX_SPLIT_DUE,
-    USER_DISPLAY_PICTURE, API_URL
+    USER_DISPLAY_PICTURE_URL, API_URL, USER_VERIFICATION_URL, REGEN_VERIFICATION_MAIL_URL,
 } from "./Config";
 
 import { unregister } from "./interceptor.js";
@@ -319,12 +319,17 @@ const API = {
     updateUserDisplayPicture: async(formData) => {
         const config={
             method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access')}`
-            },
             body: formData
         }
-        return await fetch(USER_DISPLAY_PICTURE, config)
+        return await fetch(USER_DISPLAY_PICTURE_URL, config)
+    },
+
+    verifyUserEmail: async(token) => {
+        return await fetch(USER_VERIFICATION_URL + `?token=${token}`)
+    },
+
+    regenVerificationLink: async(email) => {
+        return await fetch(REGEN_VERIFICATION_MAIL_URL+ `?email=${email}`)
     }
 
 }

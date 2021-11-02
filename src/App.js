@@ -24,8 +24,10 @@ import AllFriendRequest from './components/FriendRequests';
 import AllScheduledTransactions from './components/AllScheduledTransactions';
 import AllSplitTransactions from './components/AllSplitTransactions';
 import SplitDetail from './components/SplitDetail';
-import UserProfile from './components/Profile'
+import UserProfile from './components/Profile';
+import UserVerification from './components/UserVerification';
 import API from './API';
+import SignInError from './components/SignInError';
 
 
 class App extends React.Component {
@@ -88,6 +90,8 @@ class App extends React.Component {
                 <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
                 <Route path='/splitExpense/:splitId' component={SplitDetail} />
                 <Route path='/profile'> <UserProfile user={this.state.user} updateUser={this.updateUser} /> </Route>
+                <Route path='/user/verify' component={UserVerification} />
+                <Route path='/signin-error' component={SignInError} />
               </Switch>
             </div>
           </div>

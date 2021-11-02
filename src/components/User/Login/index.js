@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, Redirect } from 'react-router-dom'
 
 import API from '../../../API';
+import { API_URL } from '../../../Config';
 
 async function checkNewUser() {
     const accounts = await API.fetchCashAccountList()
@@ -33,13 +34,18 @@ class LoginForm extends React.Component {
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user.username);
             localStorage.setItem('userid', result.user.id);
-            const user = await API.fetchUser(result.user.id)
-            this.props.handleLogin(true, user)
+            if (result.user.display_picture) {
+                result.user.display_picture = API_URL + result.user.display_picture
+            }
+            this.props.handleLogin(true, result.user)
             const isNewUser = await checkNewUser()
             this.setState({
                 isLoggedIn: true,
-                isNewUser: isNewUser
+                isNewUser: isNewUser,
             })
+        } else {
+            const error = result.detail
+            alert(error)
         }
     }
 
@@ -58,7 +64,6 @@ class LoginForm extends React.Component {
     }
 
     render() {
-
         if (this.state.isLoggedIn && this.state.isNewUser) {
             return <Redirect to='/onboarding' />
         } else if (this.state.isLoggedIn && !this.state.isNewUser) {
@@ -84,8 +89,9 @@ class LoginForm extends React.Component {
                                 <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Submit</button>
                             </form>
 
-                            <div>
+                            <div className='d-flex justify-content-between'>
                                 <Link to='/signup'> Create Your Account </Link>
+                                <Link to='/signin-error'> Unable to signin? </Link>
                             </div>
                         </div>
                     </div>
