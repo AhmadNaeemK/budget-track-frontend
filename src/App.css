@@ -27,7 +27,9 @@
 .nav-item.display-pic{
     border: 0px;
     border-radius: 50%;
-    max-width: 50px;
+    width: 50px;
+    height: 50px;
+    object-fit: fill;
 }
 
 .profile-display-pic-container{
@@ -37,9 +39,9 @@
 .profile-display-pic{
     border: 0px;
     border-radius: 50%;
-    max-width: 140px;
-    max-height: 140px;
-    object-fit: cover;
+    width: 140px;
+    height: 140px;
+    object-fit: none;
 }
 
 .profile-display-pic.edit-btn{
@@ -48,6 +50,8 @@
     color: var(--bs-primary);
     right: 20%;
     top: 15%;
+    height: 15%;
+    width: 15%;
 }
 
 .profile-card{
@@ -56,4 +60,11 @@
     box-shadow: #191919 0px 0px 5px 5px;
     padding: 10px;
     margin-top: 5%;
+}
+
+.invalid-form-entry{
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #f74355;
 }

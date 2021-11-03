@@ -9,10 +9,11 @@ export const unregister = fetchIntercept.register({
         // Modify the url or config here
 
         if (localStorage.getItem('access') && ![LOGIN_URL, REGISTER_URL].includes(url)) {
-            const headers = {
+            let headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('access')}`
+                'Authorization': `Bearer ${localStorage.getItem('access')}`,
             }
+
             config = {
                 headers, ...config
             }

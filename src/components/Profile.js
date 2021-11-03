@@ -2,11 +2,12 @@ import React from 'react'
 
 import ModalComponent from './Modals';
 import EditProfilePicForm from './User/EditProfilePicForm';
+import ResetPasswordForm from './User/ResetPasswordForm';
 
 class UserProfile extends React.Component {
 
     render() {
-        return (
+        return (this.props.user &&
             <div className='container'>
                 <div className='container profile-card '>
                     <div className='row'>
@@ -17,11 +18,11 @@ class UserProfile extends React.Component {
                             <div className='p-4 profile-display-pic-container'>
                                 {
                                     this.props.user.display_picture ?
-                                        <img className='profile-display-pic' src={this.props.user.display_picture} alt='display_pic' /> :
-                                        <i className='fa fa-user-circle-o fa-2x' style = {{fontSize: '140px'}} />
+                                        <img className='profile-display-pic' src={this.props.user.display_picture} alt='display_pic'/> :
+                                        <i className='fa fa-user-circle-o fa-2x' style={{ fontSize: '140px' }} />
                                 }
-                                <button 
-                                    type='button' 
+                                <button
+                                    type='button'
                                     className='profile-display-pic edit-btn'
                                     data-bs-toggle='modal'
                                     data-bs-target='#update-pic'
@@ -31,17 +32,38 @@ class UserProfile extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className='row'>
+                    <hr />
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='p-4 m-0'>
+                            <p>Reset Password</p>
+                        </div>
+                        <div className='p-4'>
+                            <button
+                                type='button'
+                                className='btn primaryBtn'
+                                data-bs-toggle='modal'
+                                data-bs-target='#reset-password'
+                            >
+                                Reset
+                            </button>
+                        </div>
                     </div>
-                    <hr/>
+                    <hr />
                 </div>
-                <ModalComponent 
+                <ModalComponent
                     id='update-pic'
                     title='Upload Profile Pic'
                     modalBody={
-                        <EditProfilePicForm 
+                        <EditProfilePicForm
                             updateUser={this.props.updateUser}
                         />
+                    }
+                />
+                <ModalComponent
+                    id='reset-password'
+                    title='Reset Password'
+                    modalBody={
+                        <ResetPasswordForm />
                     }
                 />
             </div >

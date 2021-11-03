@@ -45,6 +45,10 @@ const NOTIFICATION_SOCKET_URL = 'ws://127.0.0.1:8000/ws/notification/'
 const USER_VERIFICATION_URL = API_URL + '/user/verify'
 const REGEN_VERIFICATION_MAIL_URL = USER_VERIFICATION_URL +'/regenerate'
 
+const UPDATE_PASSWORD_URL = API_URL + '/user/updatePassword/'
+const PASSWORD_RECOVERY_URL = API_URL + '/user/recover/password'
+
+
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
@@ -83,5 +87,7 @@ export {
     NOTIFICATION_SOCKET_URL,
     USER_VERIFICATION_URL,
     REGEN_VERIFICATION_MAIL_URL,
+    UPDATE_PASSWORD_URL,
+    PASSWORD_RECOVERY_URL,
     monthNames,
 }

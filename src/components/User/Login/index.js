@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import API from '../../../API';
 import { API_URL } from '../../../Config';
@@ -21,8 +21,8 @@ class LoginForm extends React.Component {
         this.state = {
             email: '',
             password: '',
+            isLoggedIn: false,
             isNewUser: null,
-            isLoggedIn: null,
         }
     }
 
@@ -39,6 +39,7 @@ class LoginForm extends React.Component {
             }
             this.props.handleLogin(true, result.user)
             const isNewUser = await checkNewUser()
+            //state update
             this.setState({
                 isLoggedIn: true,
                 isNewUser: isNewUser,
@@ -70,32 +71,19 @@ class LoginForm extends React.Component {
             return <Redirect to='/home' />
         } else {
             return (
-                <div className='container-fluid p-2'>
-                    <div className='d-flex justify-content-center mt-5'>
-                        <div className='col-5'>
-                            <form>
-                                <h3>Sign In</h3>
-
-                                <div className="mb-3">
-                                    <label>Email</label>
-                                    <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={this.handleChange} />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label>Password</label>
-                                    <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
-                                </div>
-
-                                <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Submit</button>
-                            </form>
-
-                            <div className='d-flex justify-content-between'>
-                                <Link to='/signup'> Create Your Account </Link>
-                                <Link to='/signin-error'> Unable to signin? </Link>
-                            </div>
-                        </div>
+                <form>
+                    <div className="mb-3">
+                        <label>Email</label>
+                        <input type="email" className="form-control" placeholder="Enter Email" name='email' onChange={this.handleChange} />
                     </div>
-                </div>
+
+                    <div className="mb-3">
+                        <label>Password</label>
+                        <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
+                    </div>
+
+                    <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Submit</button>
+                </form>
             )
         }
     }
