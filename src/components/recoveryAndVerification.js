@@ -19,8 +19,7 @@ class RecoveryVerificationPage extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const isValidForm = this.handleValidation();
-        if (isValidForm) {
+        if (this.isValidForm()) {
             if (this.props.passwordRecovery) {
                 API.generatePasswordRecoveryLink(this.state.formFields.email).then((res) => {
                     if (res.status === 200){
@@ -45,7 +44,7 @@ class RecoveryVerificationPage extends React.Component {
         });
     }
 
-    handleValidation = () => {
+    isValidForm = () => {
         const emailRegex = /\S+@\S+\.\S+/
         let isValidForm = true
         const formErrors = { ...this.initialState.formErrors }

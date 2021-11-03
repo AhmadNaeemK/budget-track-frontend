@@ -41,7 +41,7 @@
     border-radius: 50%;
     width: 140px;
     height: 140px;
-    object-fit: none;
+    object-fit: fill;
 }
 
 .profile-display-pic.edit-btn{

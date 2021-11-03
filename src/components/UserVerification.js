@@ -10,7 +10,6 @@ class UserVerification extends React.Component {
         this.state = {
             verified: null,
         }
-
     }
 
     componentDidMount = async () => {
@@ -44,7 +43,6 @@ class UserVerification extends React.Component {
             </div >
         )
     }
-
 }
 
 

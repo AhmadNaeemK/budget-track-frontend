@@ -48,8 +48,7 @@ class ResetPasswordForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        const isValidForm = this.isValidForm()
-        if (isValidForm) {
+        if (this.isValidForm()) {
             const res = await API.updatePassword(this.state.formFields)
             if (res.status === 200) {
                 this.setState(
