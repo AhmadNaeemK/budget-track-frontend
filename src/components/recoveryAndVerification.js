@@ -21,7 +21,7 @@ class RecoveryVerificationPage extends React.Component {
         event.preventDefault();
         if (this.isValidForm()) {
             if (this.props.passwordRecovery) {
-                API.generatePasswordRecoveryLink(this.state.formFields.email).then((res) => {
+                API.recoverPassword(this.state.formFields.email).then((res) => {
                     if (res.status === 200){
                         this.setState(this.initialState);
                     }

@@ -30,7 +30,11 @@ class ResetPasswordForm extends React.Component {
 
     isValidForm = () => {
         let validForm = false
+
+        // 1 digit 1 small charachter 1 capital charachter 1 special charachter no special charachter minimum 8 charachters
+        // Example: "Pa&sw0rd12"
         const validPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[\W])(?!.*[\s]).{8,}$/
+
         const validationFormErrors = { ...this.initialState.formErrors }
         if (this.state.formFields.password !== this.state.formFields.confirmPassword) {
             validationFormErrors.password = 'Password and Confirm Password does not match';

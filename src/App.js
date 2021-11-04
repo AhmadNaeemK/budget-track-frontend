@@ -26,7 +26,7 @@ import UserProfile from './components/Profile';
 import UserVerification from './components/UserVerification';
 import API from './API';
 import RecoveryVerificationPage from './components/recoveryAndVerification';
-import SignUpLoginPage from './components/SignUp&Login';
+import SignUpLoginPage from './components/SignUpAndLogin';
 import PasswordRecoveryPage from './components/RecoverPassword';
 
 

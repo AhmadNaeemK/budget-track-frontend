@@ -308,14 +308,6 @@ const API = {
         return await data.json()
     },
 
-    fetchUserDisplayPicture: async (imageUrl) => {
-        const config ={
-            method: 'GET'
-        }
-        const displayPicture = await fetch(imageUrl, config)
-        return displayPicture.json();
-    },
-
     updateUserDisplayPicture: async(formData) => {
         const config={
             method: 'PATCH',
@@ -343,7 +335,7 @@ const API = {
         return await fetch(UPDATE_PASSWORD_URL, config)
     },
 
-    generatePasswordRecoveryLink: async(email) => {
+    recoverPassword: async(email) => {
         return await fetch(PASSWORD_RECOVERY_URL+ `?email=${email}`)
     },
 
