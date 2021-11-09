@@ -1,6 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux';
 
 import API from '../../../API';
+import { CASH_ACCOUNT_LIST_URL } from '../../../Config';
 
 class TransactionForm extends React.Component {
 
@@ -34,9 +36,9 @@ class TransactionForm extends React.Component {
             if (String(formData.category) === String(incomeCategory)) {
                 const res = await API.createIncome(formData)
                 if (res && res.status === 201) {
-                    const newTransactions = await API.fetchIncomeList(new Date().getMonth() + 1)
-                    const newAccounts = await API.fetchCashAccountList()
-                    this.props.transactionAccountHandler('incomes', newTransactions, newAccounts)
+                    const newTransactions = await API.fetchIncomeList(new Date().getMonth() + 1);
+                    this.props.getAccounts();
+                    this.props.transactionAccountHandler('incomes', newTransactions);
                 } else {
                     const error = await res.json()
                     alert(error[Object.keys(error)[0]])
@@ -45,8 +47,8 @@ class TransactionForm extends React.Component {
                 const res = await API.createExpense(formData)
                 if (res && res.status === 201) {
                     const newTransactions = await API.fetchExpenseList(new Date().getMonth() + 1)
-                    const newAccounts = await API.fetchCashAccountList()
-                    this.props.transactionAccountHandler('expenses', newTransactions, newAccounts)
+                    this.props.getAccounts();
+                    this.props.transactionAccountHandler('expenses', newTransactions)
                 } else {
                     const error = await res.json()
                     alert(error[Object.keys(error)[0]])
@@ -142,7 +144,7 @@ class TransactionForm extends React.Component {
                             <input className='form-control' value={this.state.amount} type='number' name='amount' onChange={this.handleChange} />
                         </div>
 
-                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
+                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit} data-bs-dismiss='modal'>
                             Update
                         </button>
                     </form>
@@ -153,4 +155,27 @@ class TransactionForm extends React.Component {
     }
 }
 
-export default TransactionForm;
+
+const createGetAccountsAction = (accounts) => (
+    {
+        type: 'account/getAccounts',
+        payload: accounts
+    }
+)
+
+const mapDispatchToProps = (dispatch) => ({
+    getAccounts: () => {
+        API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20').then(
+            (accounts) => {
+                dispatch(createGetAccountsAction(accounts.results))
+            }
+        )
+    }
+})
+
+const mapStateToProps = (state) => ({
+    categories: state.transactionCategories.categories,
+    accounts: state.account.accounts
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionForm);

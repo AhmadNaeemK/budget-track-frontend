@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import API from '../../API';
 
 class EditProfilePicForm extends React.Component {
@@ -23,8 +24,7 @@ class EditProfilePicForm extends React.Component {
         formData.append('display_picture', this.state.display_picture, this.state.display_picture.name)
         const res = await API.updateUserDisplayPicture(formData)
         if (res.status === 202){
-            const user = await API.fetchUser(localStorage.getItem('userid'))
-            this.props.updateUser(user)
+            this.props.updateUser(localStorage.getItem('userid'))
             this.state = this.initial_state
         }
     }
@@ -42,4 +42,19 @@ class EditProfilePicForm extends React.Component {
     }
 }
 
-export default EditProfilePicForm
+const createUpdateUserAction = (user) => {
+    return {
+        type: 'user/update',
+        payload: user
+    }
+} 
+
+const mapDispatchToProps = (dispatch) => ({
+    updateUser: (userId) => {
+        API.fetchUser(userId).then( user => {
+            dispatch(createUpdateUserAction(user))
+        })
+    }
+})
+
+export default connect(null,mapDispatchToProps)(EditProfilePicForm)

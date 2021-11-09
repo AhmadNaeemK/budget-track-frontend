@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
+//redux
+import {connect} from 'react-redux'
 
 class SideBarComponent extends React.Component {
 
@@ -14,7 +16,7 @@ class SideBarComponent extends React.Component {
                     <div className="col-auto col-sm-3 col-md-2 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
                         <div className="d-flex flex-column flex-shrink-0 text-white bg-dark sticky-top">
                             <div className='d-flex align-items-center justify-content-center mt-3'>
-                                <Link style={{ textDecoration: 'none', color: 'white' }} to={this.props.isLoggedIn ? '/home' : '/'}>
+                                <Link style={{ textDecoration: 'none', color: 'white' }} to='/home'>
                                     <h1>Budget Track</h1>
                                 </Link>
                             </div>
@@ -63,7 +65,12 @@ class SideBarComponent extends React.Component {
             </>
         )
     }
-
 }
 
-export default SideBarComponent;
+function mapStateToProps(state){
+    return ({
+        isLoggedIn: state.user.isLoggedIn
+    })
+}
+
+export default connect(mapStateToProps)(SideBarComponent);

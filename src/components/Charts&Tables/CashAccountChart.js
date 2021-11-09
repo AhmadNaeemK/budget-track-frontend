@@ -26,7 +26,7 @@ class CashAccountsChart extends React.Component {
             }
             return data;
         }
-        return { cashAccountData: getCashAccountsData(props.cashAccounts[props.selectedAccount]) };
+        return { cashAccountData: getCashAccountsData(props.selectedAccount) };
     }
 
     render() {

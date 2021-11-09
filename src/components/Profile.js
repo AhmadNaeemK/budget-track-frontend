@@ -1,19 +1,22 @@
 import React from 'react'
+import { connect } from 'react-redux';
 
 import ModalComponent from './Modals';
+import EditFullNameForm from './User/EditFullNameForm';
 import EditProfilePicForm from './User/EditProfilePicForm';
 import ResetPasswordForm from './User/ResetPasswordForm';
 
 class UserProfile extends React.Component {
 
     render() {
-        return (this.props.user &&
+        return (
             <div className='container'>
                 <div className='container profile-card '>
                     <div className='row'>
                         <div className='d-flex justify-content-between align-items-center'>
-                            <div className='p-4'>
+                            <div className='d-flex flex-column p-4'>
                                 <h1>{this.props.user.username}</h1>
+                                <p className='text-nowrap'>{`${this.props.user.first_name} ${this.props.user.last_name}`}</p>
                             </div>
                             <div className='p-4 profile-display-pic-container'>
                                 {
@@ -49,14 +52,28 @@ class UserProfile extends React.Component {
                         </div>
                     </div>
                     <hr />
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='p-4 m-0'>
+                            <p>Change Display Name</p>
+                        </div>
+                        <div className='p-4'>
+                            <button
+                                type='button'
+                                className='btn primaryBtn'
+                                data-bs-toggle='modal'
+                                data-bs-target='#change-display-name'
+                            >
+                                Change
+                            </button>
+                        </div>
+                    </div>
+                    <hr />
                 </div>
                 <ModalComponent
                     id='update-pic'
                     title='Upload Profile Pic'
                     modalBody={
-                        <EditProfilePicForm
-                            updateUser={this.props.updateUser}
-                        />
+                        <EditProfilePicForm/>
                     }
                 />
                 <ModalComponent
@@ -66,9 +83,20 @@ class UserProfile extends React.Component {
                         <ResetPasswordForm />
                     }
                 />
+                <ModalComponent
+                    id='change-display-name'
+                    title='Change Name'
+                    modalBody={
+                        <EditFullNameForm />
+                    }
+                />
             </div >
         )
     }
 }
 
-export default UserProfile;
+const mapStateToProps = state => ({
+    user: state.user.user_props,
+})
+
+export default connect(mapStateToProps)(UserProfile);

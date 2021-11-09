@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux';
 
 import API from '../../../API';
 
@@ -28,7 +29,7 @@ class AccountsForm extends React.Component {
             if (res && res.status === 201) {
                 this.setState(this.initialState)
                 const account = await res.json()
-                this.props.accountHandler(account)
+                this.props.createAccount(account)
             } else {
                 const error = await res.json()
                 alert(error[Object.keys(error)[0]])
@@ -38,7 +39,10 @@ class AccountsForm extends React.Component {
             const res = await API.updateCashAccount(this.props.account_edit.id, formData)
             if (res.status === 200) {
                 const updatedAccount = await res.json()
-                this.props.accountHandler(updatedAccount)
+                this.props.updateAccount(updatedAccount)
+                if(this.props.isResultSuccesful){
+                    this.props.isResultSuccesful(true)
+                }
                 this.setState(this.initialState)
             } else {
                 const error = await res.json()
@@ -71,11 +75,26 @@ class AccountsForm extends React.Component {
                     <input className='form-control' value={this.state.limit} type='number' name='limit' onChange={this.handleChange} placeholder='Add limit here' />
                 </div>
 
-                <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>Add</button>
+                <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit} data-bs-dismiss={!this.isResultSuccesful? null: "modal"}>Add</button>
             </form>
         )
     }
 }
 
-export default AccountsForm
+const mapDispatchToProps = (dispatch) => ({
+    createAccount: (account) => {
+        dispatch({
+            type: 'account/createAccount',
+            payload: account
+        })
+    },
+    updateAccount: (account) => {
+        dispatch({
+            type: 'account/updateAccount',
+            payload: account
+        })
+    }
+})
+
+export default connect(null, mapDispatchToProps)(AccountsForm)
 
