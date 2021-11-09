@@ -11,6 +11,8 @@ const RegistrationForm = (props) => {
         email: '',
         password: '',
         phone_number: '',
+        first_name: '',
+        last_name: ''
     }
 
     const [formData, setFormData] = useState(initialData)
@@ -38,6 +40,17 @@ const RegistrationForm = (props) => {
                     placeholder="Username" value={formData.username} onChange={handleChange} />
             </div>
 
+            <div className="mb-3">
+                <label>First name</label>
+                <input type="text" className="form-control" name='first_name'
+                    placeholder="First Name" value={formData.first_name} onChange={handleChange} />
+            </div>
+
+            <div className="mb-3">
+                <label>Last name</label>
+                <input type="text" className="form-control" name='last_name'
+                    placeholder="Last Name" value={formData.last_name} onChange={handleChange} />
+            </div>
 
             <div className="mb-3">
                 <label>Email address</label>

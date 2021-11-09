@@ -344,7 +344,7 @@ const API = {
             method: 'PATCH',
             body: JSON.stringify(formData)
         }
-        const res = await fetch(UPDATE_FULLNAME_URL + localStorage.getItem('userid'), config)
+        const res = await fetch(UPDATE_FULLNAME_URL + localStorage.getItem('userid') + '/', config)
         return await res.json()
     }   
 
