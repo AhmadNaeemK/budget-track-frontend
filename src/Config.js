@@ -38,7 +38,16 @@ const PAY_SPLIT_URL = API_URL + '/paySplit/'
 const SPLIT_PAYMENT_DATA_URL = API_URL + '/splitPaymentData'
 const MAX_SPLIT_DUE  = API_URL +'/splitsDueMax'
 
+const USER_DISPLAY_PICTURE_URL = API_URL + '/user/displayPicture/'
+
 const NOTIFICATION_SOCKET_URL = 'ws://127.0.0.1:8000/ws/notification/'
+
+const USER_VERIFICATION_URL = API_URL + '/user/verify'
+const REGEN_VERIFICATION_MAIL_URL = USER_VERIFICATION_URL +'/regenerate'
+
+const UPDATE_PASSWORD_URL = API_URL + '/user/updatePassword/'
+const PASSWORD_RECOVERY_URL = API_URL + '/user/recover/password'
+
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -74,6 +83,11 @@ export {
     MONTHLY_TRANSACTION_CHART_DATA,
     SPLIT_PAYMENT_DATA_URL,
     MAX_SPLIT_DUE,
+    USER_DISPLAY_PICTURE_URL,
     NOTIFICATION_SOCKET_URL,
+    USER_VERIFICATION_URL,
+    REGEN_VERIFICATION_MAIL_URL,
+    UPDATE_PASSWORD_URL,
+    PASSWORD_RECOVERY_URL,
     monthNames,
 }

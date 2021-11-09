@@ -45,12 +45,12 @@ class MonthlyTransactionChart extends React.Component {
                     })}>
                         <div className="form-check form-check-inline">
                             <input className="btn-check" type="radio" name="income" id="income"
-                                value="income" checked={this.state.selectedType === 'income'} />
+                                value="income" checked={this.state.selectedType === 'income'} readOnly/>
                             <label className="btn btn-outline-secondary" htmlFor="income">Income</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input className="btn-check" type="radio" name="expense" id="expense" value="expense"
-                                checked={this.state.selectedType === 'expense'}
+                                checked={this.state.selectedType === 'expense'} readOnly
                             />
                             <label className="btn btn-outline-secondary" htmlFor="expense">Expense</label>
                         </div>

@@ -13,17 +13,21 @@ import { GlobalStyle } from './GlobalStyle';
 // component
 import NavBar from './components/NavBar';
 import Home from './components/Home';
-import LoginForm from './components/User/Login';
 import AllTransactions from './components/AllTransactions'
 import AllAccounts from './components/AllAccounts';
 import UserOnboarding from './components/UserOnBoarding'
-import RegistrationForm from './components/User/Register';
 import FriendsPage from './components/Friends';
 import SideBarComponent from './components/SideBar';
 import AllFriendRequest from './components/FriendRequests';
 import AllScheduledTransactions from './components/AllScheduledTransactions';
 import AllSplitTransactions from './components/AllSplitTransactions';
 import SplitDetail from './components/SplitDetail';
+import UserProfile from './components/Profile';
+import UserVerification from './components/UserVerification';
+import API from './API';
+import RecoveryVerificationPage from './components/recoveryAndVerification';
+import SignUpLoginPage from './components/SignUpAndLogin';
+import PasswordRecoveryPage from './components/RecoverPassword';
 
 
 class App extends React.Component {
@@ -32,23 +36,34 @@ class App extends React.Component {
     super(props);
     this.state = {
       isLoggedIn: false,
-      username: '',
+      user: null,
+      loading: false,
+    }
+  }
+  
+
+  componentDidMount() {
+    if (localStorage.getItem('userid')) {
+      API.fetchUser(localStorage.getItem('userid')).then(
+        (user) => {
+          this.setState({
+            isLoggedIn: localStorage.getItem('refresh') ? true : false,
+            user: user
+          })
+        })
     }
   }
 
-  componentDidMount() {
+  handleIsLoggedIn = (status, user) => {
     this.setState({
-      isLoggedIn: localStorage.getItem('refresh') ? true : false,
-      username: localStorage.getItem('username'),
-      userid: localStorage.getItem('userid')
+      isLoggedIn: status,
+      user: user
     })
   }
 
-  handleIsLoggedIn = (status, username, userid) => {
+  updateUser = (user) => {
     this.setState({
-      isLoggedIn: status,
-      username: username,
-      userid: userid
+      user: user
     })
   }
 
@@ -59,14 +74,12 @@ class App extends React.Component {
           <div className="row flex-nowrap">
             <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
             <div className="col p-0">
-              <NavBar 
+              <NavBar
                 loggedIn={this.state.isLoggedIn}
-                username={this.state.username}
-                userid={this.state.userid}
+                user={this.state.user}
                 handleLogout={this.handleIsLoggedIn} />
               <Switch>
-                <Route exact path='/'> <LoginForm handleLogin={this.handleIsLoggedIn} /> </Route>
-                <Route path='/signup'> <RegistrationForm /> </Route>
+                <Route exact path='/'> <SignUpLoginPage handleLogin={this.handleIsLoggedIn}/> </Route>
                 <Route path='/onboarding' > <UserOnboarding /> </Route>
                 <Route path='/home'> <Home /> </Route>
                 <Route path='/expenses'> <AllTransactions type='expense' /> </Route>
@@ -77,6 +90,11 @@ class App extends React.Component {
                 <Route path='/scheduledTransactions'> <AllScheduledTransactions /> </Route>
                 <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
                 <Route path='/splitExpense/:splitId' component={SplitDetail} />
+                <Route path='/profile'> <UserProfile user={this.state.user} updateUser={this.updateUser} /> </Route>
+                <Route path='/user/verify' component={UserVerification} />
+                <Route path='/signin-error' component={RecoveryVerificationPage} />
+                <Route path='/forgotPassword'> <RecoveryVerificationPage passwordRecovery={true} /> </Route>
+                <Route path='/recover/password' component={PasswordRecoveryPage} />
               </Switch>
             </div>
           </div>
