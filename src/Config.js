@@ -48,7 +48,7 @@ const REGEN_VERIFICATION_MAIL_URL = USER_VERIFICATION_URL +'/regenerate'
 const UPDATE_PASSWORD_URL = API_URL + '/user/updatePassword/'
 const PASSWORD_RECOVERY_URL = API_URL + '/user/recover/password'
 
-const UPDATE_FULLNAME_URL = API_URL + '/user/updateFullname/'
+const UPDATE_FULLNAME_URL = API_URL + '/user/'
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"

@@ -239,5 +239,4 @@ class SplitDetail extends React.Component {
     }
 }
 
-
 export default SplitDetail;

@@ -96,7 +96,7 @@ class UserProfile extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.user.user_props,
+    user: state.user.user_props
 })
 
 export default connect(mapStateToProps)(UserProfile);
