@@ -78,7 +78,7 @@ class NavBar extends React.Component {
                                 <div></div>
                                 <div className='row align-items-center m-2'>
                                     <div className='col pt-2'>
-                                        <p className='text-nowrap'>{`${this.props.user.first_name} ${this.props.user.last_name}`}</p>
+                                        <p className='text-nowrap'>{this.props.user.fullname}</p>
                                     </div>
                                     <div className='col'>
                                         <div className='dropdown'>
