@@ -37,6 +37,9 @@ class App extends React.Component {
       API.fetchUser(localStorage.getItem('userid')).then(user => {
         this.props.login(user)
       })
+      API.fetchTransactionCategories().then(categories => {
+        this.props.getCategories(categories)
+      })
     }
   }
 
@@ -81,7 +84,13 @@ const mapDispatchToProps = (dispatch) => ({
       type: 'user/login',
       payload: user
     })
-  }
+  },
+  getCategories: (categories) => {
+    dispatch({
+      type: 'transactionCategories/getCategories',
+      payload: categories
+    })
+  },
 })
 
 export default connect(null, mapDispatchToProps)(App)

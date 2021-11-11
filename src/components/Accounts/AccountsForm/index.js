@@ -17,6 +17,15 @@ class AccountsForm extends React.Component {
         this.state = this.initialState;
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps !== this.props){
+            this.setState({
+                balance: this.props.account_edit.balance,
+                limit: this.props.account_edit.limit
+            })
+        }
+    }
+
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -35,7 +44,7 @@ class AccountsForm extends React.Component {
                 alert(error[Object.keys(error)[0]])
             }
         } else {
-            let formData = {balance: this.state.balance, budget: this.state.budget};
+            let formData = {balance: this.state.balance, limit: this.state.limit};
             const res = await API.updateCashAccount(this.props.account_edit.id, formData)
             if (res.status === 200) {
                 const updatedAccount = await res.json()

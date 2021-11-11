@@ -46,7 +46,7 @@ class EditFullNameForm extends React.Component {
                         name='last_name'
                         type='text'
                         className='form-control'
-                        placeholder='First Name'
+                        placeholder='Last Name'
                         value={this.state.last_name}
                         onChange={this.handleChange}
                     />

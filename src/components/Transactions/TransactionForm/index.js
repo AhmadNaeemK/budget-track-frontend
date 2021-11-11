@@ -60,7 +60,7 @@ class TransactionForm extends React.Component {
         const update = async () => {
             const formData = { 'amount': this.state.amount }
             const transactionId = this.props.transaction.id
-            if (this.props.transaction.category === incomeCategory) {
+            if (this.props.transaction.category[0] === incomeCategory) {
                 const res = await API.updateIncome(transactionId, formData)
                 if (res && res.status === 200) {
                     const updatedTransaction = await res.json()

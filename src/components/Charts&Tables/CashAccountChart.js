@@ -41,6 +41,7 @@ class CashAccountsChart extends React.Component {
                                 fontSize: 100,
                             },
                             legend: {
+                                display: false,
                                 position: 'bottom'
                             }
                         },
