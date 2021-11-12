@@ -30,7 +30,7 @@ class DownloadReportForm extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         API.downloadTransactionReport(this.state);
-        this.state=this.intitial_state
+        this.setState(this.intitial_state)
     }
 
     render() {

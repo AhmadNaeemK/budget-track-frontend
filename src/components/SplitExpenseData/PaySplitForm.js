@@ -41,8 +41,8 @@ class PaySplitForm extends React.Component {
             alert('Payment Succesful')
         }
         else {
-            const error = res.json()
-            alert(error[Object.keys(error)[0]])
+            const error = await res.json()
+            alert(error)
         }
     }
 
