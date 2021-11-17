@@ -58,7 +58,6 @@ class ResetPasswordForm extends React.Component {
                 this.setState(
                     this.initialState
                 );
-                this.props.handlePasswordReset()
             }
         }
     }
@@ -76,7 +75,7 @@ class ResetPasswordForm extends React.Component {
                     <input type="password" className="form-control" value={this.state.formFields.confirmPassword} placeholder="Confirm Password" name='confirmPassword' onChange={this.handleChange} />
                     <span className="invalid-form-entry">{this.state.formErrors.confirmPassword}</span>
                 </div>
-                <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>Reset</button>
+                <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit} data-dismiss='modal'>Reset</button>
             </form>
         )
     }

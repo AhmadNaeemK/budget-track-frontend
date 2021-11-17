@@ -4,10 +4,12 @@ import {
     SCHEDULED_TRANSACTION_LIST_URL, SCHEDULED_TRANSACTION_URL, SENT_FRIEND_REQUEST_LIST_URL,
     RECEIVED_FRIEND_REQUEST_LIST_URL, FRIEND_REQUEST_URL, FRIEND_REQUEST_ACCEPT_URL, FRIEND_LIST_URL, UNFFRIEND_URL,
     SPLIT_TRANSACTION_LIST_URL, SPLIT_TRANSACTION_URL, PAY_SPLIT_URL, MONTHLY_TRANSACTION_CHART_DATA, SPLIT_PAYMENT_DATA_URL, MAX_SPLIT_DUE,
-    USER_DISPLAY_PICTURE_URL, API_URL, USER_VERIFICATION_URL, REGEN_VERIFICATION_MAIL_URL, UPDATE_PASSWORD_URL, PASSWORD_RECOVERY_URL, UPDATE_FULLNAME_URL
+    USER_DISPLAY_PICTURE_URL, API_URL, USER_VERIFICATION_URL, REGEN_VERIFICATION_MAIL_URL, UPDATE_PASSWORD_URL, PASSWORD_RECOVERY_URL, USER_URL, DOWNLOAD_TRANSACTION_REPORT_URL
 } from "./Config";
 
 import { unregister } from "./interceptor.js";
+
+import { saveAs } from 'file-saver';
 
 const API = {
     register: async (formData) => {
@@ -344,9 +346,19 @@ const API = {
             method: 'PATCH',
             body: JSON.stringify(formData)
         }
-        const res = await fetch(UPDATE_FULLNAME_URL + localStorage.getItem('userid') + '/', config)
+        const res = await fetch(USER_URL + localStorage.getItem('userid') + '/', config)
         return await res.json()
-    }   
+    },
+
+    downloadTransactionReport: async(params) => {
+        const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+        const url = DOWNLOAD_TRANSACTION_REPORT_URL + `?${queryString}`
+        const res = await fetch(url)
+        const blob = await res.blob()
+        if (res.status === 200){
+            saveAs(blob, `${localStorage.getItem('username')}_transaction_report.csv`)
+        }
+    }
 
 }
 

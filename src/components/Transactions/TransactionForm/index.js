@@ -133,7 +133,7 @@ class TransactionForm extends React.Component {
                         </div>
 
 
-                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
+                        <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit} data-bs-dismiss='modal'>
                             Add
                         </button>
                     </form>

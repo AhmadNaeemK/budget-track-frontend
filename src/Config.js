@@ -48,7 +48,9 @@ const REGEN_VERIFICATION_MAIL_URL = USER_VERIFICATION_URL +'/regenerate'
 const UPDATE_PASSWORD_URL = API_URL + '/user/updatePassword/'
 const PASSWORD_RECOVERY_URL = API_URL + '/user/recover/password'
 
-const UPDATE_FULLNAME_URL = API_URL + '/user/'
+const USER_URL = API_URL + '/user/'
+
+const DOWNLOAD_TRANSACTION_REPORT_URL = API_URL + '/downloadReport'
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -90,6 +92,7 @@ export {
     REGEN_VERIFICATION_MAIL_URL,
     UPDATE_PASSWORD_URL,
     PASSWORD_RECOVERY_URL,
-    UPDATE_FULLNAME_URL,
+    USER_URL,
+    DOWNLOAD_TRANSACTION_REPORT_URL,
     monthNames,
 }
