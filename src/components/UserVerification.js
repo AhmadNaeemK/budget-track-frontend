@@ -12,13 +12,15 @@ class UserVerification extends React.Component {
         }
     }
 
-    componentDidMount = async () => {
-        const query_params = new URLSearchParams(this.props.location.search)
-        const token = query_params.get('token')
-        const verificationResult = await API.verifyUserEmail(token)
-        this.setState({
-            verified: verificationResult.status === 200,
-        })
+    componentDidMount = () => {
+        const queryParams = new URLSearchParams(this.props.location.search)
+        const token = queryParams.get('token')
+        API.verifyUserEmail(token).then(verificationResult => {
+            this.setState({
+                verified: verificationResult.status === 200,
+            })
+        }
+        )
     }
 
     render() {
