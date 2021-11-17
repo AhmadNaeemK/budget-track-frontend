@@ -14,14 +14,15 @@ import MonthlyTransactionChart from './Charts&Tables/MonthlyTransactionChart';
 import ScheduleTransactionForm from './Transactions/ScheduleTransactionForm/index.js';
 import ExpenseList from './Transactions/TransactionsList/expenseList';
 import MaxSplitData from './SplitExpenseData/maxSplitData';
+import { connect } from 'react-redux';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
+        props.getAccounts();
+        props.getTransactionCategories();
         this.state = {
             isLoaded: false,
-            cashAccounts: [],
-            transactionCategories: [],
             transaction_edit: null,
             accountId: null,
             month: new Date().getMonth() + 1,
@@ -30,35 +31,21 @@ class Home extends React.Component {
         }
     }
 
-    createAccount = (createdAccount) => {
-        const accounts = this.state.cashAccounts
-        accounts.push(createdAccount)
+    fetchData = async () => {
+        const categoryExpenseData = await API.fetchCategoryExpenseData(this.state.month);
+        const monthlyTransactionChartData = await API.fetchMonthlyTransactionChartData()
         this.setState({
-            cashAccounts: accounts
+            categoryExpenseData: categoryExpenseData,
+            monthlyTransactionChartData: monthlyTransactionChartData,
         })
     }
 
-    createTransaction = (transaction) => {
-
-    }
-
-    componentDidMount() {
-        const fetchThings = async () => {
-            const month = new Date().getMonth() + 1
-            const cashAccountList = await API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20');
-            const transactionCategories = await API.fetchTransactionCategories();
-            const categoryExpenseData = await API.fetchCategoryExpenseData(month);
-            const monthlyTransactionChartData = await API.fetchMonthlyTransactionChartData()
-            this.setState({
-                cashAccounts: cashAccountList.results,
-                transactionCategories: transactionCategories,
-                categoryExpenseData: categoryExpenseData,
-                monthlyTransactionChartData: monthlyTransactionChartData,
+    async componentDidUpdate(prevProps){
+        if (prevProps.accounts !== this.props.accounts) {
+            this.fetchData().then(() => {
+                this.setState({ isLoaded: true })
             })
         }
-        fetchThings().then(() => {
-            this.setState({ isLoaded: true })
-        })
     }
 
     render() {
@@ -117,7 +104,7 @@ class Home extends React.Component {
                                                 modalBody={
                                                     <AccountsForm
                                                         type='creation'
-                                                        accountHandler={this.createAccount} />
+                                                    />
                                                 }
                                             />
                                         </div>
@@ -136,9 +123,7 @@ class Home extends React.Component {
                                                     <TransactionForm
                                                         type='creation'
                                                         transaction={this.state.transaction_edit}
-                                                        accounts={this.state.cashAccounts}
-                                                        transactionAccountHandler={this.changeHandler}
-                                                        categories={this.state.transactionCategories}
+                                                        transactionAccountHandler={() => {}}
                                                     />
                                                 }
                                             />
@@ -156,8 +141,6 @@ class Home extends React.Component {
                                                 title='Schedule Transaction'
                                                 modalBody={
                                                     <ScheduleTransactionForm
-                                                        accounts={this.state.cashAccounts}
-                                                        categories={this.state.transactionCategories}
                                                         scheduledTransactionHandler={() => {}}
                                                     />
                                                 }
@@ -167,7 +150,6 @@ class Home extends React.Component {
                                 </div>
                                 <div className='border rounded border-white p-2 m-2'>
                                     <AccountDataCharts
-                                        cashAccounts={this.state.cashAccounts}
                                         month={this.state.month}
                                         expenseData={this.state.categoryExpenseData}
                                     />
@@ -199,4 +181,39 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+const createGetAccountsAction = (accounts) => (
+    {
+        type: 'account/getAccounts',
+        payload: accounts
+    }
+)
+
+const createGetTransactionCategoriesAction = (categories) => ({
+    type: 'transactionCategories/getCategories',
+    payload: categories
+})
+
+const mapDispatchToProps = (dispatch) => ({
+
+    getAccounts: () => {
+        API.fetchCashAccountList(CASH_ACCOUNT_LIST_URL + '?page_size=20').then(
+            (accounts) => {
+                dispatch(createGetAccountsAction(accounts.results))
+            }
+        )
+    },
+    getTransactionCategories: () => {
+        API.fetchTransactionCategories().then(categories => {
+            dispatch(createGetTransactionCategoriesAction(categories))
+        })
+    }
+
+
+})
+
+const mapStateToProps = (state) => ({
+    accounts: state.account.accounts,
+    transactionCategories: state.transactionCategories.categories
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

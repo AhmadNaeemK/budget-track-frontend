@@ -46,7 +46,7 @@ class ExpenseList extends React.Component {
             wrap: true,
         },
         {
-            name: 'Cash Account',
+            name: 'Account',
             id: 'cash_account',
             selector: row => row.cash_account.title,
             sortable: true,

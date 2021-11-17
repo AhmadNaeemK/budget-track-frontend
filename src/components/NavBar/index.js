@@ -8,6 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { NOTIFICATION_SOCKET_URL } from '../../Config';
 
+//redux
+import { connect } from 'react-redux';
+
 
 class UserDisplayPic extends React.Component {
 
@@ -38,7 +41,7 @@ class NavBar extends React.Component {
         if (this.notificationSocket) {
             this.notificationSocket.close();
         }
-        if (this.props !== prevProps && this.props.loggedIn) {
+        if (this.props !== prevProps && this.props.isLoggedIn) {
 
             this.notificationSocket = new WebSocket(
                 NOTIFICATION_SOCKET_URL + this.props.user.id
@@ -65,7 +68,7 @@ class NavBar extends React.Component {
         return (
             <>
                 <nav className='navbar navbar-dark bg-dark'>
-                    {!this.props.loggedIn ?
+                    {!this.props.isLoggedIn ?
                         (<div className='container-fluid mt-2'>
                             <Link style={{ textDecoration: 'none', color: 'white' }} to='/'><h1>Budget Tracker</h1></Link>
                         </div>)
@@ -75,7 +78,7 @@ class NavBar extends React.Component {
                                 <div></div>
                                 <div className='row align-items-center m-2'>
                                     <div className='col pt-2'>
-                                        <p>{this.props.user.username}</p>
+                                        <p className='text-nowrap'>{this.props.user.fullname}</p>
                                     </div>
                                     <div className='col'>
                                         <div className='dropdown'>
@@ -120,4 +123,11 @@ class NavBar extends React.Component {
     }
 }
 
-export default NavBar;
+function mapStateToProps(state) {
+    return ({
+        isLoggedIn: state.user.isLoggedIn,
+        user: state.user.user_props
+    })
+}
+
+export default connect(mapStateToProps)(NavBar);

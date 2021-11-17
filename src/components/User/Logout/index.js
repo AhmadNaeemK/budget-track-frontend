@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LOGOUT_URL } from '../../../Config';
@@ -37,4 +38,10 @@ class Logout extends React.Component {
     }
 }
 
-export default Logout
+const mapDispatchToProps = (dispatch) => ({
+    loggedOut: () => dispatch({
+        type: 'user/logout'
+    })
+})
+
+export default connect(null, mapDispatchToProps)(Logout)

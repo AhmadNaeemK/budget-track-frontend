@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import API from '../API';
 import { CASH_ACCOUNT_LIST_URL } from '../Config';
@@ -125,7 +126,7 @@ class AllAccounts extends React.Component {
                         modalBody={
                             <AccountsForm
                                 type='creation' 
-                                accountHandler={this.createAccount}
+                                createAccount={this.createAccount}
                             />
                         }
                     />
@@ -162,4 +163,8 @@ class AllAccounts extends React.Component {
 
 }
 
-export default AllAccounts;
+const mapStateToProps = (state) => ({
+    accounts: state.account.accounts
+})
+
+export default connect(mapStateToProps)(AllAccounts);

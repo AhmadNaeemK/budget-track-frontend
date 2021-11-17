@@ -9,11 +9,11 @@ class ExpenseStructureChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            expenseCategoryData: []
+            expenseCategoryData: {}
         }
     }
 
-    static getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps (props,state) {
         function getExpenseAccountsData(expenseData) {
             const data = {
                 labels: expenseData.map(category => category[0]),
@@ -27,16 +27,17 @@ class ExpenseStructureChart extends React.Component {
             }
             return data;
         }
-        return {
+
+        return ({
             expenseCategoryData: getExpenseAccountsData(
-                props.expenseData[Object.keys(props.expenseData)[props.selectedAccount]]
+                props.expenseData[props.selectedAccount.title]
             )
-        };
+        })
     }
 
     render() {
         return (
-            <>  {this.state.expenseCategoryData.labels.length > 0 &&
+            <> 
                 <Pie
                     data={this.state.expenseCategoryData}
                     options={{
@@ -47,12 +48,12 @@ class ExpenseStructureChart extends React.Component {
                                 fontSize: 100,
                             },
                             legend: {
+                                display: false,
                                 position: 'bottom'
                             }
                         },
                     }}
                 />
-            }
             </>
         )
     }

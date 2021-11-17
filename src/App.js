@@ -1,13 +1,13 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 
-import './App.css'
-
 // styles
+import './App.css'
 import { GlobalStyle } from './GlobalStyle';
 
 // component
@@ -24,47 +24,23 @@ import AllSplitTransactions from './components/AllSplitTransactions';
 import SplitDetail from './components/SplitDetail';
 import UserProfile from './components/Profile';
 import UserVerification from './components/UserVerification';
-import API from './API';
 import RecoveryVerificationPage from './components/recoveryAndVerification';
 import SignUpLoginPage from './components/SignUpAndLogin';
 import PasswordRecoveryPage from './components/RecoverPassword';
+import API from './API';
 
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoggedIn: false,
-      user: null,
-      loading: false,
-    }
-  }
-  
-
   componentDidMount() {
-    if (localStorage.getItem('userid')) {
-      API.fetchUser(localStorage.getItem('userid')).then(
-        (user) => {
-          this.setState({
-            isLoggedIn: localStorage.getItem('refresh') ? true : false,
-            user: user
-          })
-        })
+    if (localStorage.getItem('refresh')) {
+      API.fetchUser(localStorage.getItem('userid')).then(user => {
+        this.props.login(user)
+      })
+      API.fetchTransactionCategories().then(categories => {
+        this.props.getCategories(categories)
+      })
     }
-  }
-
-  handleIsLoggedIn = (status, user) => {
-    this.setState({
-      isLoggedIn: status,
-      user: user
-    })
-  }
-
-  updateUser = (user) => {
-    this.setState({
-      user: user
-    })
   }
 
   render() {
@@ -72,14 +48,11 @@ class App extends React.Component {
       <Router>
         <div className='container-fluid'>
           <div className="row flex-nowrap">
-            <SideBarComponent isLoggedIn={this.state.isLoggedIn} />
+            <SideBarComponent />
             <div className="col p-0">
-              <NavBar
-                loggedIn={this.state.isLoggedIn}
-                user={this.state.user}
-                handleLogout={this.handleIsLoggedIn} />
+              <NavBar />
               <Switch>
-                <Route exact path='/'> <SignUpLoginPage handleLogin={this.handleIsLoggedIn}/> </Route>
+                <Route exact path='/'> <SignUpLoginPage /> </Route>
                 <Route path='/onboarding' > <UserOnboarding /> </Route>
                 <Route path='/home'> <Home /> </Route>
                 <Route path='/expenses'> <AllTransactions type='expense' /> </Route>
@@ -90,7 +63,7 @@ class App extends React.Component {
                 <Route path='/scheduledTransactions'> <AllScheduledTransactions /> </Route>
                 <Route path='/splitExpenses'> <AllSplitTransactions /> </Route>
                 <Route path='/splitExpense/:splitId' component={SplitDetail} />
-                <Route path='/profile'> <UserProfile user={this.state.user} updateUser={this.updateUser} /> </Route>
+                <Route path='/profile'> <UserProfile /> </Route>
                 <Route path='/user/verify' component={UserVerification} />
                 <Route path='/signin-error' component={RecoveryVerificationPage} />
                 <Route path='/forgotPassword'> <RecoveryVerificationPage passwordRecovery={true} /> </Route>
@@ -105,5 +78,20 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => {
+    dispatch({
+      type: 'user/login',
+      payload: user
+    })
+  },
+  getCategories: (categories) => {
+    dispatch({
+      type: 'transactionCategories/getCategories',
+      payload: categories
+    })
+  },
+})
+
+export default connect(null, mapDispatchToProps)(App)
 

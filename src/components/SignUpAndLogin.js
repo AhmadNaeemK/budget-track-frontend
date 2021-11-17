@@ -9,8 +9,6 @@ class SignUpLoginPage extends React.Component {
         super(props);
         this.state = {
             selectedForm: 'login',
-            isLoggedIn: false,
-            isNewUser: null,
         }
     }
 
@@ -20,6 +18,11 @@ class SignUpLoginPage extends React.Component {
         })
     }
 
+    changeSelectedForm = (selection) => {
+        this.setState({
+            selectedForm: selection
+        })
+    }
 
     render() {
         return (
@@ -51,13 +54,15 @@ class SignUpLoginPage extends React.Component {
                             <div className='mt-4'>
                                 {this.state.selectedForm === 'login' ?
                                     <>
-                                        <LoginForm handleLogin={this.props.handleLogin}/>
+                                        <LoginForm/>
                                         <div className='d-flex justify-content-between'>
                                             <Link to='/forgotPassword'> Forgot Password </Link>
                                             <Link to='/signin-error'> Activate Account </Link>
                                         </div>
                                     </> :
-                                    <RegistrationForm />
+                                    <RegistrationForm 
+                                        changeSelectedForm={this.changeSelectedForm}
+                                    />
                                 }
                             </div>
                         </div>

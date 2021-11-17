@@ -2,7 +2,9 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import API from '../../../API';
-import { API_URL } from '../../../Config';
+
+//redux
+import { connect } from 'react-redux'
 
 async function checkNewUser() {
     const accounts = await API.fetchCashAccountList()
@@ -21,7 +23,6 @@ class LoginForm extends React.Component {
         this.state = {
             email: '',
             password: '',
-            isLoggedIn: false,
             isNewUser: null,
         }
     }
@@ -34,16 +35,12 @@ class LoginForm extends React.Component {
             localStorage.setItem('refresh', result.refresh);
             localStorage.setItem('username', result.user.username);
             localStorage.setItem('userid', result.user.id);
-            if (result.user.display_picture) {
-                result.user.display_picture = API_URL + result.user.display_picture
-            }
-            this.props.handleLogin(true, result.user)
             const isNewUser = await checkNewUser()
             //state update
             this.setState({
-                isLoggedIn: true,
                 isNewUser: isNewUser,
             })
+            this.props.handleLogin(result.user.id)
         } else {
             const error = result.detail
             alert(error)
@@ -56,18 +53,10 @@ class LoginForm extends React.Component {
         })
     }
 
-    componentDidMount() {
-        if (localStorage.getItem('access')) {
-            this.setState({
-                isLoggedIn: true
-            })
-        }
-    }
-
     render() {
-        if (this.state.isLoggedIn && this.state.isNewUser) {
+        if (this.props.isLoggedIn && this.state.isNewUser) {
             return <Redirect to='/onboarding' />
-        } else if (this.state.isLoggedIn && !this.state.isNewUser) {
+        } else if (this.props.isLoggedIn && !this.state.isNewUser) {
             return <Redirect to='/home' />
         } else {
             return (
@@ -82,12 +71,36 @@ class LoginForm extends React.Component {
                         <input type="password" className="form-control" placeholder="Enter password" name='password' onChange={this.handleChange} />
                     </div>
 
-                    <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Submit</button>
+                    <button type="submit" className="btn primaryBtn btn-block" onClick={this.handleSubmit}>Login</button>
                 </form>
             )
         }
     }
-
 }
 
-export default LoginForm;
+
+function createLoginAction(user){
+    return {
+        type: 'user/login',
+        payload: user
+    }
+}
+
+function mapStateToProps (state) {
+    return ({
+      isLoggedIn: state.user.isLoggedIn
+    })
+  }
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    handleLogin: (userId) => {
+        API.fetchUser(userId).then(
+            user => {
+                dispatch(createLoginAction(user))
+            }
+        )
+    } 
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import ExpenseStructureChart from '../../Charts&Tables/ExpenseStructureChart';
 
@@ -10,20 +11,20 @@ class AccountDataCharts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedAccount: 0,
+            selectedAccount: props.accounts[0],
         }
     }
 
     handleAccountChange = (event) => {
         this.setState({
-            selectedAccount: event.target.value
+            selectedAccount: this.props.accounts[event.target.value]
         })
     }
 
-    componentDidMount() {
-        if ( !this.props.cashAccounts['selectedAccount']){
+    componentDidUpdate(prevProps) {
+        if (prevProps.accounts !== this.props.accounts) {
             this.setState({
-                selectedAccount: 0
+                selectedAccount: this.props.accounts.find(account => account.title === this.state.selectedAccount.title)
             })
         }
     }
@@ -36,12 +37,12 @@ class AccountDataCharts extends React.Component {
                         <h6> Current Balance </h6>
                         <h1>
                             {new Intl.NumberFormat()
-                                .format(this.props.cashAccounts[this.state.selectedAccount].balance)}
+                                .format(this.state.selectedAccount.balance)}
                         </h1>
                     </div>
                     <div className='col'>
                         <select name='selectedAccount' className='form-select' onChange={this.handleAccountChange}>
-                            {this.props.cashAccounts.map((account, index) => (
+                            {this.props.accounts.map((account, index) => (
                                 <option key={account.id} value={index}>{account.title}</option>
                             ))}
                         </select>
@@ -59,7 +60,6 @@ class AccountDataCharts extends React.Component {
                     <div className='col-lg-6'>
                         <CashAccountsChart
                             selectedAccount={this.state.selectedAccount}
-                            cashAccounts={this.props.cashAccounts}
                         />
                     </div>
                 </div>
@@ -68,4 +68,8 @@ class AccountDataCharts extends React.Component {
     }
 }
 
-export default AccountDataCharts;
+const mapStateToProps = (state) => ({
+    accounts: state.account.accounts
+})
+
+export default connect(mapStateToProps)(AccountDataCharts);

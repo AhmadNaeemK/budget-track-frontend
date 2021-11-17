@@ -3,6 +3,7 @@ import React from 'react'
 import moment from 'moment';
 
 import API from '../../../API';
+import { connect } from 'react-redux';
 
 class ScheduleTransactionForm extends React.Component {
 
@@ -98,7 +99,7 @@ class ScheduleTransactionForm extends React.Component {
                     </div>
 
 
-                    <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit}>
+                    <button type='submit' className='btn primaryBtn' onClick={this.handleSubmit} data-bs-dismiss='modal'>
                         Schedule
                     </button>
 
@@ -107,4 +108,9 @@ class ScheduleTransactionForm extends React.Component {
     }
 }
 
-export default ScheduleTransactionForm;
+const mapStateToProps = (state) => ({
+    categories: state.transactionCategories.categories,
+    accounts: state.account.accounts
+})
+
+export default connect(mapStateToProps)(ScheduleTransactionForm);

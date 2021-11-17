@@ -30,12 +30,12 @@ class FriendsPage extends React.Component {
                     })}>
                         <div className="form-check form-check-inline">
                             <input className="btn-check" type="radio" name="friends" id="friends"
-                                value="friends" checked={this.state.selectedList === 'friends'} />
+                                value="friends" checked={this.state.selectedList === 'friends'} readOnly/>
                             <label className="btn btn-outline-secondary" htmlFor="friends">Friends</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input className="btn-check" type="radio" name="users" id="users" value="users"
-                                checked={this.state.selectedList === 'users'}
+                                checked={this.state.selectedList === 'users'} readOnly
                             />
                             <label className="btn btn-outline-secondary" htmlFor="users">Add Friends</label>
                         </div>
