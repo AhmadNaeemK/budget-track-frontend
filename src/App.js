@@ -47,10 +47,12 @@ class App extends React.Component {
     return (
       <Router>
         <div className='container-fluid'>
+          <div className="row">
+            <NavBar />
+          </div>
           <div className="row flex-nowrap">
             <SideBarComponent />
             <div className="col p-0">
-              <NavBar />
               <Switch>
                 <Route exact path='/'> <SignUpLoginPage /> </Route>
                 <Route path='/onboarding' > <UserOnboarding /> </Route>

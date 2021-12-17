@@ -8,6 +8,13 @@ import { connect } from 'react-redux'
 import API from '../../API';
 import ModalComponent from '../Modals';
 
+//svgs
+import { ReactComponent as AccountsIcon } from '../../svg_images/Accounts.svg'
+import { ReactComponent as SplitExpensesIcon } from '../../svg_images/SplitExpenses.svg'
+import { ReactComponent as ExpenseIcon } from '../../svg_images/expense.svg'
+import { ReactComponent as IncomeIcon } from '../../svg_images/income.svg'
+import { ReactComponent as ScheduledTransactionIcon } from '../../svg_images/calendar.svg'
+import { ReactComponent as FriendsIcon } from '../../svg_images/friends.svg'
 
 class DownloadReportForm extends React.Component {
     constructor(props) {
@@ -69,57 +76,63 @@ class SideBarComponent extends React.Component {
         return (
             <>
                 {this.props.isLoggedIn &&
-                    <div className="col-auto col-sm-3 col-md-2 col-xl-2 bg-dark" style={{ minHeight: '100vh' }}>
+                    <div className="col bg-dark sidebar">
                         <div className="d-flex flex-column flex-shrink-0 text-white bg-dark sticky-top">
-                            <div className='d-flex align-items-center justify-content-center mt-3'>
-                                <Link style={{ textDecoration: 'none', color: 'white' }} to='/home'>
-                                    <h1>Budget Track</h1>
-                                </Link>
-                            </div>
-                            <hr />
-                            <ul className="nav nav-pills flex-column flex-grow-1 mb-auto">
+                            <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
-                                    <NavLink to="/home" className='nav-link text-white' activeClassName='active primaryBtn'>
-                                        Home
+                                    <NavLink to="/home" className='nav-link text-white d-flex' activeClassName='active primaryBtn'>
+                                        <i className='fa fa-home sidebar-icon' />
+                                        <span> Home </span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/accounts" className='nav-link text-white' activeClassName='nav-link active'>
-                                        Accounts
+                                    <NavLink to="/accounts" className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <AccountsIcon className='sidebar-icon' />
+                                        <span> Accounts </span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/splitExpenses' className='nav-link text-white' activeClassName='nav-link active'>
-                                        Split Expense
+                                    <NavLink to='/splitExpenses' className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <SplitExpensesIcon className='sidebar-icon' />
+                                        <span> Splits </span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/expenses' className='nav-link text-white' activeClassName='nav-link active'>
-                                        Expenses
+                                    <NavLink to='/expenses' className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <ExpenseIcon className='sidebar-icon' />
+                                        <span>Expenses</span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/incomes' className='nav-link text-white' activeClassName='nav-link active'>
-                                        Incomes
+                                    <NavLink to='/incomes' className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <IncomeIcon className='sidebar-icon' />
+                                        <span> Incomes </span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/scheduledTransactions' className='nav-link text-white' activeClassName='nav-link active'>
-                                        Scheduled Transactions
+                                    <NavLink to='/scheduledTransactions' className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <ScheduledTransactionIcon className='sidebar-icon' />
+                                        <span> Scheduled </span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/friends' className='nav-link text-white' activeClassName='nav-link active'>
-                                        Friends
+                                    <NavLink to='/friends' className='nav-link text-white d-flex' activeClassName='nav-link active'>
+                                        <FriendsIcon className='sidebar-icon' />
+                                        <span> Friends </span>
                                     </NavLink>
+                                </li>
+                                <hr/>
+                                <li className='download-report'>
+                                    <button className='btn primaryBtn' data-bs-toggle='modal' data-bs-target='#download-report'>
+                                        <i className='fa fa-arrow-down' />
+                                        <span> Download Report </span>
+                                    </button>
                                 </li>
                             </ul>
-                            <hr />
-                            <button className='btn primaryBtn' data-bs-toggle='modal' data-bs-target='#download-report'> Download Report </button>
                         </div>
                     </div>
                 }
-                <ModalComponent 
+                <ModalComponent
                     id='download-report'
                     title='Download Transaction Report'
                     modalBody={<DownloadReportForm />}
