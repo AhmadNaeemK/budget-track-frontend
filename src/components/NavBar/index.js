@@ -69,16 +69,20 @@ class NavBar extends React.Component {
             <>
                 <nav className='navbar navbar-dark bg-dark'>
                     {!this.props.isLoggedIn ?
-                        (<div className='container-fluid mt-2'>
-                            <Link style={{ textDecoration: 'none', color: 'white' }} to='/'><h1>Budget Tracker</h1></Link>
+                        (<div className='container-fluid'>
+                            <Link className='text-white text-decoration-none' to='/'><h2>Budget Tracker</h2></Link>
                         </div>)
                         :
                         (
-                            <div className='container-fluid mt-2'>
-                                <div></div>
+                            <div className='container-fluid px-0'>
+                                <div className='d-flex align-items-center justify-content-center mt-3'>
+                                    <Link className='text-white text-decoration-none' to='/home'>
+                                        <h2>Budget Track</h2>
+                                    </Link>
+                                </div>
                                 <div className='row align-items-center m-2'>
-                                    <div className='col pt-2'>
-                                        <p className='text-nowrap'>{this.props.user.fullname}</p>
+                                    <div className='col'>
+                                        <p className='text-nowrap m-0'>{this.props.user.fullname}</p>
                                     </div>
                                     <div className='col'>
                                         <div className='dropdown'>

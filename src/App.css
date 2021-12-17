@@ -12,26 +12,6 @@
     background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5));
 }
 
-.nav-link.active{
-    color: white;
-    background: none;
-    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 1), rgba(48, 111, 150, 1)) !important;
-}
-
-.nav-link.active:hover{
-    color: white;
-    background: none;
-    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5)) !important;
-}
-
-.nav-item.display-pic{
-    border: 0px;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    object-fit: fill;
-}
-
 .profile-display-pic-container{
     position: relative;
 }
@@ -68,3 +48,86 @@
     font-size: .875em;
     color: #f74355;
 }
+
+.nav-item.display-pic{
+    border: 0px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: fill;
+}
+
+/* sidebar */
+
+.sidebar{
+    color: white;
+    border-top: 1px solid gray;
+    padding-top: 10px;
+    position: relative;
+    max-width: 80px;
+    min-width: 75px;
+    height: 100vh;
+    transition: 1s;
+}
+
+.sidebar.icons-only{
+    max-width: 10%;
+}
+
+.sidebar .nav{
+    max-width:100%;
+    overflow: hidden;
+}
+
+.sidebar .nav-link{
+    background: none;
+    border-radius: 0;
+    margin: 0;
+}
+
+.sidebar .nav-link.active{
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204), rgba(48, 111, 150)) !important;
+}
+
+.sidebar .nav-link:hover{
+    background-image: linear-gradient(to bottom right, rgba(65, 151, 204, 0.5), rgba(48, 111, 150, 0.5)) !important;
+}
+
+.sidebar .sidebar-icon{
+    margin-right: 24px;
+    font-size: 24px;
+    max-width: 24px;
+    max-height: 24px;
+    fill: white;
+}
+
+.sidebar .download-report{
+    display: none;
+}
+
+/* navbar */
+.navbar .navbar-menu-icon{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.navbar .sidebar-toggle{
+    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+    color: white;
+    font-size: 24px;
+}
+
+.navbar .sidebar-toggle:hover{
+    background-color: rgba(255,255,255, 0.3) !important;
+}
+
+/* media queries */
+@media screen and (min-width: 1200px) {
+    .sidebar{
+        max-width: max-content;
+    }
+
+    .sidebar .download-report{
+        display: inherit;
+    }
+  }

@@ -2,6 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
     :root {
+        //globals
         --black: #0a0a0a;
         --darkGrey: #1f1f1f;
         --medGrey: #404040;
@@ -13,6 +14,9 @@ export const GlobalStyle = createGlobalStyle`
         --fontBig: 1.5rem;
         --fontMed: 1.2 rem;
         --fontSmall: 1rem;
+        
+        //sidebar-icons
+        
     }
 
     * {

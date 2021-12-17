@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:8000'
+const API_URL = 'http://' + process.env.REACT_APP_BACKEND_API
 
 const LOGIN_URL = API_URL + '/user/token/'
 const REFRESH_URL = LOGIN_URL + 'refresh/'
@@ -40,7 +40,7 @@ const MAX_SPLIT_DUE  = API_URL +'/splitsDueMax'
 
 const USER_DISPLAY_PICTURE_URL = API_URL + '/user/displayPicture/'
 
-const NOTIFICATION_SOCKET_URL = 'ws://127.0.0.1:8000/ws/notification/'
+const NOTIFICATION_SOCKET_URL = 'ws://'+ process.env.REACT_APP_BACKEND_API +'/ws/notification/'
 
 const USER_VERIFICATION_URL = API_URL + '/user/verify'
 const REGEN_VERIFICATION_MAIL_URL = USER_VERIFICATION_URL +'/regenerate'

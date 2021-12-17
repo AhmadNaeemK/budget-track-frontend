@@ -30,8 +30,8 @@ export const unregister = fetchIntercept.register({
         // Modify the reponse object
         if (localStorage.getItem('refresh') && response.status === 401) {
             let decoded = jwt_decode(localStorage.getItem('refresh'));
-            if (Date.now() < decoded.exp * 1000) {
-                localStorage.removeItem('access')
+            localStorage.removeItem('access')
+            if (Date.now() < decoded.exp * 1000) { 
                 fetch(REFRESH_URL, {
                     method: 'POST',
                     headers: {
@@ -50,7 +50,6 @@ export const unregister = fetchIntercept.register({
                         window.location.reload();
                     })
             } else {
-                localStorage.removeItem('access')
                 localStorage.removeItem('refresh')
                 window.location.href = '/'
             }

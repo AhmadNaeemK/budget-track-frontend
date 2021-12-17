@@ -56,7 +56,7 @@ class ExpenseList extends React.Component {
             id: 'transaction_time',
             selector: row => {
                 const date = new Date(row.transaction_time)
-                return `${date.getDate()} - ${date.getMonth()} - ${date.getFullYear()}`
+                return `${date.getDate()} - ${date.getMonth()+1} - ${date.getFullYear()}`
             },
             sortable: true,
         },
